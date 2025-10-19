@@ -1,0 +1,302 @@
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): server.ts src/**/*[39m
+[33m[nodemon] watching extensions: ts,tsx,js,jsx[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+ ○ Compiling /guvenilir-telegram ...
+ ✓ Compiled /guvenilir-telegram in 1211ms (907 modules)
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 1542ms
+ ✓ Compiled in 329ms (425 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /_not-found in 154ms (897 modules)
+ GET /@vite/client 404 in 218ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 114ms
+ GET /@vite/client 404 in 29ms
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 53ms
+ GET /@vite/client 404 in 21ms
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 46ms
+ GET /@vite/client 404 in 19ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1149ms (1744 modules)
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 200 in 1405ms
+ ○ Compiling /api/campaigns ...
+ ✓ Compiled /api/campaigns in 592ms (1769 modules)
+ GET /@vite/client 404 in 701ms
+ GET /api/partner-sites 200 in 729ms
+prisma:query SELECT `main`.`PartnerSite`.`id`, `main`.`PartnerSite`.`name`, `main`.`PartnerSite`.`slug`, `main`.`PartnerSite`.`logoUrl`, `main`.`PartnerSite`.`rating`, `main`.`PartnerSite`.`features`, `main`.`PartnerSite`.`siteUrl`, `main`.`PartnerSite`.`isActive`, `main`.`PartnerSite`.`createdAt`, `main`.`PartnerSite`.`updatedAt` FROM `main`.`PartnerSite` WHERE 1=1 ORDER BY `main`.`PartnerSite`.`rating` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`order`, `main`.`MarqueeLogo`.`isActive`, `main`.`MarqueeLogo`.`createdAt`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`isFeatured` DESC, `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isActive` = ? ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/marquee-logos 200 in 731ms
+ GET /api/campaigns 200 in 731ms
+ GET /api/bonuses?active=true 200 in 733ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 200 in 161ms
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isActive` = ? ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/bonuses?active=true 200 in 21ms
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`isFeatured` DESC, `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`PartnerSite`.`id`, `main`.`PartnerSite`.`name`, `main`.`PartnerSite`.`slug`, `main`.`PartnerSite`.`logoUrl`, `main`.`PartnerSite`.`rating`, `main`.`PartnerSite`.`features`, `main`.`PartnerSite`.`siteUrl`, `main`.`PartnerSite`.`isActive`, `main`.`PartnerSite`.`createdAt`, `main`.`PartnerSite`.`updatedAt` FROM `main`.`PartnerSite` WHERE 1=1 ORDER BY `main`.`PartnerSite`.`rating` DESC LIMIT ? OFFSET ?
+ GET /api/campaigns 200 in 35ms
+ GET /api/partner-sites 200 in 37ms
+ GET /api/marquee-logos 200 in 38ms
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`order`, `main`.`MarqueeLogo`.`isActive`, `main`.`MarqueeLogo`.`createdAt`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`order` ASC LIMIT ? OFFSET ?
+ ○ Compiling /bonuslar ...
+ ✓ Compiled /bonuslar in 596ms (1817 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /bonuslar?type=Deneme%20Bonusu 200 in 841ms
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isActive` = ? ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/bonuses?active=true 200 in 12ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 200 in 72ms
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isActive` = ? ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/bonuses?active=true 200 in 8ms
+prisma:query SELECT `main`.`PartnerSite`.`id`, `main`.`PartnerSite`.`name`, `main`.`PartnerSite`.`slug`, `main`.`PartnerSite`.`logoUrl`, `main`.`PartnerSite`.`rating`, `main`.`PartnerSite`.`features`, `main`.`PartnerSite`.`siteUrl`, `main`.`PartnerSite`.`isActive`, `main`.`PartnerSite`.`createdAt`, `main`.`PartnerSite`.`updatedAt` FROM `main`.`PartnerSite` WHERE 1=1 ORDER BY `main`.`PartnerSite`.`rating` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`order`, `main`.`MarqueeLogo`.`isActive`, `main`.`MarqueeLogo`.`createdAt`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/partner-sites 200 in 28ms
+ GET /api/marquee-logos 200 in 31ms
+ GET /api/campaigns 200 in 32ms
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`isFeatured` DESC, `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 66ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 59ms
+ GET /@vite/client 404 in 29ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio

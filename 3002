@@ -1,0 +1,326 @@
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): server.ts src/**/*[39m
+[33m[nodemon] watching extensions: ts,tsx,js,jsx[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+ ✓ Compiled /middleware in 100ms (108 modules)
+ ○ Compiling /admin/telegram/approval ...
+ ✓ Compiled /admin/telegram/approval in 1437ms (1028 modules)
+ ⨯ [Error: React.Children.only expected to receive a single React element child.] {
+  digest: '1359882496'
+}
+ GET /admin/telegram/approval 500 in 2004ms
+ ✓ Compiled in 587ms (464 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ✓ Compiled /_not-found in 348ms (1018 modules)
+ GET /@vite/client 404 in 463ms
+ ⨯ [Error: React.Children.only expected to receive a single React element child.] {
+  digest: '1359882496'
+}
+ GET /admin/telegram/approval 500 in 330ms
+ GET /@vite/client 404 in 17ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] still waiting for 2 sub-process to finish...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+ ✓ Compiled /middleware in 93ms (108 modules)
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 1148ms (1004 modules)
+ GET /admin 200 in 1476ms
+ ✓ Compiled in 500ms (452 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /api/admin/site-reviews in 468ms (1021 modules)
+ GET /@vite/client 404 in 588ms
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`SiteReview`.`id` FROM `main`.`SiteReview` WHERE `main`.`SiteReview`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`isAnonymous`, `main`.`SiteReview`.`rating`, `main`.`SiteReview`.`isPositive`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`isApproved`, `main`.`SiteReview`.`isRejected`, `main`.`SiteReview`.`helpfulCount`, `main`.`SiteReview`.`notHelpfulCount`, `main`.`SiteReview`.`repliedBy`, `main`.`SiteReview`.`replyText`, `main`.`SiteReview`.`repliedAt`, `main`.`SiteReview`.`createdAt`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) ORDER BY `main`.`SiteReview`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`SiteReview`.`id` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`isAnonymous`, `main`.`SiteReview`.`rating`, `main`.`SiteReview`.`isPositive`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`isApproved`, `main`.`SiteReview`.`isRejected`, `main`.`SiteReview`.`helpfulCount`, `main`.`SiteReview`.`notHelpfulCount`, `main`.`SiteReview`.`repliedBy`, `main`.`SiteReview`.`replyText`, `main`.`SiteReview`.`repliedAt`, `main`.`SiteReview`.`createdAt`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE `main`.`SiteReview`.`isApproved` = ? ORDER BY `main`.`SiteReview`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`isFeatured` DESC, `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE 1=1 ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl` FROM `main`.`ReviewBrand` WHERE `main`.`ReviewBrand`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/admin/site-reviews?status=pending&limit=1 200 in 618ms
+ GET /api/admin/site-reviews?status=approved&limit=1 200 in 618ms
+ GET /api/campaigns 200 in 619ms
+ GET /api/review-brands 200 in 620ms
+ GET /api/bonuses 200 in 620ms
+ ✓ Compiled /api/marquee-logos in 170ms (1027 modules)
+ GET /api/telegram-groups 200 in 201ms
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`order`, `main`.`MarqueeLogo`.`isActive`, `main`.`MarqueeLogo`.`createdAt`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`CarouselSlide`.`id`, `main`.`CarouselSlide`.`title`, `main`.`CarouselSlide`.`subtitle`, `main`.`CarouselSlide`.`imageUrl`, `main`.`CarouselSlide`.`desktopImageUrl`, `main`.`CarouselSlide`.`mobileImageUrl`, `main`.`CarouselSlide`.`ctaLabel`, `main`.`CarouselSlide`.`ctaUrl`, `main`.`CarouselSlide`.`order`, `main`.`CarouselSlide`.`isActive`, `main`.`CarouselSlide`.`createdAt`, `main`.`CarouselSlide`.`updatedAt` FROM `main`.`CarouselSlide` WHERE 1=1 ORDER BY `main`.`CarouselSlide`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/marquee-logos 200 in 163ms
+ GET /api/carousel 200 in 165ms
+ ○ Compiling /admin/telegram ...
+ ✓ Compiled /admin/telegram in 663ms (1052 modules)
+ GET /admin/telegram 200 in 875ms
+ GET /@vite/client 404 in 25ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/telegram-groups 200 in 12ms
+ ○ Compiling /admin/telegram/approval ...
+ ✓ Compiled /admin/telegram/approval in 733ms (1083 modules)
+ GET /admin/telegram/approval 200 in 818ms
+ ✓ Compiled /api/admin/telegram-suggestions in 154ms (1085 modules)
+prisma:query SELECT 1
+prisma:query SELECT 1
+ GET /api/admin/telegram-suggestions?status=pending&page=1&limit=20&sortBy=createdAt&order=desc 200 in 200ms
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`TelegramSuggestion`.`id` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`TelegramSuggestion`.`id`, `main`.`TelegramSuggestion`.`name`, `main`.`TelegramSuggestion`.`ctaUrl`, `main`.`TelegramSuggestion`.`adminUsername`, `main`.`TelegramSuggestion`.`members`, `main`.`TelegramSuggestion`.`imageUrl`, `main`.`TelegramSuggestion`.`type`, `main`.`TelegramSuggestion`.`isApproved`, `main`.`TelegramSuggestion`.`isRejected`, `main`.`TelegramSuggestion`.`createdAt`, `main`.`TelegramSuggestion`.`updatedAt` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) ORDER BY `main`.`TelegramSuggestion`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /admin/telegram/approval 200 in 212ms
+ GET /@vite/client 404 in 31ms
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`TelegramSuggestion`.`id` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`TelegramSuggestion`.`id`, `main`.`TelegramSuggestion`.`name`, `main`.`TelegramSuggestion`.`ctaUrl`, `main`.`TelegramSuggestion`.`adminUsername`, `main`.`TelegramSuggestion`.`members`, `main`.`TelegramSuggestion`.`imageUrl`, `main`.`TelegramSuggestion`.`type`, `main`.`TelegramSuggestion`.`isApproved`, `main`.`TelegramSuggestion`.`isRejected`, `main`.`TelegramSuggestion`.`createdAt`, `main`.`TelegramSuggestion`.`updatedAt` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) ORDER BY `main`.`TelegramSuggestion`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/admin/telegram-suggestions?status=pending&page=1&limit=20&sortBy=createdAt&order=desc 200 in 5ms
+ ○ Compiling /admin/bonuses ...
+ ✓ Compiled /admin/bonuses in 528ms (1088 modules)
+ GET /admin/bonuses 200 in 608ms
+ ✓ Compiled /api/bonuses in 80ms (613 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE 1=1 ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/bonuses 200 in 117ms
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE 1=1 ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/bonuses 200 in 6ms
+ GET /admin/telegram 200 in 60ms
+ ✓ Compiled /api/telegram-groups in 84ms (615 modules)
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/telegram-groups 200 in 116ms
+ GET /admin/telegram/approval 200 in 37ms
+ ✓ Compiled /api/admin/telegram-suggestions in 69ms (617 modules)
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`TelegramSuggestion`.`id` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`TelegramSuggestion`.`id`, `main`.`TelegramSuggestion`.`name`, `main`.`TelegramSuggestion`.`ctaUrl`, `main`.`TelegramSuggestion`.`adminUsername`, `main`.`TelegramSuggestion`.`members`, `main`.`TelegramSuggestion`.`imageUrl`, `main`.`TelegramSuggestion`.`type`, `main`.`TelegramSuggestion`.`isApproved`, `main`.`TelegramSuggestion`.`isRejected`, `main`.`TelegramSuggestion`.`createdAt`, `main`.`TelegramSuggestion`.`updatedAt` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) ORDER BY `main`.`TelegramSuggestion`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/admin/telegram-suggestions?status=pending&page=1&limit=20&sortBy=createdAt&order=desc 200 in 94ms
+ GET /admin/telegram 200 in 40ms
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/telegram-groups 200 in 9ms
+ GET /admin/telegram/approval 200 in 19ms
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`TelegramSuggestion`.`id` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`TelegramSuggestion`.`id`, `main`.`TelegramSuggestion`.`name`, `main`.`TelegramSuggestion`.`ctaUrl`, `main`.`TelegramSuggestion`.`adminUsername`, `main`.`TelegramSuggestion`.`members`, `main`.`TelegramSuggestion`.`imageUrl`, `main`.`TelegramSuggestion`.`type`, `main`.`TelegramSuggestion`.`isApproved`, `main`.`TelegramSuggestion`.`isRejected`, `main`.`TelegramSuggestion`.`createdAt`, `main`.`TelegramSuggestion`.`updatedAt` FROM `main`.`TelegramSuggestion` WHERE (`main`.`TelegramSuggestion`.`isApproved` = ? AND `main`.`TelegramSuggestion`.`isRejected` = ?) ORDER BY `main`.`TelegramSuggestion`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/admin/telegram-suggestions?status=pending&page=1&limit=20&sortBy=createdAt&order=desc 200 in 6ms
+ GET /admin 200 in 26ms
+ ✓ Compiled /api/admin/site-reviews in 136ms (619 modules)
+ ✓ Compiled (623 modules)
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/telegram-groups 200 in 260ms
+ GET /api/campaigns 200 in 263ms
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`isFeatured` DESC, `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE 1=1 ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT 1
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`SiteReview`.`id` FROM `main`.`SiteReview` WHERE `main`.`SiteReview`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`SiteReview`.`id` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`isAnonymous`, `main`.`SiteReview`.`rating`, `main`.`SiteReview`.`isPositive`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`isApproved`, `main`.`SiteReview`.`isRejected`, `main`.`SiteReview`.`helpfulCount`, `main`.`SiteReview`.`notHelpfulCount`, `main`.`SiteReview`.`repliedBy`, `main`.`SiteReview`.`replyText`, `main`.`SiteReview`.`repliedAt`, `main`.`SiteReview`.`createdAt`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) ORDER BY `main`.`SiteReview`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`isAnonymous`, `main`.`SiteReview`.`rating`, `main`.`SiteReview`.`isPositive`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`isApproved`, `main`.`SiteReview`.`isRejected`, `main`.`SiteReview`.`helpfulCount`, `main`.`SiteReview`.`notHelpfulCount`, `main`.`SiteReview`.`repliedBy`, `main`.`SiteReview`.`replyText`, `main`.`SiteReview`.`repliedAt`, `main`.`SiteReview`.`createdAt`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE `main`.`SiteReview`.`isApproved` = ? ORDER BY `main`.`SiteReview`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl` FROM `main`.`ReviewBrand` WHERE `main`.`ReviewBrand`.`id` IN (?) LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 267ms
+ GET /api/bonuses 200 in 262ms
+ GET /api/admin/site-reviews?status=pending&limit=1 200 in 265ms
+ GET /api/admin/site-reviews?status=approved&limit=1 200 in 265ms
+ ✓ Compiled /api/marquee-logos in 80ms (625 modules)
+ ✓ Compiled (627 modules)
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`order`, `main`.`MarqueeLogo`.`isActive`, `main`.`MarqueeLogo`.`createdAt`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/marquee-logos 200 in 197ms
+ GET /api/carousel 200 in 198ms
+prisma:query SELECT `main`.`CarouselSlide`.`id`, `main`.`CarouselSlide`.`title`, `main`.`CarouselSlide`.`subtitle`, `main`.`CarouselSlide`.`imageUrl`, `main`.`CarouselSlide`.`desktopImageUrl`, `main`.`CarouselSlide`.`mobileImageUrl`, `main`.`CarouselSlide`.`ctaLabel`, `main`.`CarouselSlide`.`ctaUrl`, `main`.`CarouselSlide`.`order`, `main`.`CarouselSlide`.`isActive`, `main`.`CarouselSlide`.`createdAt`, `main`.`CarouselSlide`.`updatedAt` FROM `main`.`CarouselSlide` WHERE 1=1 ORDER BY `main`.`CarouselSlide`.`order` ASC LIMIT ? OFFSET ?
+ ○ Compiling / ...
+ ✓ Compiled / in 946ms (1967 modules)
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 200 in 1079ms
+ GET /api/bonuses?active=true 200 in 19ms
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isActive` = ? ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ ✓ Compiled /api/partner-sites in 348ms (1969 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`order`, `main`.`MarqueeLogo`.`isActive`, `main`.`MarqueeLogo`.`createdAt`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`isFeatured` DESC, `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+ GET /api/marquee-logos 200 in 383ms
+ GET /api/campaigns 200 in 383ms
+ GET /api/partner-sites 200 in 424ms
+prisma:query SELECT `main`.`PartnerSite`.`id`, `main`.`PartnerSite`.`name`, `main`.`PartnerSite`.`slug`, `main`.`PartnerSite`.`logoUrl`, `main`.`PartnerSite`.`rating`, `main`.`PartnerSite`.`features`, `main`.`PartnerSite`.`siteUrl`, `main`.`PartnerSite`.`isActive`, `main`.`PartnerSite`.`createdAt`, `main`.`PartnerSite`.`updatedAt` FROM `main`.`PartnerSite` WHERE 1=1 ORDER BY `main`.`PartnerSite`.`rating` DESC LIMIT ? OFFSET ?
+ ○ Compiling /guvenilir-telegram ...
+ ✓ Compiled /guvenilir-telegram in 773ms (1989 modules)
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 1008ms
+ ✓ Compiled /_not-found in 300ms (1993 modules)
+ GET /@vite/client 404 in 429ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 135ms
+ ✓ Compiled /api/telegram-suggestions in 326ms (1988 modules)
+prisma:query SELECT 1
+prisma:query INSERT INTO `main`.`TelegramSuggestion` (`id`, `name`, `ctaUrl`, `adminUsername`, `members`, `imageUrl`, `type`, `isApproved`, `isRejected`, `createdAt`, `updatedAt`) VALUES (?,?,?,?,?,?,?,?,?,?,?) RETURNING `id` AS `id`, `name` AS `name`, `ctaUrl` AS `ctaUrl`, `adminUsername` AS `adminUsername`, `members` AS `members`, `imageUrl` AS `imageUrl`, `type` AS `type`, `isApproved` AS `isApproved`, `isRejected` AS `isRejected`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`
+ POST /api/telegram-suggestions 201 in 395ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 229ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1025ms (2322 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /_next/static/webpack/5ac6f5e50a312d4e.webpack.hot-update.json 404 in 699ms
+ GET /guvenilir-telegram 200 in 705ms
+ GET /guvenilir-telegram 200 in 705ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /@vite/client 404 in 1427ms
+ GET /guvenilir-telegram 200 in 155ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 193ms
+ GET /guvenilir-telegram 200 in 198ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 27ms
+ GET /guvenilir-telegram 404 in 52ms
+ ✓ Compiled /favicon.ico in 274ms (1147 modules)
+ GET /favicon.ico 200 in 314ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 142ms
+ ⨯ TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(ssr)/./src/components/HomeClient.tsx:14:150)
+    at (ssr)/./src/components/HomeClient.tsx (.next/server/app/page.js:226:1)
+    at Object.__webpack_require__ [as require] (.next/server/webpack-runtime.js:33:42) {
+  digest: '2941878473'
+}
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 500 in 201ms
+ GET /favicon.ico 200 in 4ms
+ GET /guvenilir-telegram 404 in 46ms
+ GET /favicon.ico 404 in 7ms
+ GET /guvenilir-telegram 404 in 27ms
+ GET /guvenilir-telegram 404 in 25ms
+ GET /guvenilir-telegram 404 in 33ms
+ GET /guvenilir-telegram 404 in 38ms
+ GET /guvenilir-telegram 404 in 56ms
+ GET /guvenilir-telegram 404 in 38ms
+ ⨯ TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(ssr)/./src/components/HomeClient.tsx:14:150)
+    at (ssr)/./src/components/HomeClient.tsx (.next/server/app/page.js:226:1)
+    at Object.__webpack_require__ [as require] (.next/server/webpack-runtime.js:33:42) {
+  digest: '2941878473'
+}
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 500 in 264ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /guvenilir-telegram 200 in 92ms
+ ⨯ TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(ssr)/./src/components/HomeClient.tsx:14:150)
+    at (ssr)/./src/components/HomeClient.tsx (.next/server/app/page.js:226:1)
+    at Object.__webpack_require__ [as require] (.next/server/webpack-runtime.js:33:42) {
+  digest: '2941878473'
+}
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 500 in 196ms
+ ○ Compiling /kampanyalar ...
+ ✓ Compiled /kampanyalar in 1247ms (2263 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /kampanyalar 200 in 1782ms
+ ✓ Compiled /api/seo in 148ms (1109 modules)
+ ✓ Compiled in 265ms (1158 modules)
+ GET /api/campaigns 200 in 580ms
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`isFeatured` DESC, `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=/kampanyalar 200 in 581ms
+ ○ Compiling /bonuslar ...
+ ✓ Compiled /bonuslar in 722ms (2279 modules)
+ ⨯ TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_require__ (.next/server/webpack-runtime.js:33:42)
+    at eval (webpack-internal:///(ssr)/./src/components/BonuslarClient.tsx:19:127)
+    at (ssr)/./src/components/BonuslarClient.tsx (.next/server/app/bonuslar/page.js:193:1)
+    at Object.__webpack_require__ [as require] (.next/server/webpack-runtime.js:33:42) {
+  digest: '571606669'
+}
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /bonuslar 500 in 1031ms
+ ○ Compiling /api/bonuses ...
+ ✓ Compiled /api/bonuses in 513ms (1120 modules)
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isActive` = ? ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/bonuses?active=true 200 in 547ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+ ○ Compiling / ...
+ ✓ Compiled / in 1798ms (1810 modules)
+ ✓ Compiled /_not-found in 214ms (1800 modules)
+ GET / 404 in 473ms
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1285ms (2134 modules)
+ GET / 404 in 1644ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET / 200 in 375ms
