@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import BonuslarClient from "@/components/BonuslarClient";
+import { Suspense } from "react";
 
 export default function BonuslarPage() {
-  return <BonuslarClient />;
+  return (
+    <Suspense fallback={<div />}> 
+      <BonuslarClient />
+    </Suspense>
+  );
 }
 
 export async function generateMetadata(): Promise<Metadata> {
