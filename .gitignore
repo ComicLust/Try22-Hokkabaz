@@ -47,11 +47,3 @@ test
 prompt
 
 server.log
-
-# Ignore local SQLite databases
-prisma/db/*.db
-db/*.db
-
-# Ignore uploaded files; keep directory with .keep
-public/uploads/*
-!public/uploads/.keep
