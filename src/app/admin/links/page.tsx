@@ -48,7 +48,10 @@ export default async function LinksDashboardPage() {
     <div className="min-h-screen p-6 space-y-6 bg-background text-foreground">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Links</h1>
-        <CreateLinkButton />
+        <div className="flex gap-2">
+          <CreateLinkButton />
+          <ResetStatsButton />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -111,9 +114,9 @@ function TableList({ items }: { items: any[] }) {
               <td className="py-2 pr-4"><Link className="text-primary" href={`/admin/links/${l.id}`}>{l.title}</Link></td>
               <td className="py-2 pr-4">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <Link className="text-muted-foreground" href={`/${l.slug}`}>/{l.slug}</Link>
+                  <Link prefetch={false} className="text-muted-foreground" href={`/${l.slug}`}>/{l.slug}</Link>
                   <span className="text-muted-foreground hidden sm:inline">•</span>
-                  <Link className="text-muted-foreground" href={`/out/${l.slug}`}>/out/{l.slug}</Link>
+                  <Link prefetch={false} className="text-muted-foreground" href={`/out/${l.slug}`}>/out/{l.slug}</Link>
                 </div>
               </td>
               <td className="py-2 pr-4">{l.clicks}</td>
@@ -128,3 +131,4 @@ function TableList({ items }: { items: any[] }) {
 
 import ClientChart from './components/ClientChart'
 import CreateLinkButton from './components/CreateLinkButton'
+import ResetStatsButton from './components/ResetStatsButton'
