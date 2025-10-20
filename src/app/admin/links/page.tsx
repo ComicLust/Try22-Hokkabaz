@@ -40,6 +40,10 @@ export default async function LinksDashboardPage() {
     recentLinks: [],
   }
 
+  const links = data?.links ?? []
+  const manualLinks = links.filter((l: any) => l.isManual)
+  const autoLinks = links.filter((l: any) => !l.isManual)
+
   return (
     <div className="min-h-screen p-6 space-y-6 bg-background text-foreground">
       <div className="flex items-center justify-between">
@@ -68,8 +72,13 @@ export default async function LinksDashboardPage() {
       </div>
 
       <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
-        <h2 className="font-semibold mb-2">Son Eklenenler</h2>
-        <TableList items={stats.recentLinks} />
+        <h2 className="font-semibold mb-2">Manuel Linkler</h2>
+        <TableList items={manualLinks} />
+      </div>
+
+      <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
+        <h2 className="font-semibold mb-2">Otomatik Linkler</h2>
+        <TableList items={autoLinks} />
       </div>
     </div>
   )

@@ -33,6 +33,7 @@ import {
   Sliders,
   Activity,
   Link2,
+  Bell,
 } from 'lucide-react'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
@@ -48,6 +49,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     users: 'Kullanıcılar',
     'marquee-logos': 'Anlaşmalı Siteler',
     media: 'Medya',
+    'push-notifications': 'Push Notifications',
     campaigns: 'Kampanyalar',
     bonuses: 'Bonuslar',
     telegram: 'Telegram',
@@ -108,6 +110,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/users')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/users"><List className="size-4" /> Kullanıcılar</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/push-notifications')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/push-notifications"><Bell className="size-4" /> Push Notifications</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

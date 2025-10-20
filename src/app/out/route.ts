@@ -59,7 +59,7 @@ export async function GET(req: Request) {
         if (!exists) break
         slug = `${base}-${counter++}`
       }
-      link = await prisma.affiliateLink.create({ data: { title: target.hostname, slug, targetUrl: u } })
+      link = await prisma.affiliateLink.create({ data: { title: target.hostname, slug, targetUrl: u, isManual: false } })
     }
 
     const ipHeader = getIp(req)

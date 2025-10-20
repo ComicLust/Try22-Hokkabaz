@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import AnalyticsInjector from '@/components/AnalyticsInjector'
 import SeoAutoInjector from '@/components/SeoAutoInjector'
 import ExternalLinkTracker from '@/components/ExternalLinkTracker'
+import PermissionPrompt from '@/components/push/PermissionPrompt'
+import Script from "next/script"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,10 +52,34 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden`}
       >
+        <Script id="hydration-fix" strategy="beforeInteractive">
+          {`
+            (function(){
+              try {
+                var b = document.body;
+                if (!b) return;
+                var attrs = ['cz-shortcut-listen','data-new-gr-c-s-check-loaded','data-gr-ext-installed','data-lt-installed'];
+                var clean = function(){
+                  attrs.forEach(function(a){ if (b.hasAttribute(a)) { b.removeAttribute(a); } });
+                };
+                clean();
+                var obs = new MutationObserver(function(mutations){
+                  for (var i=0;i<mutations.length;i++){
+                    var m = mutations[i];
+                    if (m.type === 'attributes' && attrs.indexOf(m.attributeName) !== -1) { clean(); }
+                  }
+                });
+                obs.observe(b, { attributes: true, attributeFilter: attrs });
+              } catch(e) {}
+            })();
+          `}
+        </Script>
         {children}
         <Toaster />
         <SeoAutoInjector />
         <AnalyticsInjector />
+        {/* @ts-expect-error Server Component içinde client bileşeni */}
+        <PermissionPrompt />
         {/* Dış linkleri otomatik izleme */}
         {/* @ts-expect-error Server Component içinde client bileşeni */}
         <ExternalLinkTracker />

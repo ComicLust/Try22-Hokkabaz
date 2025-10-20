@@ -57,7 +57,7 @@ export default function AdminHome() {
     <div className="p-4 space-y-6">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold flex items-center gap-2"><LayoutDashboard className="w-5 h-5" /> Gösterge Paneli</h1>
-        <div className="text-sm text-muted-foreground">WordPress benzeri yönetim özeti</div>
+        <div className="text-sm text-muted-foreground">GMANVİBES</div>
       </header>
 
       {error && (

@@ -35,9 +35,14 @@ export default async function LinkDetailPage({ params }: { params: { id: string 
           <div className="text-sm text-muted-foreground">Kısa Linkler: <Link href={`/${link.slug}`} className="text-primary">/{link.slug}</Link> • <Link href={`/out/${link.slug}`} className="text-primary">/out/{link.slug}</Link></div>
           <div className="text-sm text-muted-foreground">Gerçek URL: <a href={link.targetUrl} className="text-primary" target="_blank" rel="noreferrer">{link.targetUrl}</a></div>
         </div>
-        <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
-          <div className="text-sm text-muted-foreground">Toplam Tıklama</div>
-          <div className="text-2xl font-bold">{link.clicks}</div>
+        <div className="flex items-center gap-3">
+          {link.isManual && (
+            <EditLinkButton id={link.id} initialTitle={link.title} initialTargetUrl={link.targetUrl} initialSlug={link.slug} />
+          )}
+          <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
+            <div className="text-sm text-muted-foreground">Toplam Tıklama</div>
+            <div className="text-2xl font-bold">{link.clicks}</div>
+          </div>
         </div>
       </div>
 
@@ -81,3 +86,4 @@ export default async function LinkDetailPage({ params }: { params: { id: string 
 
 import ClientLine from '../components/ClientLine'
 import ClientPie from '../components/ClientPie'
+import EditLinkButton from '../components/EditLinkButton'
