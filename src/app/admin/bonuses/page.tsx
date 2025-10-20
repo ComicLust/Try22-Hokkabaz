@@ -52,8 +52,8 @@ export default function BonusesPage() {
         const all = await res.json()
         const types = Array.from(new Set((all || []).map((b: any) => b.bonusType).filter(Boolean)))
         const cats = Array.from(new Set((all || []).map((b: any) => b.gameCategory).filter(Boolean)))
-        if (types.length) setTypeOptions((prev) => Array.from(new Set<string>([...prev, ...types])))
-        if (cats.length) setCategoryOptions((prev) => Array.from(new Set<string>([...prev, ...cats])))
+        if (types.length) setTypeOptions((prev) => Array.from(new Set<string>([...prev, ...(types as string[])])))
+        if (cats.length) setCategoryOptions((prev) => Array.from(new Set<string>([...prev, ...(cats as string[])])))
       } catch {}
     })()
   }, [])

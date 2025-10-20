@@ -7,6 +7,7 @@ import SeoAutoInjector from '@/components/SeoAutoInjector'
 import ExternalLinkTracker from '@/components/ExternalLinkTracker'
 import PermissionPrompt from '@/components/push/PermissionPrompt'
 import Script from "next/script"
+import { Suspense } from "react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,10 +79,10 @@ export default function RootLayout({
         <Toaster />
         <SeoAutoInjector />
         <AnalyticsInjector />
-        {/* @ts-expect-error Server Component içinde client bileşeni */}
-        <PermissionPrompt />
+        <Suspense fallback={null}>
+          <PermissionPrompt />
+        </Suspense>
         {/* Dış linkleri otomatik izleme */}
-        {/* @ts-expect-error Server Component içinde client bileşeni */}
         <ExternalLinkTracker />
       </body>
     </html>
