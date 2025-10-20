@@ -9,9 +9,7 @@ if ((!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) && process.env.NODE_ENV !== 'produ
   const { publicKey, privateKey } = webPush.generateVAPIDKeys()
   VAPID_PUBLIC_KEY = publicKey
   VAPID_PRIVATE_KEY = privateKey
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY = VAPID_PUBLIC_KEY
-  process.env.VAPID_PUBLIC_KEY = VAPID_PUBLIC_KEY
-  process.env.VAPID_PRIVATE_KEY = VAPID_PRIVATE_KEY
+  // Do not mutate process.env here; Next.js may inline env values
 }
 
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {

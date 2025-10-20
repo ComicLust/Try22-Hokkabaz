@@ -387,6 +387,99 @@ export default function AdminPushNotificationsPage() {
               </div>
             </TabsContent>
 
+            <TabsContent value="stats" className="pt-4">
+              {statsLoading ? (
+                <div className="py-6">Yükleniyor...</div>
+              ) : !stats ? (
+                <div className="py-6 text-sm text-muted-foreground">Veri yok</div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-sm">Toplam Bildirim</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-semibold">{stats.totals?.notifications ?? 0}</div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-sm">Toplam Tıklama</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-semibold">{stats.totals?.clicks ?? 0}</div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-sm">Aktif Abone</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-semibold">{stats.totals?.activeSubscribers ?? 0}</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-sm">Tarayıcı Dağılımı</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex flex-wrap gap-2">
+                          {(stats.distribution?.browser ?? []).map((b: any) => (
+                            <Badge key={b.name} variant="secondary">{b.name}: {b.count}</Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-sm">Cihaz Dağılımı</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex flex-wrap gap-2">
+                          {(stats.distribution?.device ?? []).map((d: any) => (
+                            <Badge key={d.name} variant="secondary">{d.name}: {d.count}</Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="border rounded-md overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Tarih</TableHead>
+                          <TableHead>Gönderildi</TableHead>
+                          <TableHead>Tıklama</TableHead>
+                          <TableHead>Yeni Abone</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {(stats.daily ?? []).map((d: any) => (
+                          <TableRow key={d.date}>
+                            <TableCell className="font-mono text-xs">{d.date}</TableCell>
+                            <TableCell>{d.sent}</TableCell>
+                            <TableCell>{d.clicked}</TableCell>
+                            <TableCell>{d.newSubscribers}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  <div className="flex items-center justify-end">
+                    <Button type="button" variant="outline" onClick={loadStats}>
+                      <RefreshCcw className="mr-2 h-4 w-4" /> Yenile
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+
             <TabsContent value="perm" className="pt-4">
               {permLoading ? (
                 <div className="py-6">Yükleniyor...</div>
