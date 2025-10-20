@@ -1,60 +1,46 @@
-# Dockerfile for Coolify deployment
-FROM node:18-alpine AS base
+# syntax=docker/dockerfile:1
+FROM node:20-alpine AS base
+WORKDIR /app
 
-# Install dependencies only when needed
+# ---- deps ----
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
-# Install dependencies based on the preferred package manager
-COPY package.json package-lock.json* ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
-# Rebuild the source code only when needed
-FROM base AS builder
+# ---- builder ----
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Generate Prisma client
+# Prisma client üret
 RUN npx prisma generate
-
-# Build the application
+# Next build
 RUN npm run build
 
-# Production image, copy all the files and run next
-FROM base AS runner
+# ---- runner ----
+FROM node:20-alpine AS runner
 WORKDIR /app
+ENV NODE_ENV=production
+# Production için gerekli modüller
+COPY --from=deps /app/node_modules ./node_modules
+RUN npm prune --production
 
-ENV NODE_ENV production
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-# Copy the public folder
+# Build çıktıları ve statikler
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-
-# Create uploads directory with proper permissions
-RUN mkdir -p /app/public/uploads
-RUN chown -R nextjs:nodejs /app/public/uploads
-RUN chmod -R 755 /app/public/uploads
-
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copy Prisma files
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-USER nextjs
+# Uploads klasörü
+RUN mkdir -p /app/public/uploads
 
 EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+# Kalıcı veri için volume’lar
+VOLUME ["/app/public/uploads", "/app/prisma/db"]
 
-# Create volume mount point for persistent uploads
-VOLUME ["/app/public/uploads"]
-
-CMD ["node", "server.js"]
+# Prisma migrasyon + custom server start
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate deploy && npm start"]
