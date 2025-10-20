@@ -31,8 +31,6 @@ const nextConfig: NextConfig = {
   },
   // Dev ortamında standart izleme/derleme davranışı
   reactStrictMode: false,
-  // Coolify deployment için standalone output
-  output: 'standalone',
   webpack: (config) => {
     return config;
   },
