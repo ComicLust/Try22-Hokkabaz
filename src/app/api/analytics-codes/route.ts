@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   const injectToParam = searchParams.get('injectTo') // optional filter: 'head' | 'body'
   const injectTo = injectToParam === 'head' || injectToParam === 'body' ? injectToParam : undefined
   try {
-    const items = await (db as any).analyticsCode.findMany({
+    const items = await db.analyticsCode.findMany({
       where: {
         isActive: true,
         ...(injectTo ? { injectTo } : {}),

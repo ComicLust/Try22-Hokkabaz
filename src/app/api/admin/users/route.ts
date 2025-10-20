@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-
-// Alias to avoid Prisma delegate typing noise in editors
-const prisma: any = db
+import { Prisma } from '@prisma/client'
 
 // GET /api/admin/users?q=search&page=1&limit=20&sort=desc|asc
 export async function GET(req: NextRequest) {
@@ -18,7 +16,7 @@ export async function GET(req: NextRequest) {
     const envUser = process.env.ADMIN_USERNAME || 'admin'
     if (envUser && typeof envUser === 'string') {
       try {
-        await prisma.user.upsert({
+        await db.user.upsert({
           where: { email: envUser },
           update: {},
           create: { email: envUser, name: 'Yönetici' },
@@ -26,7 +24,7 @@ export async function GET(req: NextRequest) {
       } catch {}
     }
 
-    const where: any = {}
+    const where: Prisma.UserWhereInput = {}
     if (q) {
       where.OR = [
         { email: { contains: q, mode: 'insensitive' } },
@@ -35,13 +33,13 @@ export async function GET(req: NextRequest) {
     }
 
     const [items, total] = await Promise.all([
-      prisma.user.findMany({
+      db.user.findMany({
         where,
         orderBy: { createdAt: sort },
         skip,
         take: limit,
       }),
-      prisma.user.count({ where }),
+      db.user.count({ where }),
     ])
 
     return NextResponse.json({ items, total, page, limit })
@@ -60,12 +58,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'E-posta gerekli' }, { status: 400 })
     }
 
-    const exists = await prisma.user.findUnique({ where: { email } })
+    const exists = await db.user.findUnique({ where: { email } })
     if (exists) {
       return NextResponse.json({ error: 'E-posta zaten kayıtlı' }, { status: 400 })
     }
 
-    const created = await prisma.user.create({ data: { email, name: name ?? null } })
+    const created = await db.user.create({ data: { email, name: name ?? null } })
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Oluşturma hatası' }, { status: 400 })

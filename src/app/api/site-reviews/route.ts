@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-const prisma: any = db
 import { randomUUID } from 'crypto'
 
 function dicebearAvatar(seed: string) {
@@ -18,20 +17,20 @@ export async function GET(req: NextRequest) {
 
   if (!brandSlug) return NextResponse.json({ error: 'brandSlug is required' }, { status: 400 })
 
-  const brand = await prisma.reviewBrand.findUnique({ where: { slug: brandSlug } })
+  const brand = await db.reviewBrand.findUnique({ where: { slug: brandSlug } })
   if (!brand) return NextResponse.json({ error: 'Brand not found' }, { status: 404 })
 
   const orderBy = sort === 'newest' ? { createdAt: 'desc' as const } : { createdAt: 'asc' as const }
   const skip = (page - 1) * limit
 
   const [items, total] = await Promise.all([
-    prisma.siteReview.findMany({
+    db.siteReview.findMany({
       where: { brandId: brand.id, isApproved: true },
       orderBy,
       skip,
       take: limit,
     }),
-    prisma.siteReview.count({ where: { brandId: brand.id, isApproved: true } }),
+    db.siteReview.count({ where: { brandId: brand.id, isApproved: true } }),
   ])
 
   // One-time backfill: Assign random avatar to reviews missing avatarUrl
@@ -41,7 +40,7 @@ export async function GET(req: NextRequest) {
       toFill.map((i: any) => {
         const url = dicebearAvatar(randomUUID())
         i.avatarUrl = url // reflect in response immediately
-        return prisma.siteReview.update({ where: { id: i.id }, data: { avatarUrl: url } })
+        return db.siteReview.update({ where: { id: i.id }, data: { avatarUrl: url } })
       })
     )
   }
@@ -57,12 +56,12 @@ export async function POST(req: NextRequest) {
     const slug = brandSlug || siteSlug
     if (!slug || !content) return NextResponse.json({ error: 'brandSlug and content are required' }, { status: 400 })
 
-    const brand = await prisma.reviewBrand.findUnique({ where: { slug } })
+    const brand = await db.reviewBrand.findUnique({ where: { slug } })
     if (!brand) return NextResponse.json({ error: 'Brand not found' }, { status: 404 })
 
     const avatarUrl = dicebearAvatar(randomUUID())
 
-    const created = await prisma.siteReview.create({
+    const created = await db.siteReview.create({
       data: {
         brandId: brand.id,
         author: isAnonymous ? null : (author || null),

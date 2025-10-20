@@ -1,22 +1,21 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-const prisma: any = db
 
 // Returns review stats per site: counts of approved reviews and tone breakdown
 export async function GET() {
   const [brands, countGroups, toneGroups, latestItems] = await Promise.all([
-    prisma.reviewBrand.findMany({ select: { id: true, slug: true, name: true, logoUrl: true, createdAt: true, isActive: true } }),
-    prisma.siteReview.groupBy({
+    db.reviewBrand.findMany({ select: { id: true, slug: true, name: true, logoUrl: true, createdAt: true, isActive: true } }),
+    db.siteReview.groupBy({
       by: ['brandId'],
       where: { isApproved: true },
       _count: { _all: true },
     }),
-    prisma.siteReview.groupBy({
+    db.siteReview.groupBy({
       by: ['brandId', 'isPositive'],
       where: { isApproved: true },
       _count: { _all: true },
     }),
-    prisma.siteReview.findMany({
+    db.siteReview.findMany({
       where: { isApproved: true },
       select: { brandId: true, createdAt: true },
       orderBy: { createdAt: 'desc' },
@@ -34,9 +33,9 @@ export async function GET() {
   }
 
   const stats = brands.map((b) => {
-    const g = countGroups.find((x: any) => x.brandId === b.id)
-    const pos = toneGroups.find((x: any) => x.brandId === b.id && x.isPositive === true)?._count?._all ?? 0
-    const neg = toneGroups.find((x: any) => x.brandId === b.id && x.isPositive === false)?._count?._all ?? 0
+    const g = countGroups.find((x) => x.brandId === b.id)
+    const pos = toneGroups.find((x) => x.brandId === b.id && x.isPositive === true)?._count?._all ?? 0
+    const neg = toneGroups.find((x) => x.brandId === b.id && x.isPositive === false)?._count?._all ?? 0
     return {
       brandId: b.id,
       slug: b.slug,

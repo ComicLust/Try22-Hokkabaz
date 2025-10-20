@@ -17,12 +17,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic brand review pages under /yorumlar/[slug]
   let brandEntries: { url: string; lastModified?: string }[] = []
   try {
-    const brands = await (db as any).reviewBrand.findMany({
+    const brands = await db.reviewBrand.findMany({
       where: { isActive: true },
       select: { slug: true, updatedAt: true },
       orderBy: { updatedAt: 'desc' },
     })
-    brandEntries = (brands || []).map((b: any) => ({
+    brandEntries = (brands || []).map((b) => ({
       url: `${base}/yorumlar/${b.slug}`,
       lastModified: (b?.updatedAt ? new Date(b.updatedAt) : new Date()).toISOString(),
     }))

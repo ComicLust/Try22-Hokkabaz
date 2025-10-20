@@ -143,9 +143,17 @@
     scrollbar-gutter: stable both-edges;
   }
   html, body {
-    /* Üstte sabit header ile overscroll bounce ve scroll-chain’i engelle */
-    overscroll-behavior-y: none;
+    /* Mobilde pull-to-refresh ve bounce’u geri aç */
+    overscroll-behavior-y: auto;
   }
+
+  @media (min-width: 768px) {
+    html, body {
+      /* Desktop'ta overscroll bounce ve scroll-chain’i engelle */
+      overscroll-behavior-y: none;
+    }
+  }
+
   html {
     /* Anchor/scroll hedefleri için üstte sabit header boşluğunu hesaba kat */
     scroll-padding-top: 64px; /* h-16 ile uyumlu */

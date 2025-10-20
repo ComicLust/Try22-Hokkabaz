@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
+import { Prisma } from '@prisma/client'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -7,7 +9,7 @@ export async function GET(req: NextRequest) {
   const featured = searchParams.get('featured')
   const type = searchParams.get('type') ?? undefined
 
-  const where: any = {}
+  const where: Prisma.TelegramGroupWhereInput = {}
   if (q) {
     where.name = { contains: q, mode: 'insensitive' }
   }
@@ -15,7 +17,7 @@ export async function GET(req: NextRequest) {
   if (featured === 'false') where.isFeatured = false
   if (type) where.type = { equals: type }
 
-  const items = await (db as any).telegramGroup.findMany({
+  const items = await db.telegramGroup.findMany({
     where,
     orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
   })
@@ -25,7 +27,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const created = await (db as any).telegramGroup.create({ data: body })
+    const created = await db.telegramGroup.create({ data: body })
+    revalidatePath('/guvenilir-telegram')
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })

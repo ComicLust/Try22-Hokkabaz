@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-// Prisma client için yerel alias; tip hatalarını azaltmak için kullanıyoruz
-const prisma = db as any
 
 function slugify(input: string) {
   return (input || '')
@@ -49,17 +47,17 @@ export async function GET(req: Request) {
     }
 
     // Var olan kaydı hedef URL üzerinden bul
-    let link = await prisma.affiliateLink.findFirst({ where: { targetUrl: u } })
+    let link = await db.affiliateLink.findFirst({ where: { targetUrl: u } })
     if (!link) {
       const base = slugify(`${target.hostname}-${target.pathname}`) || slugify(target.hostname)
       let slug = base || 'link'
       let counter = 1
       while (counter < 50) {
-        const exists = await prisma.affiliateLink.findUnique({ where: { slug } })
+        const exists = await db.affiliateLink.findUnique({ where: { slug } })
         if (!exists) break
         slug = `${base}-${counter++}`
       }
-      link = await prisma.affiliateLink.create({ data: { title: target.hostname, slug, targetUrl: u, isManual: false } })
+      link = await db.affiliateLink.create({ data: { title: target.hostname, slug, targetUrl: u, isManual: false } })
     }
 
     const ipHeader = getIp(req)
@@ -71,15 +69,15 @@ export async function GET(req: Request) {
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
 
     // Tekil IP kontrolü: aynı IP 24 saat içinde bu linke tıkladıysa clicks artmasın
-    const existing = await prisma.affiliateClick.findFirst({ where: { linkId: link.id, ip, createdAt: { gte: since } } })
+    const existing = await db.affiliateClick.findFirst({ where: { linkId: link.id, ip, createdAt: { gte: since } } })
 
-    const ops: any[] = [
-      prisma.affiliateClick.create({
+    const ops: import('@prisma/client').Prisma.PrismaPromise<unknown>[] = [
+      db.affiliateClick.create({
         data: { linkId: link.id, ip: ip || undefined, country: country || undefined, userAgent: userAgent || undefined },
       }),
     ]
     if (!existing) {
-      ops.push(prisma.affiliateLink.update({ where: { id: link.id }, data: { clicks: { increment: 1 } } }))
+      ops.push(db.affiliateLink.update({ where: { id: link.id }, data: { clicks: { increment: 1 } } }))
     }
 
     await db.$transaction(ops)

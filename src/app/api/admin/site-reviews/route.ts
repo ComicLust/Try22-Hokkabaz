@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-
-// Use a permissive alias to avoid Prisma delegate typing issues in editors
-const prisma: any = db
+import { Prisma } from '@prisma/client'
 
 // GET /api/admin/site-reviews?status=pending|approved|all&brandSlug=slug&q=search&page=1&limit=20
 export async function GET(req: NextRequest) {
@@ -15,13 +13,13 @@ export async function GET(req: NextRequest) {
     const limit = Math.min(100, Math.max(1, Number(searchParams.get('limit') || '20')))
     const skip = (page - 1) * limit
 
-    const where: any = {}
+    const where: Prisma.SiteReviewWhereInput = {}
     if (statusParam === 'pending') { where.isApproved = false; where.isRejected = false }
     if (statusParam === 'approved') where.isApproved = true
     if (statusParam === 'rejected') where.isRejected = true
 
     if (brandSlug) {
-      const brand = await prisma.reviewBrand.findUnique({ where: { slug: brandSlug } })
+      const brand = await db.reviewBrand.findUnique({ where: { slug: brandSlug } })
       if (!brand) {
         return NextResponse.json({ items: [], total: 0, page, limit })
       }
@@ -33,7 +31,7 @@ export async function GET(req: NextRequest) {
     }
 
     const [items, total] = await Promise.all([
-      prisma.siteReview.findMany({
+      db.siteReview.findMany({
         where,
         orderBy: { createdAt: 'desc' },
         skip,
@@ -42,7 +40,7 @@ export async function GET(req: NextRequest) {
           brand: { select: { id: true, name: true, slug: true, logoUrl: true } },
         },
       }),
-      prisma.siteReview.count({ where }),
+      db.siteReview.count({ where }),
     ])
 
     return NextResponse.json({ items, total, page, limit })

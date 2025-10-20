@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
 
 // GET single suggestion
@@ -35,6 +36,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           badges: [],
         },
       })
+      revalidatePath('/guvenilir-telegram')
 
       const updated = await (db as any).telegramSuggestion.update({
         where: { id: params.id },

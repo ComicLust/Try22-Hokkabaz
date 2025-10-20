@@ -1,5 +1,6 @@
 import React from 'react'
 import type { Metadata } from 'next'
+import { unstable_noStore as noStore } from 'next/cache'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { db } from '@/lib/db'
@@ -22,6 +23,7 @@ function badgeClass(b: string) {
 }
 
 export default async function GuvenilirTelegramPage() {
+  noStore()
   const seo = await (db as any).seoSetting.findUnique({ where: { page: '/guvenilir-telegram' } })
   const pageTitle = seo?.title ?? 'Güvenilir Telegram Grupları'
   const pageDescription = seo?.description ?? 'Seçtiğimiz güvenilir kanal ve grupları aşağıda bulabilirsiniz.'

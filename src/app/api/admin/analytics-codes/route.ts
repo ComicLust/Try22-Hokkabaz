@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const isActive = isActiveParam === null ? undefined : isActiveParam === 'true'
 
   try {
-    const items = await (db as any).analyticsCode.findMany({
+    const items = await db.analyticsCode.findMany({
       where: {
         AND: [
           q ? { OR: [{ name: { contains: q } }, { type: { contains: q } }] } : {},
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'injectTo must be "head" or "body"' }, { status: 400 })
     }
 
-    const created = await (db as any).analyticsCode.create({
+    const created = await db.analyticsCode.create({
       data: { name, type, code, injectTo, isActive },
     })
     return NextResponse.json(created, { status: 201 })
