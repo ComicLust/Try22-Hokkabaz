@@ -95,11 +95,6 @@ export async function middleware(req: NextRequest) {
     return attachNonce(NextResponse.next())
   }
 
-  // Allow public push subscribe and event logging
-  if ((pathname.startsWith('/api/push/subscribe') || pathname.startsWith('/api/push/event')) && method === 'POST') {
-    return attachNonce(NextResponse.next())
-  }
-
   // Protect write requests on non-admin APIs
   if (pathname.startsWith('/api')) {
     if (method === 'GET' || method === 'OPTIONS') {

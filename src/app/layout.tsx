@@ -5,9 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import AnalyticsInjector from '@/components/AnalyticsInjector'
 import SeoAutoInjector from '@/components/SeoAutoInjector'
 import ExternalLinkTracker from '@/components/ExternalLinkTracker'
-import PermissionPrompt from '@/components/push/PermissionPrompt'
+// removed: import PermissionPrompt from '@/components/push/PermissionPrompt'
 import Script from "next/script"
-import { Suspense } from "react"
+// removed: import { Suspense } from "react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,6 +48,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ONE_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID || ''
   return (
     <html lang="tr" suppressHydrationWarning>
       <body
@@ -79,9 +80,22 @@ export default function RootLayout({
         <Toaster />
         <SeoAutoInjector />
         <AnalyticsInjector />
-        <Suspense fallback={null}>
-          <PermissionPrompt />
-        </Suspense>
+        {/* OneSignal Web SDK */}
+        <Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" strategy="afterInteractive" />
+        {ONE_APP_ID && (
+          <Script id="onesignal-init" strategy="afterInteractive">
+            {`
+              window.OneSignal = window.OneSignal || [];
+              OneSignal.push(function() {
+                OneSignal.init({
+                  appId: '${ONE_APP_ID}',
+                  allowLocalhostAsSecureOrigin: true,
+                  notifyButton: { enable: true }
+                });
+              });
+            `}
+          </Script>
+        )}
         {/* Dış linkleri otomatik izleme */}
         <ExternalLinkTracker />
       </body>
