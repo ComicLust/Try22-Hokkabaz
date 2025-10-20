@@ -14,13 +14,15 @@ const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
 
 // Coolify deployment için uploads klasörünü kontrol et ve oluştur
 async function ensureUploadsDir() {
-  const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
+  const cwd = process.cwd()
+  const uploadsDir = path.join(cwd, 'public', 'uploads')
   try {
     await access(uploadsDir)
   } catch {
     await mkdir(uploadsDir, { recursive: true })
     console.log('📁 Uploads directory created:', uploadsDir)
   }
+  console.log('🔎 Using uploads dir:', uploadsDir, 'cwd:', cwd)
   return uploadsDir
 }
 
