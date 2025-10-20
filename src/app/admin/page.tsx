@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { LayoutDashboard, MessageSquare, Megaphone, Gift, Images, Sliders, Send, List } from 'lucide-react'
+import { LayoutDashboard, MessageSquare, Megaphone, Gift, Images, Sliders, Send, List, Activity } from 'lucide-react'
 
 export default function AdminHome() {
   const [loading, setLoading] = useState(true)
@@ -113,6 +113,7 @@ export default function AdminHome() {
           <Button asChild variant="outline"><a href="/admin/campaigns" className="flex items-center justify-between"><span>Kampanyalar</span><Megaphone className="w-4 h-4 ml-2" /></a></Button>
           <Button asChild variant="outline"><a href="/admin/bonuses" className="flex items-center justify-between"><span>Bonuslar</span><Gift className="w-4 h-4 ml-2" /></a></Button>
           <Button asChild variant="outline"><a href="/admin/seo" className="flex items-center justify-between"><span>Genel SEO</span><LayoutDashboard className="w-4 h-4 ml-2" /></a></Button>
+          <Button asChild variant="outline"><a href="/admin/analytics" className="flex items-center justify-between"><span>Analytics & Meta Kodları</span><Activity className="w-4 h-4 ml-2" /></a></Button>
           <Button asChild variant="outline"><a href="/admin/telegram" className="flex items-center justify-between"><span>Telegram</span><Send className="w-4 h-4 ml-2" /></a></Button>
         </div>
       </section>

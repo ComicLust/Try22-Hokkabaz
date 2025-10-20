@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import AnalyticsInjector from '@/components/AnalyticsInjector'
+import SeoAutoInjector from '@/components/SeoAutoInjector'
+import ExternalLinkTracker from '@/components/ExternalLinkTracker'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +52,11 @@ export default function RootLayout({
       >
         {children}
         <Toaster />
+        <SeoAutoInjector />
+        <AnalyticsInjector />
+        {/* Dış linkleri otomatik izleme */}
+        {/* @ts-expect-error Server Component içinde client bileşeni */}
+        <ExternalLinkTracker />
       </body>
     </html>
   );

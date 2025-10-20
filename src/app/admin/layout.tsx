@@ -31,6 +31,8 @@ import {
   Search as SearchIcon,
   Send,
   Sliders,
+  Activity,
+  Link2,
 } from 'lucide-react'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
@@ -53,6 +55,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     'yorum-onay': 'Yorum Onay',
     markalar: 'Markalar',
     approval: 'Onay',
+    links: 'Links',
   }
   const labelFor = (seg: string) => labelMap[seg] ?? seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
   const breadcrumb = segments.map((seg, idx) => ({ href: '/' + segments.slice(0, idx + 1).join('/'), label: labelFor(seg) }))
@@ -98,6 +101,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/analytics')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/analytics"><Activity className="size-4" /> Analytics & Meta Kodları</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/users')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/users"><List className="size-4" /> Kullanıcılar</Link>
                 </SidebarMenuButton>
@@ -129,6 +137,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/bonuses')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/bonuses"><Gift className="size-4" /> Bonuslar</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/links')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/links"><Link2 className="size-4" /> Links</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

@@ -90,6 +90,11 @@ export async function middleware(req: NextRequest) {
     return attachNonce(NextResponse.next())
   }
 
+  // Allow public comment creation
+  if (pathname.startsWith('/api/site-reviews') && method === 'POST') {
+    return attachNonce(NextResponse.next())
+  }
+
   // Protect write requests on non-admin APIs
   if (pathname.startsWith('/api')) {
     if (method === 'GET' || method === 'OPTIONS') {

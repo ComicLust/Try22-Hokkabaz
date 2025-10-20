@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 const prisma: any = db
+import { randomUUID } from 'crypto'
+
+function dicebearAvatar(seed: string) {
+  const s = encodeURIComponent(seed)
+  return `https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=${s}&size=64&radius=50&backgroundType=gradientLinear`
+}
 
 // List approved reviews for a site (by slug) with sorting and pagination
 export async function GET(req: NextRequest) {
@@ -28,6 +34,18 @@ export async function GET(req: NextRequest) {
     prisma.siteReview.count({ where: { brandId: brand.id, isApproved: true } }),
   ])
 
+  // One-time backfill: Assign random avatar to reviews missing avatarUrl
+  const toFill = items.filter((i: any) => !i.avatarUrl)
+  if (toFill.length > 0) {
+    await Promise.all(
+      toFill.map((i: any) => {
+        const url = dicebearAvatar(randomUUID())
+        i.avatarUrl = url // reflect in response immediately
+        return prisma.siteReview.update({ where: { id: i.id }, data: { avatarUrl: url } })
+      })
+    )
+  }
+
   return NextResponse.json({ items, total, page, limit })
 }
 
@@ -42,6 +60,8 @@ export async function POST(req: NextRequest) {
     const brand = await prisma.reviewBrand.findUnique({ where: { slug } })
     if (!brand) return NextResponse.json({ error: 'Brand not found' }, { status: 404 })
 
+    const avatarUrl = dicebearAvatar(randomUUID())
+
     const created = await prisma.siteReview.create({
       data: {
         brandId: brand.id,
@@ -51,6 +71,7 @@ export async function POST(req: NextRequest) {
         isPositive: typeof isPositive === 'boolean' ? isPositive : null,
         content: String(content),
         isApproved: false,
+        avatarUrl,
       },
     })
     return NextResponse.json(created, { status: 201 })

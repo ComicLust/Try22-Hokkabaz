@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Calendar, ExternalLink, MessageSquare, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Calendar, ExternalLink, MessageSquare, ThumbsUp, ThumbsDown, AlertCircle } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,7 +14,7 @@ import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/hooks/use-toast'
 
 type ReviewBrand = { id: string; name: string; slug: string; logoUrl?: string | null; siteUrl?: string | null; editorialSummary?: string | null }
-type Review = { id: string; author?: string | null; isAnonymous: boolean; isPositive?: boolean | null; rating?: number | null; content: string; createdAt: string; helpfulCount: number; notHelpfulCount: number; repliedBy?: string | null; replyText?: string | null; repliedAt?: string | null }
+type Review = { id: string; author?: string | null; isAnonymous: boolean; isPositive?: boolean | null; rating?: number | null; content: string; createdAt: string; helpfulCount: number; notHelpfulCount: number; repliedBy?: string | null; replyText?: string | null; repliedAt?: string | null; avatarUrl?: string | null }
 
 const fadeInUp = {
   initial: { opacity: 0, y: 12 },
@@ -33,8 +33,8 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
 
   // Form state
   const [author, setAuthor] = useState('')
-  const [isAnonymous, setIsAnonymous] = useState(false)
-  const [isPositive, setIsPositive] = useState<boolean>(true)
+  const [isAnonymous, setIsAnonymous] = useState(true)
+  const [isPositive, setIsPositive] = useState<boolean | null>(null)
   const [content, setContent] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
@@ -68,6 +68,14 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
   const summary: string = useMemo(() => String(site?.editorialSummary ?? ''), [site])
 
   const handleSubmit = async () => {
+    if (typeof isPositive !== 'boolean') {
+      toast({ variant: 'destructive', title: 'Eksik bilgi', description: 'Lütfen yorum türünü (olumlu/olumsuz) seçin.' })
+      return
+    }
+    if (!isAnonymous && !author.trim()) {
+      toast({ variant: 'destructive', title: 'Eksik bilgi', description: 'Lütfen kullanıcı adı veya takma ad girin.' })
+      return
+    }
     if (!content.trim()) {
       toast({ variant: 'destructive', title: 'Eksik bilgi', description: 'Lütfen yorum metni girin.' })
       return
@@ -82,8 +90,8 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
       if (res.ok) {
         setContent('')
         setAuthor('')
-        setIsPositive(true)
-        setIsAnonymous(false)
+        setIsPositive(null)
+        setIsAnonymous(true)
         regenCaptcha()
         toast({ title: 'Gönderildi', description: 'Moderatör onayından sonra mesajınız görüntülenecek.' })
       } else {
@@ -146,26 +154,34 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
               <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4">
                 <div>
                   <label className="text-sm mb-1 block">Kullanıcı Adı / Takma Ad</label>
-                  <Input value={author} onChange={(e)=>setAuthor(e.target.value)} placeholder="İsteğe bağlı" />
+                  <Input value={author} onChange={(e)=>setAuthor(e.target.value)} placeholder={isAnonymous ? "İsteğe bağlı" : "Zorunlu — kullanıcı adı veya takma ad"} />
+                  {(!isAnonymous && !author.trim()) && (
+                    <div className="mt-1 text-xs text-muted-foreground flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Lütfen kullanıcı adı veya takma ad girin.</div>
+                  )}
                   <div className="flex items-center justify-between mt-2 gap-2 flex-wrap">
                     <div className="flex items-center gap-2">
                       <span className="text-sm">Anonim</span>
-                      <span className="text-xs text-muted-foreground">İsminiz görüntülenmez.</span>
+                      <span className="text-xs text-muted-foreground">{isAnonymous ? 'İsminiz görüntülenmez.' : 'Anonim değil, isminiz görünebilir.'}</span>
                     </div>
                     <Switch checked={isAnonymous} onCheckedChange={setIsAnonymous} />
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> {isAnonymous ? 'Anonim mod aktif.' : 'Anonim mod kapalı.'}
                   </div>
                 </div>
                 <div className="md:col-span-2 order-3">
                   <label className="text-sm mb-1 block">Yorum Türü</label>
                   <div className="grid grid-cols-2 gap-2">
-                    <Button size="sm" type="button" onClick={()=>setIsPositive(true)} variant={isPositive ? 'default' : 'outline'} className={`${isPositive ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'text-emerald-700 border-emerald-600'} w-full`}>
+                    <Button size="sm" type="button" onClick={()=>setIsPositive(true)} variant={isPositive === true ? 'default' : 'outline'} className={`${isPositive === true ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'text-emerald-700 border-emerald-600'} w-full`}>
                       <ThumbsUp className="w-4 h-4 mr-2" /> Olumlu
                     </Button>
-                    <Button size="sm" type="button" onClick={()=>setIsPositive(false)} variant={!isPositive ? 'default' : 'outline'} className={`${!isPositive ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'text-rose-700 border-rose-600'} w-full`}>
+                    <Button size="sm" type="button" onClick={()=>setIsPositive(false)} variant={isPositive === false ? 'default' : 'outline'} className={`${isPositive === false ? 'bg-rose-600 hover:bg-rose-700 text-white' : 'text-rose-700 border-rose-600'} w-full`}>
                       <ThumbsDown className="w-4 h-4 mr-2" /> Olumsuz
                     </Button>
                   </div>
-
+                  {typeof isPositive !== 'boolean' && (
+                    <div className="mt-1 text-xs text-muted-foreground flex items-center gap-1"><AlertCircle className="w-3 h-3" /> Lütfen yorum türünü seçin.</div>
+                  )}
                 </div>
                 <div className="md:col-span-2 order-2">
                   <label className="text-sm mb-1 block">Yorum Metni</label>
@@ -179,7 +195,7 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
                   <Input className="w-16 sm:w-20 h-8" value={captchaInput} onChange={(e)=>setCaptchaInput(e.target.value)} placeholder="?" />
                   <Button size="sm" variant="outline" type="button" onClick={regenCaptcha}>Yenile</Button>
                 </div>
-                <Button size="sm" className="w-full sm:w-auto" onClick={()=>{ if (!captchaOk) { toast({ variant: 'destructive', title: 'Doğrulama gerekli', description: 'Captcha hatalı' }); return } ; handleSubmit() }} disabled={submitting || !captchaOk}>{submitting ? 'Gönderiliyor…' : 'Yorumu Gönder'}</Button>
+                <Button size="sm" className="w-full sm:w-auto" onClick={()=>{ if (!captchaOk) { toast({ variant: 'destructive', title: 'Doğrulama gerekli', description: 'Captcha hatalı' }); return } ; handleSubmit() }} disabled={submitting || typeof isPositive !== 'boolean' || (!isAnonymous && !author.trim())}>{submitting ? 'Gönderiliyor…' : 'Yorumu Gönder'}</Button>
 
               </div>
             </motion.section>
@@ -207,9 +223,17 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
                   <Card key={r.id} className="rounded-xl border">
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium text-sm">{r.isAnonymous ? 'Anonim Kullanıcı' : (r.author || 'Kullanıcı')}</div>
-                          <div className="text-xs text-muted-foreground"><Calendar className="w-3 h-3 inline mr-1" /> {new Date(r.createdAt).toLocaleString('tr-TR')}</div>
+                        <div className="flex items-center">
+                          <img
+                            src={r.avatarUrl || `https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=${encodeURIComponent(r.id)}&size=64&radius=50&backgroundType=gradientLinear`}
+                            alt="Profil"
+                            className="w-10 h-10 rounded-full border mr-3"
+                            loading="lazy"
+                          />
+                          <div>
+                            <div className="font-medium text-sm">{r.isAnonymous ? 'Anonim Kullanıcı' : (r.author || 'Kullanıcı')}</div>
+                            <div className="text-xs text-muted-foreground"><Calendar className="w-3 h-3 inline mr-1" /> {new Date(r.createdAt).toLocaleString('tr-TR')}</div>
+                          </div>
                         </div>
                         {typeof r.isPositive === 'boolean' && (
                           <Badge className="text-xs" variant={r.isPositive ? 'default' : 'secondary'}>{r.isPositive ? 'Olumlu' : 'Olumsuz'}</Badge>

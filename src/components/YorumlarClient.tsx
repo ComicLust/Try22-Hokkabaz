@@ -27,22 +27,42 @@ export default function YorumlarClient() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const readJsonSafe = async <T,>(res: Response, fallback: T): Promise<T> => {
+    try {
+      return await res.json()
+    } catch {
+      return fallback
+    }
+  }
+
   useEffect(() => {
     (async () => {
+      setLoading(true)
       try {
-        setLoading(true)
         const [brandRes, statRes] = await Promise.all([
-          fetch('/api/review-brands?active=true'),
-          fetch('/api/site-reviews/stats'),
+          fetch('/api/review-brands?active=true', { headers: { Accept: 'application/json' } }),
+          fetch('/api/site-reviews/stats', { headers: { Accept: 'application/json' } }),
         ])
-        const brandData: any[] = await brandRes.json()
-        const statData: ReviewStat[] = await statRes.json()
-        const actives = Array.isArray(brandData) ? brandData.filter((b) => b.isActive ?? true) : []
+
+        if (!brandRes.ok) {
+          const text = await brandRes.text()
+          console.warn('review-brands fetch failed', brandRes.status, text)
+        }
+        if (!statRes.ok) {
+          const text = await statRes.text()
+          console.warn('site-reviews/stats fetch failed', statRes.status, text)
+        }
+
+        const brandData = await readJsonSafe<any[]>(brandRes, [])
+        const statData = await readJsonSafe<ReviewStat[]>(statRes, [])
+        const actives = Array.isArray(brandData) ? brandData.filter((b) => (b.isActive ?? true)) : []
+
         setBrands(actives.map((b) => ({ id: b.id, name: b.name, slug: b.slug, logoUrl: b.logoUrl, createdAt: b.createdAt })))
-        setStats(statData)
+        setStats(Array.isArray(statData) ? statData : [])
         setError(null)
       } catch (e: any) {
-        setError(e?.message ?? 'Yüklenemedi')
+        console.error('Yorumlar yüklenemedi:', e)
+        setError('Yüklenemedi')
       } finally {
         setLoading(false)
       }
@@ -106,27 +126,31 @@ export default function YorumlarClient() {
           </div>
         </motion.section>
 
-        {loading && <div className="text-center text-muted-foreground py-6">Yükleniyor…</div>}
-        {error && <div className="text-center text-red-500 py-6">{error}</div>}
+        {error && (
+          <div className="mt-4 text-sm text-muted-foreground">Yüklenemedi. Lütfen sayfayı yenileyin.</div>
+        )}
 
-        {!loading && !error && (
-          <motion.section initial="initial" animate="animate" variants={fadeInUp}>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {!error && (
+          <motion.section className="mt-6" initial="initial" animate="animate" variants={fadeInUp}>
+            <h2 className="text-xl font-bold text-gold mb-4">Yorumlu Siteler</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((s) => (
-                <Card key={s.id} className="rounded-2xl border border-border hover:shadow-xl transition">
+                <Card key={s.id}>
                   <CardHeader>
-                    <div className="w-24 h-14 mx-auto mb-4 overflow-hidden bg-muted flex items-center justify-center border rounded-md">
-                      {s.logoUrl ? (
-                        <img src={s.logoUrl} alt={s.name} className="w-full h-full object-contain" />
-                      ) : (
-                        <img src="/logo.svg" alt="logo" className="w-16 h-16" />
-                      )}
-                    </div>
-                    <CardTitle className="text-lg text-center">{s.name}</CardTitle>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <div className="w-10 h-10 overflow-hidden bg-muted flex items-center justify-center border rounded">
+                        {s.logoUrl ? (
+                          <img src={s.logoUrl} alt={s.name} className="w-full h-full object-contain" />
+                        ) : (
+                          <img src="/logo.svg" alt="logo" className="w-6 h-6" />
+                        )}
+                      </div>
+                      {s.name}
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-center gap-2 mb-3">
-                      <Badge className="text-xs">Toplam Yorum: {s.reviewCount ?? 0}</Badge>
+                  <CardContent className="space-y-3">
+                    <div className="flex gap-2 items-center">
+                      <Badge variant="default" className="text-xs">Toplam: {s.reviewCount ?? 0}</Badge>
                       <Badge variant="secondary" className="text-xs">Olumlu: {s.positiveCount ?? 0}</Badge>
                       <Badge variant="destructive" className="text-xs">Olumsuz: {s.negativeCount ?? 0}</Badge>
                     </div>

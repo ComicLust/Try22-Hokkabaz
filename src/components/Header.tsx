@@ -76,9 +76,10 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-[85vw] max-w-[380px] bg-background border-r border-gold/20 p-0">
-                <SheetHeader className="sr-only">
-                  <SheetTitle>Mobil Menü</SheetTitle>
-                </SheetHeader>
+                <div className="flex h-full flex-col">
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>Mobil Menü</SheetTitle>
+                  </SheetHeader>
                 {/* Menü Başlık */}
                 <div className="px-4 pt-6 pb-4 border-b border-border">
                   <div className="flex items-center gap-2">
@@ -90,7 +91,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                 </div>
                 {/* Ana Sayfa ayrı buton kaldırıldı; menü listesinde ilk öğe olarak gösteriliyor */}
                 {/* Menü İçerik */}
-                <div className="px-4 py-4 space-y-6">
+                <div className="flex-1 min-h-0 px-4 py-4 space-y-6 overflow-y-auto">
                   {/* Üst grup */}
                   <div className="space-y-2">
                     {primaryMenu.map((item) => (
@@ -246,6 +247,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                       </a>
                     </div>
                   </div>
+                </div>
                 </div>
               </SheetContent>
             </Sheet>
