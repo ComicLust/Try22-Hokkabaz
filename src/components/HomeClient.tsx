@@ -706,58 +706,53 @@ export default function HomeClient() {
 
       {/* Bonus Detail Dialog */}
       <Dialog open={isBonusDialogOpen} onOpenChange={setIsBonusDialogOpen}>
-        <DialogContent className={`sm:max-w-[425px] ${(selectedBonus as any)?.postImageUrl ? 'md:max-w-[560px]' : ''}`}>
-          <DialogHeader>
-            <DialogTitle>Bonus Detayları</DialogTitle>
+        <DialogContent className="sm:max-w-[640px] p-0">
+          <DialogHeader className="p-4">
+            <DialogTitle>Bonus Detayı</DialogTitle>
           </DialogHeader>
           {selectedBonus && (
-            <div className="space-y-4">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gold mb-2">
-                  {Number((selectedBonus as any).amount || 0)} TL
+            <div className="flex max-h-[85vh] flex-col">
+              <div className="overflow-y-auto p-4 space-y-4">
+                {!!(selectedBonus as any)?.postImageUrl && (
+                  <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted">
+                    <img src={(selectedBonus as any).postImageUrl} alt="Bonus Post Görseli" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <h4 className="font-semibold">Özellikler:</h4>
+                  {(Array.isArray((selectedBonus as any)?.features)
+                    ? (selectedBonus as any).features
+                    : ['Çevrim Şartsız', 'Anında Çekim']
+                  ).map((feature: string, index: number) => (
+                    <div key={index} className="flex items-center text-sm">
+                      <Check className="w-4 h-4 text-gold mr-2" />
+                      {feature}
+                    </div>
+                  ))}
                 </div>
-                {(selectedBonus as any)?.shortDescription && (
-                  <div className="text-muted-foreground">
-                    {(selectedBonus as any).shortDescription}
+                {(selectedBonus as any)?.validityText && (
+                  <div className="text-xs text-muted-foreground">
+                    <Calendar className="w-3 h-3 inline mr-1" />
+                    {String((selectedBonus as any).validityText)}
+                  </div>
+                )}
+                {!!(selectedBonus as any)?.description && (
+                  <div className="text-sm text-muted-foreground">
+                    {(selectedBonus as any).description}
                   </div>
                 )}
               </div>
-              {(selectedBonus as any)?.postImageUrl && (
-                <div className="w-full aspect-square overflow-hidden rounded-md border bg-muted">
-                  <img src={(selectedBonus as any).postImageUrl} alt="Bonus Post Görseli" className="w-full h-full object-cover" />
-                </div>
-              )}
-              <div className="space-y-2">
-                <h4 className="font-semibold">Özellikler:</h4>
-                {(Array.isArray((selectedBonus as any).features)
-                  ? (selectedBonus as any).features
-                  : ['Çevrim Şartsız', 'Anında Çekim']
-                ).map((feature: string, index: number) => (
-                  <div key={index} className="flex itemscenter text-sm">
-                    <Check className="w-4 h-4 text-gold mr-2" />
-                    {feature}
-                  </div>
-                ))}
-              </div>
-              {formatValidity(selectedBonus) && (
-                <div className="text-sm">
-                  <span className="font-semibold">Geçerlilik:</span> {formatValidity(selectedBonus)}
-                </div>
-              )}
-              {(selectedBonus as any)?.description && (
-                <div className="text-sm text-muted-foreground">
-                  {(selectedBonus as any).description}
-                </div>
-              )}
               {Boolean((selectedBonus as any)?.ctaUrl) && (
-                <a
-                  href={String((selectedBonus as any).ctaUrl)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <Button className="w-full gold-gradient neon-button mt-2">Bonusu Al</Button>
-                </a>
+                <div className="p-4 border-t bg-background">
+                  <a
+                    href={String((selectedBonus as any).ctaUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <Button className="w-full">Kampanyaya Katıl</Button>
+                  </a>
+                </div>
               )}
             </div>
           )}

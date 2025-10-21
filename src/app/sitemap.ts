@@ -12,6 +12,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/yorumlar',
     '/anlasmali-siteler',
     '/guvenilir-telegram',
+    '/banko-kuponlar',
+    '/banko-kuponlar/arsiv',
   ]
 
   // Dynamic brand review pages under /yorumlar/[slug]

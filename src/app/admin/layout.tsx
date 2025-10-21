@@ -34,6 +34,7 @@ import {
   Activity,
   Link2,
   Bell,
+  Database,
 } from 'lucide-react'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
@@ -58,6 +59,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     markalar: 'Markalar',
     approval: 'Onay',
     links: 'Links',
+    backup: 'Yedekleme',
   }
   const labelFor = (seg: string) => labelMap[seg] ?? seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
   const breadcrumb = segments.map((seg, idx) => ({ href: '/' + segments.slice(0, idx + 1).join('/'), label: labelFor(seg) }))
@@ -110,6 +112,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/users')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/users"><List className="size-4" /> Kullanıcılar</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/backup')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/backup"><Database className="size-4" /> Yedekleme</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               {/* Push Notifications menü öğesi kaldırıldı */}
@@ -193,7 +200,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="px-4 py-2 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <SidebarTrigger />
-              <span className="font-semibold">WordPress Tarzı Yönetim Paneli</span>
+              <span className="font-semibold">GmanVibes Yönetim Paneli</span>
             </div>
             <div className="flex items-center gap-2">
               <Input placeholder="Hızlı arama..." className="h-8 w-40 md:w-64" />

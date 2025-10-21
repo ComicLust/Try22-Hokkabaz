@@ -397,49 +397,54 @@ export default function AnlasmaliSitelerClient() {
         </motion.section>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[640px]">
-            <DialogHeader>
-              <DialogTitle>Bonus Detayı</DialogTitle>
-            </DialogHeader>
-            {!!(selectedBonus as any)?.postImageUrl && (
-              <div className="w-full h-40 rounded-md overflow-hidden mb-4">
-                <img src={(selectedBonus as any).postImageUrl} alt="Bonus Post Görseli" className="w-full h-full object-cover" />
-              </div>
-            )}
-            <div className="space-y-2">
-              <h4 className="font-semibold">Özellikler:</h4>
-              {(Array.isArray((selectedBonus as any)?.features)
-                ? (selectedBonus as any).features
-                : ['Çevrim Şartsız', 'Anında Çekim']
-              ).map((feature: string, index: number) => (
-                <div key={index} className="flex items-center text-sm">
-                  <Check className="w-4 h-4 text-gold mr-2" />
-                  {feature}
+          <DialogContent className="sm:max-w-[640px] p-0">
+            <div className="flex max-h-[85vh] flex-col">
+              <DialogHeader className="p-4">
+                <DialogTitle>Bonus Detayı</DialogTitle>
+              </DialogHeader>
+              <div className="overflow-y-auto p-4 space-y-4">
+                {!!(selectedBonus as any)?.postImageUrl && (
+                  <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted">
+                    <img src={(selectedBonus as any).postImageUrl} alt="Bonus Post Görseli" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <h4 className="font-semibold">Özellikler:</h4>
+                  {(Array.isArray((selectedBonus as any)?.features)
+                    ? (selectedBonus as any).features
+                    : ['Çevrim Şartsız', 'Anında Çekim']
+                  ).map((feature: string, index: number) => (
+                    <div key={index} className="flex items-center text-sm">
+                      <Check className="w-4 h-4 text-gold mr-2" />
+                      {feature}
+                    </div>
+                  ))}
                 </div>
-              ))}
+                {selectedBonus && formatValidity(selectedBonus) && (
+                  <div className="text-xs text-muted-foreground">
+                    <Calendar className="w-3 h-3 inline mr-1" />
+                    {formatValidity(selectedBonus)}
+                  </div>
+                )}
+                {!!(selectedBonus as any)?.description && (
+                  <div className="text-sm text-muted-foreground">
+                    {(selectedBonus as any).description}
+                  </div>
+                )}
+              </div>
+              {Boolean((selectedBonus as any)?.ctaUrl) && (
+                <div className="p-4 border-t bg-background">
+                  <a
+                    href={String((selectedBonus as any).ctaUrl)}
+                    target={isExternalUrl((selectedBonus as any).ctaUrl) ? "_blank" : undefined}
+                    rel={isExternalUrl((selectedBonus as any).ctaUrl) ? "noopener noreferrer" : undefined}
+                    className="block"
+                  >
+                    <Button className="w-full">Kampanyaya Katıl</Button>
+                  </a>
+                </div>
+              )}
             </div>
-            {!!selectedBonus && formatValidity(selectedBonus) && (
-              <div className="text-xs text-muted-foreground">
-                <Calendar className="w-3 h-3 inline mr-1" />
-                {formatValidity(selectedBonus)}
-              </div>
-            )}
-            {!!(selectedBonus as any)?.description && (
-              <div className="text-sm text-muted-foreground">
-                {(selectedBonus as any).description}
-              </div>
-            )}
-            {Boolean((selectedBonus as any)?.ctaUrl) && (
-              <Button className="w-full" asChild>
-                <a
-                  href={(selectedBonus as any).ctaUrl}
-                  target={isExternalUrl((selectedBonus as any).ctaUrl) ? "_blank" : undefined}
-                  rel={isExternalUrl((selectedBonus as any).ctaUrl) ? "noopener noreferrer" : undefined}
-                >
-                  Kampanyaya Katıl
-                </a>
-              </Button>
-            )}
           </DialogContent>
         </Dialog>
 

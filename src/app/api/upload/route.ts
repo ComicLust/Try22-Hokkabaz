@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir, readdir, stat } from 'fs/promises'
+import { writeFile, mkdir, readdir, stat, unlink } from 'fs/promises'
 import path from 'path'
 
 export const runtime = 'nodejs'
@@ -73,5 +73,26 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ total: sorted.length, files: sorted })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'List error' }, { status: 500 })
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const url = new URL(req.url)
+    const name = url.searchParams.get('name')
+    if (!name) return NextResponse.json({ error: 'name param gerekli' }, { status: 400 })
+
+    // Sadece dosya adını kabul et, path traversal engelle
+    if (name.includes('/') || name.includes('..')) {
+      return NextResponse.json({ error: 'Geçersiz dosya adı' }, { status: 400 })
+    }
+
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
+    const full = path.join(uploadsDir, name)
+
+    await unlink(full)
+    return NextResponse.json({ ok: true })
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message ?? 'Silme hatası' }, { status: 500 })
   }
 }

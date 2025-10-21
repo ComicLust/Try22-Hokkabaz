@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Search, Award, Calendar, Check, Star } from "lucide-react";
+import { Search, Award, Calendar, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 type Bonus = {
@@ -43,6 +43,8 @@ export default function BonuslarClient() {
   const [siteCategory, setSiteCategory] = useState("all");
   const [selectedBonus, setSelectedBonus] = useState<Bonus | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isStoryOpen, setIsStoryOpen] = useState(false);
+  const [activeStory, setActiveStory] = useState<{ img: string; label: string } | null>(null);
 
   const [bonuses, setBonuses] = useState<Bonus[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -120,6 +122,64 @@ export default function BonuslarClient() {
   const featuredBonuses = useMemo(() => filtered.filter(b => b.isFeatured), [filtered]);
   const regularBonuses = useMemo(() => filtered.filter(b => !b.isFeatured), [filtered]);
 
+  // Instagram story tarzı üst şerit için öğeler
+  const storyItems = useMemo(() => {
+    const base = featuredBonuses.length ? featuredBonuses : filtered
+    const items = base.slice(0, 12).map((b) => ({
+      id: b.id,
+      label: String(b.title ?? ""),
+      img: b.postImageUrl || b.imageUrl || "/logo.svg",
+    }))
+    const MIN_ITEMS = 10
+    if (items.length < MIN_ITEMS) {
+      const placeholders = Array.from({ length: MIN_ITEMS - items.length }).map((_, i) => ({
+        id: `demo-${i}`,
+        label: "Demo",
+        img: "/logo.svg",
+      }))
+      return [...items, ...placeholders]
+    }
+    return items
+  }, [featuredBonuses, filtered])
+
+  const storyRef = useRef<HTMLDivElement>(null);
+  const scrollLeft = () => storyRef.current?.scrollBy({ left: -320, behavior: "smooth" });
+  const scrollRight = () => storyRef.current?.scrollBy({ left: 320, behavior: "smooth" });
+
+  // Drag-to-scroll state and handlers for story rail
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [scrollStart, setScrollStart] = useState(0);
+
+  const onPointerDown = (e: any) => {
+    const target = e.currentTarget as HTMLElement;
+    if (typeof target.setPointerCapture === "function") {
+      try { target.setPointerCapture(e.pointerId); } catch {}
+    }
+    setIsDragging(true);
+    setDragStartX(e.clientX);
+    setScrollStart(storyRef.current?.scrollLeft ?? 0);
+  };
+
+  const onPointerMove = (e: any) => {
+    if (!isDragging) return;
+    const dx = e.clientX - dragStartX;
+    if (storyRef.current) {
+      storyRef.current.scrollLeft = scrollStart - dx;
+    }
+  };
+
+  const onPointerUp = (e: any) => {
+    const target = e.currentTarget as HTMLElement;
+    if (typeof target.releasePointerCapture === "function") {
+      try { target.releasePointerCapture(e.pointerId); } catch {}
+    }
+    setIsDragging(false);
+  };
+
+  const onPointerLeave = () => {
+    setIsDragging(false);
+  };
   const openDetails = (b: Bonus) => { setSelectedBonus(b); setIsDialogOpen(true); };
 
   return (
@@ -181,6 +241,79 @@ export default function BonuslarClient() {
             </Select>
           </div>
         </motion.section>
+
+        {/* Story rail: instagram tarzı, öne çıkanların üstünde ve sticky */}
+        <motion.section
+          // Story rail container – removed sticky so it stays in the normal flow
+          className="mb-6 px-0 py-2 z-30"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          <div className="relative">
+            <button
+              onClick={scrollLeft}
+              aria-label="Sola kaydır"
+              className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-full bg-black/50 hover:bg-black/60 text-white shadow-lg backdrop-blur-md"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            <div ref={storyRef}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onPointerLeave={onPointerLeave}
+              className="overflow-x-auto overflow-y-visible scroll-smooth pl-10 pr-10 py-2 touch-pan-x select-none cursor-grab active:cursor-grabbing"
+            >
+              <div className="flex items-center gap-5">
+                {storyItems.map((item) => (
+                  <a
+                    key={item.id}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveStory({ img: item.img, label: item.label });
+                      setIsStoryOpen(true);
+                    }}
+                    className="group flex flex-col items-center"
+                  >
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gold ring-2 ring-gold/40 ring-offset-2 ring-offset-background overflow-hidden shadow-sm group-hover:ring-gold/60">
+                      <img src={item.img} alt={item.label} className="w-full h-full object-cover" draggable={false} />
+                    </div>
+                    <div className="mt-2 w-20 sm:w-24 text-center text-xs text-foreground/80 truncate">{item.label}</div>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={scrollRight}
+              aria-label="Sağa kaydır"
+              className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-full bg-black/50 hover:bg-black/60 text-white shadow-lg backdrop-blur-md"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 sm:w-12 bg-gradient-to-r from-background to-transparent"></div>
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 sm:w-12 bg-gradient-to-l from-background to-transparent"></div>
+          </div>
+        </motion.section>
+
+        <Dialog open={isStoryOpen} onOpenChange={setIsStoryOpen}>
+          <DialogContent className="max-w-[720px] p-0 bg-black">
+            <DialogHeader className="sr-only">
+              <DialogTitle>Story Görseli</DialogTitle>
+            </DialogHeader>
+            <div className="relative w-full aspect-[9/16] sm:aspect-[9/16] bg-black">
+              {activeStory?.img && (
+                <img src={activeStory.img} alt={activeStory.label} className="w-full h-full object-contain" draggable={false} />
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+
+
 
         {/* Öne çıkanlar */}
         {featuredBonuses.length > 0 && (
@@ -297,46 +430,53 @@ export default function BonuslarClient() {
         </motion.section>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className={`sm:max-w-[425px] ${selectedBonus?.postImageUrl ? 'md:max-w-[560px]' : ''}`}>
-            <DialogHeader>
-              <DialogTitle>Bonus Detayı</DialogTitle>
-            </DialogHeader>
-            {!!selectedBonus?.postImageUrl && (
-              <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted mb-4">
-                <Image
-                  src={selectedBonus.postImageUrl}
-                  alt="Bonus Post Görseli"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 90vw, 560px"
-                />
-              </div>
-            )}
-            <div className="space-y-2">
-              <h4 className="font-semibold">Özellikler:</h4>
-              {(Array.isArray(selectedBonus?.features) ? selectedBonus!.features! : ['Çevrim Şartsız', 'Anında Çekim']).map((feature, index) => (
-                <div key={index} className="flex items-center text-sm">
-                  <Check className="w-4 h-4 text-gold mr-2" />
-                  {feature}
+          <DialogContent className="sm:max-w-[640px] p-0">
+            <div className="flex max-h-[85vh] flex-col">
+              <DialogHeader className="p-4">
+                <DialogTitle>Bonus Detayı</DialogTitle>
+              </DialogHeader>
+              <div className="overflow-y-auto p-4 space-y-4">
+                {!!selectedBonus?.postImageUrl && (
+                  <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted mb-4">
+                    <Image
+                      src={selectedBonus.postImageUrl}
+                      alt="Bonus Post Görseli"
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 90vw, 560px"
+                      draggable={false}
+                    />
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <h4 className="font-semibold">Özellikler:</h4>
+                  {(Array.isArray(selectedBonus?.features) ? selectedBonus!.features! : ['Çevrim Şartsız', 'Anında Çekim']).map((feature, index) => (
+                    <div key={index} className="flex items-center text-sm">
+                      <Check className="w-4 h-4 text-gold mr-2" />
+                      {feature}
+                    </div>
+                  ))}
                 </div>
-              ))}
+                {!!selectedBonus && !!formatValidity(selectedBonus) && (
+                  <div className="text-xs text-muted-foreground">
+                    <Calendar className="w-3 h-3 inline mr-1" />
+                    {formatValidity(selectedBonus)}
+                  </div>
+                )}
+                {!!selectedBonus?.description && (
+                  <div className="text-sm text-muted-foreground">
+                    {selectedBonus.description}
+                  </div>
+                )}
+              </div>
+              {!!selectedBonus?.ctaUrl && (
+                <div className="p-4 border-t bg-background">
+                  <Button className="w-full" asChild>
+                    <a href={selectedBonus.ctaUrl} target="_blank" rel="noopener noreferrer">Kampanyaya Katıl</a>
+                  </Button>
+                </div>
+              )}
             </div>
-            {!!selectedBonus && !!formatValidity(selectedBonus) && (
-              <div className="text-xs text-muted-foreground">
-                <Calendar className="w-3 h-3 inline mr-1" />
-                {formatValidity(selectedBonus)}
-              </div>
-            )}
-            {!!selectedBonus?.description && (
-              <div className="text-sm text-muted-foreground">
-                {selectedBonus.description}
-              </div>
-            )}
-            {!!selectedBonus?.ctaUrl && (
-              <Button className="w-full" asChild>
-                <a href={selectedBonus.ctaUrl} target="_blank" rel="noopener noreferrer">Kampanyaya Katıl</a>
-              </Button>
-            )}
           </DialogContent>
         </Dialog>
 

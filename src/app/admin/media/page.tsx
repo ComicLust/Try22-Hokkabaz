@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Images, Copy } from 'lucide-react'
+import { Images, Copy, Trash2 } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 
 interface UploadFile {
@@ -59,6 +59,19 @@ export default function MediaLibraryPage() {
     }
   }
 
+  const removeFile = async (name: string) => {
+    if (!confirm('Bu dosyayı silmek istediğinize emin misiniz?')) return
+    try {
+      const res = await fetch(`/api/upload?name=${encodeURIComponent(name)}`, { method: 'DELETE' })
+      const json = await res.json().catch(()=>({}))
+      if (!res.ok) throw new Error((json as any)?.error ?? 'Silme hatası')
+      setFiles((prev) => prev.filter((f) => f.name !== name))
+      toast({ title: 'Silindi', description: name })
+    } catch (e: any) {
+      toast({ title: 'Hata', description: e?.message ?? 'Silinemedi' })
+    }
+  }
+
   return (
     <div className="p-4 space-y-6">
       <header className="flex items-center justify-between">
@@ -104,6 +117,9 @@ export default function MediaLibraryPage() {
                     </Button>
                     <Button asChild variant="ghost" size="sm">
                       <a href={f.url} target="_blank" rel="noreferrer">Yeni sekmede aç</a>
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={() => removeFile(f.name)}>
+                      <Trash2 className="w-4 h-4 mr-2" /> Sil
                     </Button>
                   </div>
                 </CardContent>

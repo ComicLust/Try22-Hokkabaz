@@ -106,6 +106,7 @@ function TableList({ items }: { items: any[] }) {
             <th className="py-2 pr-4">Kısa Linkler</th>
             <th className="py-2 pr-4">Tıklama</th>
             <th className="py-2 pr-4">Oluşturma</th>
+            <th className="py-2 pr-4">İşlemler</th>
           </tr>
         </thead>
         <tbody>
@@ -121,6 +122,7 @@ function TableList({ items }: { items: any[] }) {
               </td>
               <td className="py-2 pr-4">{l.clicks}</td>
               <td className="py-2 pr-4">{new Date(l.createdAt).toLocaleString()}</td>
+              <td className="py-2 pr-4"><RowActions id={l.id} slug={l.slug} isManual={l.isManual} /></td>
             </tr>
           ))}
         </tbody>
@@ -132,3 +134,4 @@ function TableList({ items }: { items: any[] }) {
 import ClientChart from './components/ClientChart'
 import CreateLinkButton from './components/CreateLinkButton'
 import ResetStatsButton from './components/ResetStatsButton'
+import RowActions from './components/RowActions'

@@ -44,3 +44,28 @@ export async function PATCH(
     return NextResponse.json({ error: msg }, { status: 400 })
   }
 }
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const existing = await (db as any).affiliateLink.findUnique({ where: { id: params.id } })
+    if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+    // Otomatik linkler silinemez (güvenlik)
+    if (!existing.isManual) {
+      return NextResponse.json({ error: 'Otomatik oluşturulan linkler silinemez' }, { status: 400 })
+    }
+
+    // Önce tıklama loglarını sil, sonra linki sil
+    const trx = await db.$transaction([
+      (db as any).affiliateClick.deleteMany({ where: { linkId: params.id } }),
+      (db as any).affiliateLink.delete({ where: { id: params.id } }),
+    ])
+
+    return NextResponse.json({ ok: true, deletedClicks: trx?.[0]?.count ?? 0 })
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message ?? 'Silme hatası' }, { status: 500 })
+  }
+}

@@ -177,11 +177,11 @@ export default function AdminReviewBrandsPage() {
               {items.map((it) => (
                 <div key={it.id} className="grid grid-cols-1 md:grid-cols-6 gap-3 items-start border rounded-md p-3">
                   <div className="md:col-span-1 flex items-center gap-2">
-                    <div className="w-16 h-10 bg-muted flex items-center justify-center border rounded">
+                    <div className="w-16 h-10 bg-white shadow-sm flex items-center justify-center border rounded">
                       {it.logoUrl ? (
-                        <img src={it.logoUrl} alt={it.name} className="w-full h-full object-contain" />
+                        <img src={it.logoUrl} alt={it.name} className="w-full h-full object-contain filter brightness-110 contrast-115" />
                       ) : (
-                        <img src="/logo.svg" alt="logo" className="w-8 h-8" />
+                        <img src="/logo.svg" alt="logo" className="w-8 h-8 filter brightness-110 contrast-115" />
                       )}
                     </div>
                   </div>

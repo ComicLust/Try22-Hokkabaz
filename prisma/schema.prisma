@@ -241,3 +241,54 @@ model AffiliateClick {
   @@index([linkId, createdAt])
   @@index([linkId, ip])
 }
+
+
+enum CouponStatus {
+  PENDING
+  WON
+  LOST
+}
+
+enum MatchResult {
+  PENDING
+  WON
+  LOST
+  DRAW
+  CANCELLED
+}
+
+model BankoCoupon {
+  id          String        @id @default(cuid())
+  title       String?
+  date        DateTime      // Kupon tarihi (günlük kupon)
+  publishedAt DateTime?
+  isActive    Boolean       @default(true)
+  totalOdd    Float?
+  status      CouponStatus  @default(PENDING)
+  matches     BankoMatch[]
+  // Voting fields
+  upVotes     Int           @default(0)
+  downVotes   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([date])
+}
+
+model BankoMatch {
+  id          String       @id @default(cuid())
+  couponId    String
+  coupon      BankoCoupon  @relation(fields: [couponId], references: [id])
+  homeTeam    String
+  awayTeam    String
+  league      String?
+  startTime   DateTime?
+  prediction  String?
+  odd         Float?
+  resultScore String?      // Örn: "3-2"
+  result      MatchResult  @default(PENDING)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([couponId])
+}

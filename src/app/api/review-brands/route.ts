@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-
-const slugify = (str: string) => str
-  .toLowerCase()
-  .trim()
-  .replace(/[^a-z0-9]+/g, '-')
-  .replace(/(^-|-$)+/g, '')
+import { slugifyTr } from '@/lib/slugify'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -22,7 +17,8 @@ export async function POST(req: NextRequest) {
     if (!name || typeof name !== 'string') {
       return NextResponse.json({ error: 'Marka adı gerekli' }, { status: 400 })
     }
-    const slug = (rawSlug && typeof rawSlug === 'string' ? rawSlug : slugify(name)) || slugify(name)
+    const slugBase = (rawSlug && typeof rawSlug === 'string' ? rawSlug : name)
+    const slug = slugifyTr(slugBase)
     const exists = await db.reviewBrand.findUnique({ where: { slug } })
     if (exists) return NextResponse.json({ error: 'Slug zaten mevcut' }, { status: 400 })
     const created = await db.reviewBrand.create({

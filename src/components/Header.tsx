@@ -25,6 +25,8 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/kampanyalar', label: 'Kampanyalar', active: currentPath === '/kampanyalar' },
     { href: '/bonuslar', label: 'Bonuslar', active: currentPath === '/bonuslar' },
     { href: '/anlasmali-siteler', label: 'Güvenilir Siteler', active: currentPath === '/anlasmali-siteler' },
+    { href: '/yorumlar', label: 'Yorumlar', active: currentPath === '/yorumlar' },
+    { href: '/banko-kuponlar', label: 'Banko Kuponlar', active: currentPath === '/banko-kuponlar' },
     { href: '/hakkimizda', label: 'Hakkımızda', active: currentPath === '/hakkimizda' },
     { href: '/iletisim', label: 'İletişim', active: currentPath === '/iletisim' },
   ];
@@ -34,6 +36,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/anlasmali-siteler', label: 'Güvenilir Siteler', Icon: Award, active: currentPath === '/anlasmali-siteler' },
     { href: '/kampanyalar', label: 'Aktif Kampanyalar', Icon: Star, active: currentPath === '/kampanyalar' },
     { href: '/yorumlar', label: 'Yorumlar', Icon: MessageSquare, active: currentPath === '/yorumlar' },
+    { href: '/banko-kuponlar', label: 'Banko Kuponlar', Icon: Trophy, active: currentPath === '/banko-kuponlar' },
     { href: 'https://t.me/+r577e3x2dhIxNjdk', label: 'Topluluk', Icon: Users, external: true },
     { href: '/guvenilir-telegram', label: 'Telegram Grupları', Icon: Send, active: currentPath === '/guvenilir-telegram' },
   ];
@@ -63,12 +66,9 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
         <div className="container mx-auto px-4">
           {/* Mobil Header: logo ortalı, sağda hamburger */}
           <div className="flex md:hidden items-center justify-center h-16 relative">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
-                <Award className="w-6 h-6 text-background" />
-              </div>
-              <span className="text-2xl font-bold text-gold">Hokkabaz</span>
-            </div>
+            <a href="/" className="flex items-center space-x-2" aria-label="Hokkabaz">
+              <img src="/logo.svg" alt="Hokkabaz" className="h-10 w-auto max-w-[180px]" />
+            </a>
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="absolute right-0 hover:bg-gold/10 hover:text-gold">
@@ -82,12 +82,9 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                   </SheetHeader>
                 {/* Menü Başlık */}
                 <div className="px-4 pt-6 pb-4 border-b border-border">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gold rounded-full flex items-center justify-center">
-                      <Award className="w-5 h-5 text-background" />
-                    </div>
-                    <div className="text-lg font-bold">Hokkabaz</div>
-                  </div>
+                  <a href="/" className="block" aria-label="Hokkabaz">
+                    <img src="/logo.svg" alt="Hokkabaz" className="h-10 w-auto max-w-[180px]" />
+                  </a>
                 </div>
                 {/* Ana Sayfa ayrı buton kaldırıldı; menü listesinde ilk öğe olarak gösteriliyor */}
                 {/* Menü İçerik */}
@@ -261,12 +258,9 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
         <div className="flex flex-col w-full h-full">
           {/* Brand */}
           <div className="px-4 py-4 border-b border-border space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gold rounded-full flex items-center justify-center">
-                <Award className="w-6 h-6 text-background" />
-              </div>
-              <span className="text-2xl font-bold text-gold">Hokkabaz</span>
-            </div>
+            <a href="/" className="block" aria-label="Hokkabaz">
+              <img src="/logo.svg" alt="Hokkabaz" className="h-16 w-auto max-w-[240px]" />
+            </a>
             {/* Ana Sayfa ayrı buton kaldırıldı; menü listesinde ilk öğe olarak gösteriliyor */}
           </div>
 

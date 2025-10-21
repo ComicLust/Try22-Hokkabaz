@@ -27,50 +27,35 @@ export default function YorumlarClient() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const readJsonSafe = async <T,>(res: Response, fallback: T): Promise<T> => {
-    try {
-      return await res.json()
-    } catch {
-      return fallback
-    }
-  }
-
   useEffect(() => {
-    (async () => {
-      setLoading(true)
+    const fetchData = async () => {
       try {
-        const [brandRes, statRes] = await Promise.all([
+        setLoading(true)
+        const [bRes, sRes] = await Promise.all([
           fetch('/api/review-brands?active=true', { headers: { Accept: 'application/json' } }),
           fetch('/api/site-reviews/stats', { headers: { Accept: 'application/json' } }),
         ])
-
-        if (!brandRes.ok) {
-          const text = await brandRes.text()
-          console.warn('review-brands fetch failed', brandRes.status, text)
-        }
-        if (!statRes.ok) {
-          const text = await statRes.text()
-          console.warn('site-reviews/stats fetch failed', statRes.status, text)
-        }
-
-        const brandData = await readJsonSafe<any[]>(brandRes, [])
-        const statData = await readJsonSafe<ReviewStat[]>(statRes, [])
-        const actives = Array.isArray(brandData) ? brandData.filter((b) => (b.isActive ?? true)) : []
-
-        setBrands(actives.map((b) => ({ id: b.id, name: b.name, slug: b.slug, logoUrl: b.logoUrl, createdAt: b.createdAt })))
-        setStats(Array.isArray(statData) ? statData : [])
-        setError(null)
-      } catch (e: any) {
-        console.error('Yorumlar yüklenemedi:', e)
+        const [bJson, sJson] = await Promise.all([bRes.json(), sRes.json()])
+        setBrands(Array.isArray(bJson) ? bJson : [])
+        setStats(Array.isArray(sJson) ? sJson : [])
+      } catch (e) {
         setError('Yüklenemedi')
       } finally {
         setLoading(false)
       }
-    })()
+    }
+    fetchData()
   }, [])
 
+  const map = useMemo(() => {
+    const m: Record<string, { reviewCount: number; lastReviewAt?: string | null; positiveCount: number; negativeCount: number }> = {}
+    for (const s of stats) {
+      m[s.slug] = { reviewCount: s.reviewCount ?? 0, lastReviewAt: s.lastReviewAt ?? null, positiveCount: s.positiveCount ?? 0, negativeCount: s.negativeCount ?? 0 }
+    }
+    return m
+  }, [stats])
+
   const enriched = useMemo(() => {
-    const map: Record<string, ReviewStat> = Object.fromEntries(stats.map((s) => [s.slug, s]))
     return brands.map((b) => ({
       ...b,
       reviewCount: map[b.slug]?.reviewCount ?? 0,
@@ -111,17 +96,17 @@ export default function YorumlarClient() {
         <motion.section className="mb-6" initial="initial" animate="animate" variants={fadeInUp}>
           <h1 className="text-2xl font-bold text-gold mb-4 flex items-center"><MessageSquare className="w-6 h-6 mr-2" /> Bet Siteleri Yorumları</h1>
           <div className="flex flex-col md:flex-row gap-2 items-stretch md:items-center">
-          <div className="relative w-full md:flex-1">
-               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <div className="relative w-full md:flex-1">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Site ismi ara…" className="pl-9 h-9 md:h-10" />
-             </div>
+            </div>
             <div className="w-full md:w-auto flex flex-wrap items-center justify-start md:justify-center gap-2">
-            <Button size="sm" className="flex-1 md:flex-none" variant={sortKey==='most_commented'?'default':'outline'} onClick={() => setSortKey('most_commented')}>En Çok Yorumlananlar</Button>
-            <Button size="sm" className="flex-1 md:flex-none" variant={sortKey==='last_commented'?'default':'outline'} onClick={() => setSortKey('last_commented')}>Son Yorum Yapılanlar</Button>
-            <Button size="sm" className="flex-1 md:flex-none" variant={sortKey==='newest'?'default':'outline'} onClick={() => setSortKey('newest')}>En Yeniler</Button>
-            <Button size="sm" className="flex-1 md:flex-none" variant={showOnlyUncommented ? 'default' : 'outline'} onClick={() => setShowOnlyUncommented((v)=>!v)}>
-              Henüz Yorumlanmayanlar
-            </Button>
+              <Button size="sm" className="flex-1 md:flex-none" variant={sortKey==='most_commented'?'default':'outline'} onClick={() => setSortKey('most_commented')}>En Çok Yorumlananlar</Button>
+              <Button size="sm" className="flex-1 md:flex-none" variant={sortKey==='last_commented'?'default':'outline'} onClick={() => setSortKey('last_commented')}>Son Yorum Yapılanlar</Button>
+              <Button size="sm" className="flex-1 md:flex-none" variant={sortKey==='newest'?'default':'outline'} onClick={() => setSortKey('newest')}>En Yeniler</Button>
+              <Button size="sm" className="flex-1 md:flex-none" variant={showOnlyUncommented ? 'default' : 'outline'} onClick={() => setShowOnlyUncommented((v)=>!v)}>
+                Henüz Yorumlanmayanlar
+              </Button>
             </div>
           </div>
         </motion.section>
@@ -135,18 +120,18 @@ export default function YorumlarClient() {
             <h2 className="text-xl font-bold text-gold mb-4">Yorumlu Siteler</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((s) => (
-                <Card key={s.id}>
-                  <CardHeader>
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <div className="w-10 h-10 overflow-hidden bg-muted flex items-center justify-center border rounded">
+                <Card key={s.id} className="overflow-hidden">
+                  <CardHeader className="flex flex-col items-center">
+                    <a href={`/yorumlar/${s.slug}`} className="block w-full">
+                      <div className="w-full max-w-[220px] h-[60px] md:max-w-[240px] md:h-[72px] mx-auto overflow-hidden bg-card flex items-center justify-center border rounded-lg p-2 hover:shadow-md cursor-pointer">
                         {s.logoUrl ? (
-                          <img src={s.logoUrl} alt={s.name} className="w-full h-full object-contain" />
+                          <img src={s.logoUrl} alt={s.name} className="w-full h-full object-contain filter brightness-110 contrast-115" />
                         ) : (
-                          <img src="/logo.svg" alt="logo" className="w-6 h-6" />
+                          <img src="/logo.svg" alt="logo" className="h-12 w-24 filter brightness-110 contrast-115" />
                         )}
                       </div>
-                      {s.name}
-                    </CardTitle>
+                    </a>
+                    <CardTitle className="text-base text-center mt-2">{s.name}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex gap-2 items-center">
@@ -156,7 +141,7 @@ export default function YorumlarClient() {
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <Button asChild className="w-full">
-                        <a href={`/yorumlar/${s.slug}`} className="flex items-center justify-center">Yorumları Gör <ArrowRight className="w-4 h-4 ml-2" /></a>
+                        <a href={`/yorumlar/${s.slug}`} className="flex w-full items-center justify-center gap-2 px-4">Yorumları Gör <ArrowRight className="w-4 h-4" /></a>
                       </Button>
                       <Button variant="outline" asChild className="w-full">
                         <a href={`/yorumlar/${s.slug}#yeni-yorum`} className="flex items-center justify-center">Yorum Yap</a>
@@ -174,17 +159,25 @@ export default function YorumlarClient() {
             <h2 className="text-xl font-bold text-gold mb-4">Henüz Yorumlanmayanlar / Yeni Eklenecekler</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {uncommented.slice(0, 12).map((b) => (
-                <div key={b.id} className="flex items-center gap-3 p-3 rounded-xl border">
-                  <div className="w-12 h-8 overflow-hidden bg-muted flex items-center justify-center border rounded">
-                    {b.logoUrl ? (
-                      <img src={b.logoUrl} alt={b.name} className="w-full h-full object-contain" />
-                    ) : (
-                      <img src="/logo.svg" alt="logo" className="w-8 h-8" />
-                    )}
-                  </div>
-                  <div className="flex-1 text-sm">{b.name}</div>
-                  <a href={`/yorumlar/${b.slug}#yeni-yorum`} className="text-xs underline">Yorum Yap</a>
-                </div>
+                 <Card key={b.id} className="overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="flex flex-col items-center">
+                    <a href={`/yorumlar/${b.slug}`} className="block w-full">
+                      <div className="w-full max-w-[220px] h-[60px] md:max-w-[240px] md:h-[72px] mx-auto overflow-hidden bg-card flex items-center justify-center border rounded-lg p-2 hover:shadow-md cursor-pointer">
+                         {b.logoUrl ? (
+                           <img src={b.logoUrl} alt={b.name} className="w-full h-full object-contain filter brightness-110 contrast-115" />
+                         ) : (
+                           <img src="/logo.svg" alt="logo" className="h-12 w-24 filter brightness-110 contrast-115" />
+                         )}
+                       </div>
+                    </a>
+                    <CardTitle className="text-base text-center mt-2">{b.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="outline" asChild className="w-full">
+                      <a href={`/yorumlar/${b.slug}#yeni-yorum`} className="flex items-center justify-center">Yorum Yap</a>
+                    </Button>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </motion.section>
