@@ -8,9 +8,9 @@ const allowedMimeToExt: Record<string, string> = {
   'image/png': '.png',
   'image/jpeg': '.jpg',
   'image/webp': '.webp',
-  'image/gif': '.gif',
+  
 }
-const MAX_SIZE = 10 * 1024 * 1024 // 10 MB
+const MAX_SIZE = 100 * 1024 // 100 KB
 
 export async function POST(req: NextRequest) {
   try {

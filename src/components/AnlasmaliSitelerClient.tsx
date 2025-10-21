@@ -341,15 +341,15 @@ export default function AnlasmaliSitelerClient() {
               <Card key={bonus.id} className={`backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div className="w-20 h-12 bg-muted overflow-hidden border flex items-center justify-center">
+                    <div className="mx-auto mb-4 w-full max-w-[240px] h-[72px] sm:h-[80px] bg-muted flex items-center justify-center border rounded-md p-2">
                       {(bonus as any).imageUrl ? (
-                        <img src={(bonus as any).imageUrl} alt={String((bonus as any).title || 'Logo')} className="w-full h-full object-contain" />
+                        <img src={(bonus as any).imageUrl} alt={String((bonus as any).title || 'Logo')} className="h-full w-auto object-contain" />
                       ) : (
-                        <Award className="w-6 h-6 text-gold" />
+                        <Award className="w-10 h-10 text-gold" />
                       )}
                     </div>
                   </div>
-                  <CardTitle className="text-lg">{bonus.title}</CardTitle>
+                  <CardTitle className="text-lg text-center">{bonus.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-gold mb-2">

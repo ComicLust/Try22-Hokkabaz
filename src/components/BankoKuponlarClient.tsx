@@ -558,12 +558,14 @@ export default function BankoKuponlarClient() {
                 )}
               </div>
               <CardHeader>
-                <div className="W-28 h-16 mx-auto mb-4 overflow-hidden bg-muted flex items-center justify-center border">
-                  {bonus.imageUrl ? (
-                    <img src={bonus.imageUrl} alt={String(bonus.title || 'Logo')} className="w-full h-full object-contain" />
-                  ) : (
-                    <Award className="w-10 h-10 text-gold" />
-                  )}
+                <div className="flex items-center justify-between">
+                  <div className="mx-auto mb-4 w-full max-w-[240px] h-[72px] sm:h-[80px] bg-muted flex items-center justify-center border rounded-md p-2">
+                    {bonus.imageUrl ? (
+                      <img src={bonus.imageUrl} alt={String(bonus.title || 'Logo')} className="h-full w-auto object-contain" />
+                    ) : (
+                      <Award className="w-10 h-10 text-gold" />
+                    )}
+                  </div>
                 </div>
                 <CardTitle className="text-xl text-center">{bonus.title}</CardTitle>
               </CardHeader>

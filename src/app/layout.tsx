@@ -45,17 +45,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const ONE_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID || ''
   return (
     <html lang="tr" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden`}
-      >
-        <Script id="hydration-fix" strategy="beforeInteractive">
-          {`
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden`}>
+        <Script id="hydration-fix" strategy="beforeInteractive">{`
             (function(){
               try {
                 var b = document.body;
@@ -74,17 +69,16 @@ export default function RootLayout({
                 obs.observe(b, { attributes: true, attributeFilter: attrs });
               } catch(e) {}
             })();
-          `}
-        </Script>
+          `}</Script>
         {children}
         <Toaster />
         <SeoAutoInjector />
         <AnalyticsInjector />
         {/* OneSignal Web SDK */}
-        <Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" strategy="afterInteractive" />
-        {ONE_APP_ID && (
-          <Script id="onesignal-init" strategy="afterInteractive">
-            {`
+        {ONE_APP_ID && process.env.NODE_ENV === 'production' && (
+          <>
+            <Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" strategy="afterInteractive" />
+            <Script id="onesignal-init" strategy="afterInteractive">{`
               window.OneSignal = window.OneSignal || [];
               OneSignal.push(function() {
                 OneSignal.init({
@@ -93,12 +87,12 @@ export default function RootLayout({
                   notifyButton: { enable: true }
                 });
               });
-            `}
-          </Script>
+            `}</Script>
+          </>
         )}
         {/* Dış linkleri otomatik izleme */}
         <ExternalLinkTracker />
       </body>
     </html>
-  );
+  )
 }

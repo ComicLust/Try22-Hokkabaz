@@ -391,7 +391,7 @@ export default function HomeClient() {
                       <CardTitle className="text-lg">{kampanya.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground text-sm mb-4">{kampanya.description}</p>
+                      <p className="text-muted-foreground text-sm mb-4 overflow-hidden text-ellipsis" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{kampanya.description}</p>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Bonus Miktarı:</span>
@@ -451,23 +451,21 @@ export default function HomeClient() {
                 <motion.div key={bonus.id} variants={fadeInUp}>
                   <Card className={`backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                     <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div className="w-20 h-12 bg-muted overflow-hidden border flex items-center justify-center">
-                          {(bonus as any).imageUrl ? (
-                            <img src={(bonus as any).imageUrl} alt={String((bonus as any).title || 'Logo')} className="w-full h-full object-contain" />
-                          ) : (
-                            <Award className="w-6 h-6 text-gold" />
-                          )}
-                        </div>
+                      <div className="mx-auto mb-4 w-full max-w-[240px] h-[72px] sm:h-[80px] bg-muted flex items-center justify-center border rounded-md p-2">
+                        {(bonus as any).imageUrl ? (
+                          <img src={(bonus as any).imageUrl} alt={String((bonus as any).title || 'Logo')} className="h-full w-auto object-contain" />
+                        ) : (
+                          <Award className="w-10 h-10 text-gold" />
+                        )}
                       </div>
-                      <CardTitle className="text-lg">{(bonus as any).title}</CardTitle>
+                      <CardTitle className="text-lg text-center">{(bonus as any).title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold text-gold mb-2">
+                      <div className="text-2xl font-bold text-gold text-center mb-2">
                         {Number((bonus as any).amount || 0)} TL
                       </div>
                       {(((bonus as any).shortDescription || (bonus as any).description)) && (
-                        <div className="text-muted-foreground mb-4 text-sm">
+                        <div className="text-muted-foreground text-sm text-center mb-4">
                           {String((bonus as any).shortDescription || (bonus as any).description)}
                         </div>
                       )}
@@ -645,62 +643,64 @@ export default function HomeClient() {
 
       {/* Campaign Detail Dialog */}
       <Dialog open={isCampaignDialogOpen} onOpenChange={setIsCampaignDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[560px]">
-          <DialogHeader>
-            <DialogTitle>Kampanya Detayları</DialogTitle>
-          </DialogHeader>
-          {selectedCampaign && (
-            <div className="space-y-4">
-              {/* Campaign image in dialog */}
-              <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted">
-                <Image
-                  src={selectedCampaign.image}
-                  alt={selectedCampaign.title}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 90vw, 560px"
-                />
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gold mb-2">
-                  {selectedCampaign.title}
+        <DialogContent className="sm:max-w-[640px] p-0">
+          <div className="flex max-h-[85vh] flex-col">
+            <DialogHeader className="p-4">
+              <DialogTitle>Kampanya Detayları</DialogTitle>
+            </DialogHeader>
+            {selectedCampaign && (
+              <div className="overflow-y-auto p-4 space-y-4">
+                {/* Campaign image in dialog */}
+                <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted">
+                  <Image
+                    src={selectedCampaign.image}
+                    alt={selectedCampaign.title}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 90vw, 560px"
+                  />
                 </div>
-                <div className="text-muted-foreground mb-2">{selectedCampaign.description}</div>
-                <div className="text-2xl font-bold text-gold mb-4">
-                  {selectedCampaign.bonusAmount}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold">Özellikler:</h4>
-                {Array.isArray(selectedCampaign.highlights) && selectedCampaign.highlights.map((highlight: string, index: number) => (
-                  <div key={index} className="flex items-center text-sm">
-                    <Check className="w-4 h-4 text-gold mr-2" />
-                    {highlight}
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gold mb-2">
+                    {selectedCampaign.title}
                   </div>
-                ))}
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold">Etiketler:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedCampaign.tags.map((tag: string, index: number) => (
-                    <Badge key={index} variant="outline" className="text-xs border-gold text-gold">
-                      {tag}
-                    </Badge>
+                  <div className="text-muted-foreground mb-2">{selectedCampaign.description}</div>
+                  <div className="text-2xl font-bold text-gold mb-4">
+                    {selectedCampaign.bonusAmount}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold">Özellikler:</h4>
+                  {Array.isArray(selectedCampaign.highlights) && selectedCampaign.highlights.map((highlight: string, index: number) => (
+                    <div key={index} className="flex items-center text-sm">
+                      <Check className="w-4 h-4 text-gold mr-2" />
+                      {highlight}
+                    </div>
                   ))}
                 </div>
+                <div className="space-y-2">
+                  <h4 className="font-semibold">Etiketler:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCampaign.tags.map((tag: string, index: number) => (
+                      <Badge key={index} variant="outline" className="text-xs border-gold text-gold">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Bu kampanyaya katılmak için siteye kayıt olmanız ve gerekli şartları sağlamanız gerekmektedir.
+                </div>
               </div>
-              <div className="text-sm text-muted-foreground">
-                Bu kampanyaya katılmak için siteye kayıt olmanız ve gerekli şartları sağlamanız gerekmektedir.
-              </div>
-              {selectedCampaign?.ctaUrl ? (
-                <Button className="w-full gold-gradient neon-button" asChild>
+            )}
+            {selectedCampaign?.ctaUrl ? (
+              <div className="p-4 border-t bg-background">
+                <Button className="w-full" asChild>
                   <a href={selectedCampaign.ctaUrl} target="_blank" rel="noopener noreferrer">Kampanyaya Katıl</a>
                 </Button>
-              ) : (
-                <Button className="w-full gold-gradient neon-button">Kampanyaya Katıl</Button>
-              )}
-            </div>
-          )}
+              </div>
+            ) : null}
+          </div>
         </DialogContent>
       </Dialog>
 

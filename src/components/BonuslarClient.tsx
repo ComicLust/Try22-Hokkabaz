@@ -44,7 +44,7 @@ export default function BonuslarClient() {
   const [selectedBonus, setSelectedBonus] = useState<Bonus | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isStoryOpen, setIsStoryOpen] = useState(false);
-  const [activeStory, setActiveStory] = useState<{ img: string; label: string } | null>(null);
+  const [activeStory, setActiveStory] = useState<{ img: string; label: string; cta?: string } | null>(null);
 
   const [bonuses, setBonuses] = useState<Bonus[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -129,6 +129,7 @@ export default function BonuslarClient() {
       id: b.id,
       label: String(b.title ?? ""),
       img: b.postImageUrl || b.imageUrl || "/logo.svg",
+      cta: b.ctaUrl || undefined,
     }))
     const MIN_ITEMS = 10
     if (items.length < MIN_ITEMS) {
@@ -147,38 +148,36 @@ export default function BonuslarClient() {
   const scrollRight = () => storyRef.current?.scrollBy({ left: 320, behavior: "smooth" });
 
   // Drag-to-scroll state and handlers for story rail
-  const [isDragging, setIsDragging] = useState(false);
+  const draggingRef = useRef(false);
+  const pointerDownRef = useRef(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
   const onPointerDown = (e: any) => {
-    const target = e.currentTarget as HTMLElement;
-    if (typeof target.setPointerCapture === "function") {
-      try { target.setPointerCapture(e.pointerId); } catch {}
-    }
-    setIsDragging(true);
+    pointerDownRef.current = true;
+    draggingRef.current = false;
     setDragStartX(e.clientX);
     setScrollStart(storyRef.current?.scrollLeft ?? 0);
   };
-
   const onPointerMove = (e: any) => {
-    if (!isDragging) return;
+    if (!pointerDownRef.current) return;
     const dx = e.clientX - dragStartX;
-    if (storyRef.current) {
+    if (!draggingRef.current && Math.abs(dx) > 5) {
+      draggingRef.current = true;
+    }
+    if (draggingRef.current && storyRef.current) {
       storyRef.current.scrollLeft = scrollStart - dx;
+      e.preventDefault();
     }
   };
-
-  const onPointerUp = (e: any) => {
-    const target = e.currentTarget as HTMLElement;
-    if (typeof target.releasePointerCapture === "function") {
-      try { target.releasePointerCapture(e.pointerId); } catch {}
-    }
-    setIsDragging(false);
+  const onPointerUp = (_e: any) => {
+    // Allow click handler to read current drag state, then reset.
+    setTimeout(() => { pointerDownRef.current = false; draggingRef.current = false; }, 0);
   };
 
   const onPointerLeave = () => {
-    setIsDragging(false);
+    pointerDownRef.current = false;
+    draggingRef.current = false;
   };
   const openDetails = (b: Bonus) => { setSelectedBonus(b); setIsDialogOpen(true); };
 
@@ -205,7 +204,8 @@ export default function BonuslarClient() {
               />
             </div>
             <Select value={bonusType} onValueChange={setBonusType}>
-              <SelectTrigger className="w-full lg:w-48">
+              <SelectTrigger className="w-full lg:w-56" aria-label="Bonus türü filtresi">
+                <span className="text-xs text-muted-foreground mr-2">Tür</span>
                 <SelectValue placeholder="Bonus Türü" />
               </SelectTrigger>
               <SelectContent>
@@ -217,7 +217,8 @@ export default function BonuslarClient() {
               </SelectContent>
             </Select>
             <Select value={bonusAmount} onValueChange={setBonusAmount}>
-              <SelectTrigger className="w-full lg:w-48">
+              <SelectTrigger className="w-full lg:w-56" aria-label="Tutar filtresi">
+                <span className="text-xs text-muted-foreground mr-2">Tutar</span>
                 <SelectValue placeholder="Tutar" />
               </SelectTrigger>
               <SelectContent>
@@ -228,7 +229,8 @@ export default function BonuslarClient() {
               </SelectContent>
             </Select>
             <Select value={siteCategory} onValueChange={setSiteCategory}>
-              <SelectTrigger className="w-full lg:w-48">
+              <SelectTrigger className="w-full lg:w-56" aria-label="Kategori filtresi">
+                <span className="text-xs text-muted-foreground mr-2">Kategori</span>
                 <SelectValue placeholder="Kategori" />
               </SelectTrigger>
               <SelectContent>
@@ -264,7 +266,7 @@ export default function BonuslarClient() {
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onPointerLeave={onPointerLeave}
-              className="overflow-x-auto overflow-y-visible scroll-smooth pl-10 pr-10 py-2 touch-pan-x select-none cursor-grab active:cursor-grabbing"
+              className="overflow-x-auto overflow-y-visible scroll-smooth pl-10 pr-10 py-2 touch-pan-x select-none cursor-grab active:cursor-grabbing snap-x snap-mandatory"
             >
               <div className="flex items-center gap-5">
                 {storyItems.map((item) => (
@@ -273,10 +275,11 @@ export default function BonuslarClient() {
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
-                      setActiveStory({ img: item.img, label: item.label });
+                      if (draggingRef.current) return;
+                      setActiveStory({ img: item.img, label: item.label, cta: (item as any).cta });
                       setIsStoryOpen(true);
                     }}
-                    className="group flex flex-col items-center"
+                    className="group flex flex-col items-center snap-start"
                   >
                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-gold ring-2 ring-gold/40 ring-offset-2 ring-offset-background overflow-hidden shadow-sm group-hover:ring-gold/60">
                       <img src={item.img} alt={item.label} className="w-full h-full object-cover" draggable={false} />
@@ -310,8 +313,13 @@ export default function BonuslarClient() {
                 <img src={activeStory.img} alt={activeStory.label} className="w-full h-full object-contain" draggable={false} />
               )}
             </div>
-          </DialogContent>
-        </Dialog>
+            <div className="p-4 border-t border-border bg-card/40">
+              <Button className="w-full" onClick={() => { if (activeStory?.cta) window.open(activeStory.cta, '_blank'); }}>
+                Bonusu Al
+              </Button>
+            </div>
+           </DialogContent>
+         </Dialog>
 
 
 
@@ -332,9 +340,9 @@ export default function BonuslarClient() {
                       )}
                     </div>
                     <CardHeader>
-                      <div className="w-28 h-16 mx-auto mb-4 overflow-hidden bg-muted flex items-center justify-center border">
+                      <div className="mx-auto mb-4 w-full max-w-[220px] h-[64px] sm:h-[72px] bg-muted flex items-center justify-center border rounded-md p-2">
                         {bonus.imageUrl ? (
-                          <img src={bonus.imageUrl} alt={String(bonus.title || 'Logo')} className="w-full h-full object-contain" />
+                          <img src={bonus.imageUrl} alt={String(bonus.title || 'Logo')} className="h-full w-auto object-contain" />
                         ) : (
                           <Award className="w-10 h-10 text-gold" />
                         )}
@@ -383,9 +391,9 @@ export default function BonuslarClient() {
               {regularBonuses.map((bonus) => (
                 <Card key={bonus.id} className={`relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                   <CardHeader>
-                    <div className="w-24 h-14 mx-auto mb-4 overflow-hidden bg-muted flex items-center justify-center border">
+                    <div className="mx-auto mb-4 w-full max-w-[200px] h-[56px] sm:h-[64px] bg-muted flex items-center justify-center border rounded-md p-2">
                       {bonus.imageUrl ? (
-                        <img src={bonus.imageUrl} alt={String(bonus.title || 'Logo')} className="w-full h-full object-contain" />
+                        <img src={bonus.imageUrl} alt={String(bonus.title || 'Logo')} className="max-h-full max-w-full object-contain" />
                       ) : (
                         <Award className="w-8 h-8 text-gold" />
                       )}

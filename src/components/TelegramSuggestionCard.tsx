@@ -33,6 +33,8 @@ export default function TelegramSuggestionCard() {
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const { toast } = useToast()
   const [submitted, setSubmitted] = React.useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = React.useState(false)
 
   // Simple captcha (math) similar to comment page
   const [captchaA, setCaptchaA] = React.useState<number>(() => Math.floor(Math.random() * 5) + 2)
@@ -47,13 +49,47 @@ export default function TelegramSuggestionCard() {
     setErrors((e) => ({ ...e, [field]: '' }))
   }
 
+  const handleFileSelect = async (file: File | null) => {
+    if (!file) return
+    const allowed = ['image/png', 'image/jpeg', 'image/webp']
+    if (!allowed.includes(file.type)) {
+      setErrors((e) => ({ ...e, imageUrl: 'Yalnızca PNG/JPEG/WEBP yükleyin' }))
+      toast({ title: 'Desteklenmeyen dosya türü', description: 'Sadece PNG/JPEG/WEBP', variant: 'destructive' })
+      return
+    }
+    if (file.size > 100 * 1024) {
+      setErrors((e) => ({ ...e, imageUrl: 'Maksimum 100KB olmalı' }))
+      toast({ title: 'Dosya çok büyük', description: 'Maksimum 100KB', variant: 'destructive' })
+      return
+    }
+    try {
+      setUploading(true)
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      if (!res.ok) {
+        const j = await res.json().catch(() => ({}))
+        throw new Error(j?.error || 'Yükleme hatası')
+      }
+      const j = await res.json()
+      onChange('imageUrl', j.url)
+    } catch (e) {
+      console.error(e)
+      toast({ title: 'Yükleme hatası', description: (e as Error).message, variant: 'destructive' })
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const validate = () => {
     const errs: Record<string, string> = {}
     if (!state.name.trim()) errs.name = 'Ad gerekli'
     if (!state.ctaUrl.trim()) errs.ctaUrl = 'CTA URL gerekli'
     if (!/^https?:\/\//i.test(state.ctaUrl.trim())) errs.ctaUrl = 'Geçerli bir URL girin'
-    if (state.members && isNaN(Number(state.members))) errs.members = 'Üye sayısı sayı olmalı'
-    if (state.imageUrl && !/^https?:\/\//i.test(state.imageUrl.trim())) errs.imageUrl = 'Geçerli bir URL girin'
+    if (!state.adminUsername.trim()) errs.adminUsername = 'Yönetici adı gerekli'
+    if (!state.members.trim()) errs.members = 'Üye sayısı gerekli'
+    else if (isNaN(Number(state.members))) errs.members = 'Üye sayısı sayı olmalı'
+    if (!state.imageUrl.trim()) errs.imageUrl = 'Görsel gerekli'
     if (!captchaOk) errs.captcha = 'Captcha hatalı'
     setErrors(errs)
     return Object.keys(errs).length === 0
@@ -139,17 +175,33 @@ export default function TelegramSuggestionCard() {
                 </div>
                 <div>
                   <Label>Yönetici Kullanıcı Adı</Label>
-                  <Input value={state.adminUsername} onChange={(e) => onChange('adminUsername', e.target.value)} placeholder="@username (opsiyonel)" />
+                  <Input value={state.adminUsername} onChange={(e) => onChange('adminUsername', e.target.value)} placeholder="@username" />
+                  {errors.adminUsername && <p className="text-sm text-red-600 mt-1">{errors.adminUsername}</p>}
                 </div>
                 <div>
                   <Label>Üye Sayısı</Label>
-                  <Input value={state.members} onChange={(e) => onChange('members', e.target.value)} placeholder="Sayı (opsiyonel)" />
+                  <Input value={state.members} onChange={(e) => onChange('members', e.target.value)} placeholder="Sayı" />
                   {errors.members && <p className="text-sm text-red-600 mt-1">{errors.members}</p>}
                 </div>
                 <div className="col-span-2">
-                  <Label>Görsel URL</Label>
-                  <Input value={state.imageUrl} onChange={(e) => onChange('imageUrl', e.target.value)} placeholder="https://... (opsiyonel)" />
+                  <Label>Görsel</Label>
+                  <div className="flex items-center gap-3">
+                    {state.imageUrl && (
+                      <img src={state.imageUrl} alt="Seçilen görsel" className="w-16 h-16 rounded object-cover border" />
+                    )}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept="image/png,image/jpeg,image/webp"
+                      hidden
+                      onChange={(e) => handleFileSelect(e.target.files?.[0] ?? null)}
+                    />
+                    <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                      {uploading ? 'Yükleniyor...' : 'Görsel Seç'}
+                    </Button>
+                  </div>
                   {errors.imageUrl && <p className="text-sm text-red-600 mt-1">{errors.imageUrl}</p>}
+                  <p className="text-[11px] text-muted-foreground mt-1">Maksimum 100KB. PNG/JPEG/WEBP desteklenir.</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">

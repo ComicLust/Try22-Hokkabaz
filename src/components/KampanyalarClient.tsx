@@ -168,7 +168,7 @@ export default function KampanyalarClient() {
                       <CardTitle className="text-lg">{kampanya.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground text-sm mb-4">{kampanya.description}</p>
+                      <p className="text-muted-foreground text-sm mb-4 overflow-hidden text-ellipsis" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{kampanya.description}</p>
                       <div className="space-y-3">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Bonus Miktarı:</span>
@@ -230,7 +230,7 @@ export default function KampanyalarClient() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground text-sm mb-4">{kampanya.description}</p>
+                    <p className="text-muted-foreground text-sm mb-4 overflow-hidden text-ellipsis" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>{kampanya.description}</p>
                     
                     <div className="space-y-3 mb-4">
                       <div className="flex items-center justify-between text-sm">
@@ -274,52 +274,42 @@ export default function KampanyalarClient() {
       </main>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] md:max-w-[560px]">
-          <DialogHeader>
-            <DialogTitle>Kampanya Detayları</DialogTitle>
-          </DialogHeader>
-          {selectedCampaign && (
-            <div className="space-y-4">
-              <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted">
-                <Image
-                  src={selectedCampaign.image}
-                  alt={selectedCampaign.title}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 768px) 90vw, 560px"
-                />
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-gold mb-2">
-                  {selectedCampaign.title}
+        <DialogContent className="sm:max-w-[640px] p-0">
+          <div className="flex max-h-[85vh] flex-col">
+            <DialogHeader className="p-4">
+              <DialogTitle>Kampanya Detayları</DialogTitle>
+            </DialogHeader>
+            {selectedCampaign && (
+              <div className="overflow-y-auto p-4 space-y-4">
+                <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted">
+                  <Image src={selectedCampaign.image} alt={selectedCampaign.title} fill className="object-contain" sizes="(max-width: 768px) 90vw, 560px" />
                 </div>
-                <div className="text-muted-foreground mb-2">{selectedCampaign.description}</div>
-                <div className="text-2xl font-bold text-gold mb-4">
-                  {selectedCampaign.bonusAmount}
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-gold mb-2">{selectedCampaign.title}</div>
+                  <div className="text-muted-foreground mb-2">{selectedCampaign.description}</div>
+                  <div className="text-2xl font-bold text-gold mb-4">{selectedCampaign.bonusAmount}</div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="font-semibold">Etiketler:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedCampaign.tags.map((tag: string, index: number) => (
-                    <Badge key={index} variant="outline" className="text-xs border-gold text-gold">
-                      {tag}
-                    </Badge>
-                  ))}
+                <div className="space-y-2">
+                  <h4 className="font-semibold">Etiketler:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCampaign.tags.map((tag: string, index: number) => (
+                      <Badge key={index} variant="outline" className="text-xs border-gold text-gold">{tag}</Badge>
+                    ))}
+                  </div>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Bu kampanyaya katılmak için siteye kayıt olmanız ve gerekli şartları sağlamanız gerekmektedir.
                 </div>
               </div>
-              <div className="text-sm text-muted-foreground">
-                Bu kampanyaya katılmak için siteye kayıt olmanız ve gerekli şartları sağlamanız gerekmektedir.
-              </div>
-              {selectedCampaign?.ctaUrl ? (
-                <Button className="w-full gold-gradient neon-button" asChild>
+            )}
+            {selectedCampaign?.ctaUrl ? (
+              <div className="p-4 border-t bg-background">
+                <Button className="w-full" asChild>
                   <a href={selectedCampaign.ctaUrl} target="_blank" rel="noopener noreferrer">Kampanyaya Katıl</a>
                 </Button>
-              ) : (
-                <Button className="w-full gold-gradient neon-button">Kampanyaya Katıl</Button>
-              )}
-            </div>
-          )}
+              </div>
+            ) : null}
+          </div>
         </DialogContent>
       </Dialog>
       <Footer />
