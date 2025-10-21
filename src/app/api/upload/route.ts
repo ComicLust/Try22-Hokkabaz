@@ -10,7 +10,7 @@ const allowedMimeToExt: Record<string, string> = {
   'image/webp': '.webp',
   
 }
-const MAX_SIZE = 100 * 1024 // 100 KB
+const MAX_SIZE = 250 * 1024 // 250 KB
 
 export async function POST(req: NextRequest) {
   try {

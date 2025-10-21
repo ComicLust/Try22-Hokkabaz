@@ -34,6 +34,9 @@ export function MediaPicker({
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
+  const MAX_SIZE_CLIENT = 250 * 1024 // 250 KB
+  const ALLOWED_MIME = ["image/png", "image/jpeg", "image/webp"]
+
   const load = async (q?: string) => {
     setLoading(true)
     try {
@@ -70,6 +73,17 @@ export function MediaPicker({
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return
     const file = fileList[0]
+
+    // İstemci tarafı maksimum boyut ve tür kontrolü
+    if (file.size > MAX_SIZE_CLIENT) {
+      toast({ title: "Hata", description: "Maksimum dosya boyutu 250KB" })
+      return
+    }
+    if (!ALLOWED_MIME.includes(file.type)) {
+      toast({ title: "Hata", description: "Desteklenmeyen dosya türü (PNG/JPEG/WebP)" })
+      return
+    }
+
     setUploading(true)
     try {
       const url = await uploadViaFetch(file)
@@ -181,6 +195,9 @@ export function MediaPicker({
               >
                 Dosya seçin
               </Button>
+            </div>
+            <div className="text-xs text-muted-foreground">
+              Maksimum boyut: 250KB. Desteklenen türler: PNG, JPEG, WebP.
             </div>
             <input
               ref={fileInputRef}
