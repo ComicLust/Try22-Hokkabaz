@@ -35,6 +35,7 @@ import {
   Link2,
   Bell,
   Database,
+  Trophy,
 } from 'lucide-react'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
@@ -53,6 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     'push-notifications': 'Push Notifications',
     campaigns: 'Kampanyalar',
     bonuses: 'Bonuslar',
+    'banko-kuponlar': 'Banko Kuponlar',
     telegram: 'Telegram',
     yorumlar: 'Yorumlar',
     'yorum-onay': 'Yorum Onay',
@@ -147,6 +149,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/bonuses')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/bonuses"><Gift className="size-4" /> Bonuslar</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/banko-kuponlar')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/banko-kuponlar"><Trophy className="size-4" /> Banko Kuponlar</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

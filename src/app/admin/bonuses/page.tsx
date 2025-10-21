@@ -15,6 +15,12 @@ type Bonus = {
   minDeposit?: number | null
   imageUrl?: string | null
   ctaUrl?: string | null
+  badges?: string[] | null
+  features?: string[] | null
+  validityText?: string | null
+  shortDescription?: string | null
+  startDate?: string | null
+  endDate?: string | null
   isActive: boolean
   isFeatured?: boolean
   priority?: number
@@ -173,15 +179,19 @@ export default function BonusesPage() {
                 <div className="absolute top-4 right-4">
                   <span className="text-xs px-2 py-1 rounded-full bg-gold text-background">ÖNE ÇIKAN</span>
                 </div>
-                <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-full flex items-center justify-center">
-                  <Award className="w-8 h-8 text-gold" />
+                <div className="w-16 h-16 mx-auto mb-4 rounded-md flex items-center justify-center border bg-background">
+                  {bonus.imageUrl ? (
+                    <img src={bonus.imageUrl} alt={bonus.title} className="w-full h-full object-contain p-1" />
+                  ) : (
+                    <Award className="w-8 h-8 text-gold" />
+                  )}
                 </div>
                 <div className="text-center space-y-2">
                   <div className="text-lg font-medium">{bonus.title}</div>
                   <div className="text-3xl font-bold text-gold">{bonus.amount ?? 0} TL</div>
-                  <div className="text-muted-foreground">Deneme Bonusu</div>
+                  <div className="text-muted-foreground">{bonus.bonusType ?? 'Bonus'}</div>
                   <div className="space-y-1">
-                    {['Çevrim Şartsız', '7/24 Destek'].map((f, i) => (
+                    {(bonus.features ?? []).map((f, i) => (
                       <div key={i} className="flex items-center justify-center text-sm text-muted-foreground">
                         <Check className="w-4 h-4 text-gold mr-2" /> {f}
                       </div>
@@ -190,11 +200,13 @@ export default function BonusesPage() {
                   <div className="text-xs text-muted-foreground">
                     <Clock className="w-3 h-3 inline mr-1" /> Son 5 gün
                   </div>
-                  <div className="grid grid-cols-3 gap-2 text-xs">
-                    {['Lisanslı', 'SSL', 'Güvenilir'].map((b, i) => (
-                      <span key={i} className="px-2 py-1 rounded-full border text-center">{b}</span>
-                    ))}
-                  </div>
+                  {(bonus.badges ?? []).length > 0 && (
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      {(bonus.badges ?? []).map((b, i) => (
+                        <span key={i} className="px-2 py-1 rounded-full border text-center">{b}</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="mt-4 grid grid-cols-4 gap-2">
                   <button className="px-3 py-2 rounded-md border" onClick={() => updateItem(bonus.id, { isFeatured: false })}>Normal Yap</button>
@@ -215,8 +227,12 @@ export default function BonusesPage() {
           {listedItems.map((bonus) => (
             <div key={bonus.id} className="backdrop-blur-lg bg-opacity-80 bg-card border rounded-2xl p-4 hover:border-gold transition-colors">
               <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                  <Award className="w-6 h-6 text-gold" />
+                <div className="w-10 h-10 rounded-md flex items-center justify-center border bg-background">
+                  {bonus.imageUrl ? (
+                    <img src={bonus.imageUrl} alt={bonus.title} className="w-full h-full object-contain p-1" />
+                  ) : (
+                    <Award className="w-6 h-6 text-gold" />
+                  )}
                 </div>
                 <span className="text-xs border rounded-full px-2 py-1">{bonus.wager ? `${bonus.wager}x` : 'wager yok'}</span>
               </div>
@@ -226,7 +242,7 @@ export default function BonusesPage() {
                 <Calendar className="w-3 h-3 inline mr-1" /> Min. Yatırım: {bonus.minDeposit ?? 0} TL
               </div>
               <div className="space-y-2 mb-4">
-                {['Çevrim Şartsız', 'Anında Çekim'].map((f, i) => (
+                {(bonus.features ?? []).map((f, i) => (
                   <div key={i} className="flex items-center text-sm text-muted-foreground">
                     <Check className="w-4 h-4 text-gold mr-2" /> {f}
                   </div>

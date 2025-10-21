@@ -133,5 +133,5 @@ function TableList({ items }: { items: any[] }) {
 
 import ClientChart from './components/ClientChart'
 import CreateLinkButton from './components/CreateLinkButton'
-// ResetStatsButton component removed to fix module resolution error
+import ResetStatsButton from './components/ResetStatsButton'
 import RowActions from './components/RowActions'

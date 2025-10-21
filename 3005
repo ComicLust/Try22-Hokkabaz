@@ -381,3 +381,106 @@ Port 3003 in use. Retrying on 3004...
 > Socket.IO server running at ws://0.0.0.0:3003/api/socketio
 > Ready on http://0.0.0.0:3004
 > Socket.IO server running at ws://0.0.0.0:3004/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] still waiting for 2 sub-process to finish...[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+ ✓ Compiled /middleware in 201ms (108 modules)
+ ○ Compiling /admin/links ...
+ ✓ Compiled /admin/links in 2.8s (2095 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ○ Compiling /api/seo ...
+ ✓ Compiled /api/seo in 1455ms (2106 modules)
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData`, `main`.`SeoSetting`.`createdAt`, `main`.`SeoSetting`.`updatedAt` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fadmin%2Flinks 200 in 782ms
+ GET /api/analytics-codes 200 in 784ms
+prisma:query SELECT `main`.`AffiliateLink`.`id`, `main`.`AffiliateLink`.`title`, `main`.`AffiliateLink`.`slug`, `main`.`AffiliateLink`.`targetUrl`, `main`.`AffiliateLink`.`clicks`, `main`.`AffiliateLink`.`isManual`, `main`.`AffiliateLink`.`createdAt`, `main`.`AffiliateLink`.`updatedAt` FROM `main`.`AffiliateLink` WHERE 1=1 ORDER BY `main`.`AffiliateLink`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`AffiliateLink`.`id`, `main`.`AffiliateLink`.`title`, `main`.`AffiliateLink`.`slug`, `main`.`AffiliateLink`.`targetUrl`, `main`.`AffiliateLink`.`clicks`, `main`.`AffiliateLink`.`isManual`, `main`.`AffiliateLink`.`createdAt`, `main`.`AffiliateLink`.`updatedAt` FROM `main`.`AffiliateLink` WHERE 1=1 ORDER BY `main`.`AffiliateLink`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`AffiliateLink`.`id`, `main`.`AffiliateLink`.`title`, `main`.`AffiliateLink`.`slug`, `main`.`AffiliateLink`.`targetUrl`, `main`.`AffiliateLink`.`clicks`, `main`.`AffiliateLink`.`isManual`, `main`.`AffiliateLink`.`createdAt`, `main`.`AffiliateLink`.`updatedAt` FROM `main`.`AffiliateLink` WHERE 1=1 ORDER BY `main`.`AffiliateLink`.`clicks` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`AnalyticsCode`.`id`, `main`.`AnalyticsCode`.`name`, `main`.`AnalyticsCode`.`type`, `main`.`AnalyticsCode`.`code`, `main`.`AnalyticsCode`.`injectTo` FROM `main`.`AnalyticsCode` WHERE `main`.`AnalyticsCode`.`isActive` = ? ORDER BY `main`.`AnalyticsCode`.`updatedAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`AffiliateClick`.`id`, `main`.`AffiliateClick`.`linkId`, `main`.`AffiliateClick`.`ip`, `main`.`AffiliateClick`.`country`, `main`.`AffiliateClick`.`userAgent`, `main`.`AffiliateClick`.`createdAt` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? ORDER BY `main`.`AffiliateClick`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+ GET /api/affiliate-links 200 in 1098ms
+ GET /admin/links 200 in 4539ms
+ GET /admin/links 200 in 64ms
+ ✓ Compiled /_not-found in 286ms (2110 modules)
+ GET /@vite/client 404 in 416ms
+ ○ Compiling /api/admin/affiliate-links/reset-stats ...
+ ✓ Compiled /api/admin/affiliate-links/reset-stats in 688ms (2121 modules)
+prisma:query BEGIN IMMEDIATE
+prisma:query DELETE FROM `main`.`AffiliateClick` WHERE 1=1
+prisma:query UPDATE `main`.`AffiliateLink` SET `clicks` = ?, `updatedAt` = ? WHERE 1=1
+prisma:query COMMIT
+ POST /api/admin/affiliate-links/reset-stats 200 in 840ms
+prisma:query SELECT `main`.`AffiliateLink`.`id`, `main`.`AffiliateLink`.`title`, `main`.`AffiliateLink`.`slug`, `main`.`AffiliateLink`.`targetUrl`, `main`.`AffiliateLink`.`clicks`, `main`.`AffiliateLink`.`isManual`, `main`.`AffiliateLink`.`createdAt`, `main`.`AffiliateLink`.`updatedAt` FROM `main`.`AffiliateLink` WHERE 1=1 ORDER BY `main`.`AffiliateLink`.`clicks` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`AffiliateLink`.`id`, `main`.`AffiliateLink`.`title`, `main`.`AffiliateLink`.`slug`, `main`.`AffiliateLink`.`targetUrl`, `main`.`AffiliateLink`.`clicks`, `main`.`AffiliateLink`.`isManual`, `main`.`AffiliateLink`.`createdAt`, `main`.`AffiliateLink`.`updatedAt` FROM `main`.`AffiliateLink` WHERE 1=1 ORDER BY `main`.`AffiliateLink`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`AffiliateLink`.`id`, `main`.`AffiliateLink`.`title`, `main`.`AffiliateLink`.`slug`, `main`.`AffiliateLink`.`targetUrl`, `main`.`AffiliateLink`.`clicks`, `main`.`AffiliateLink`.`isManual`, `main`.`AffiliateLink`.`createdAt`, `main`.`AffiliateLink`.`updatedAt` FROM `main`.`AffiliateLink` WHERE 1=1 ORDER BY `main`.`AffiliateLink`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`AffiliateClick`.`id` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`AffiliateClick`.`id`, `main`.`AffiliateClick`.`linkId`, `main`.`AffiliateClick`.`ip`, `main`.`AffiliateClick`.`country`, `main`.`AffiliateClick`.`userAgent`, `main`.`AffiliateClick`.`createdAt` FROM `main`.`AffiliateClick` WHERE `main`.`AffiliateClick`.`createdAt` >= ? ORDER BY `main`.`AffiliateClick`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/affiliate-links 200 in 14ms
+ GET /admin/links 200 in 147ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+Port 3003 in use. Retrying on 3004...
+Port 3004 in use. Retrying on 3005...
+Server startup error: Error: listen EADDRINUSE: address already in use 0.0.0.0:3005
+    at <unknown> (Error: listen EADDRINUSE: address already in use 0.0.0.0:3005) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 3005
+}
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+Port 3003 in use. Retrying on 3004...
+Port 3004 in use. Retrying on 3005...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+> Ready on http://0.0.0.0:3004
+> Socket.IO server running at ws://0.0.0.0:3004/api/socketio
+> Ready on http://0.0.0.0:3005
+> Socket.IO server running at ws://0.0.0.0:3005/api/socketio
