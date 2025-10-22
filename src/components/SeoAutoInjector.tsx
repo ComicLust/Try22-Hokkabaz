@@ -104,14 +104,22 @@ export default function SeoAutoInjector() {
         upsertMeta('name', 'keywords', keywords ?? undefined)
 
         // OG
-        upsertMeta('property', 'og:title', (ogTitle ?? title) ?? undefined)
+        const effectiveOgTitle = (ogTitle ?? title) ?? undefined
+        upsertMeta('property', 'og:title', effectiveOgTitle)
         upsertMeta('property', 'og:description', (ogDescription ?? description) ?? undefined)
         upsertMeta('property', 'og:image', ogImageUrl ?? undefined)
 
         // Twitter
-        upsertMeta('name', 'twitter:title', (twitterTitle ?? title) ?? undefined)
+        const effectiveTwitterTitle = (twitterTitle ?? title) ?? undefined
+        upsertMeta('name', 'twitter:title', effectiveTwitterTitle)
         upsertMeta('name', 'twitter:description', (twitterDescription ?? description) ?? undefined)
         upsertMeta('name', 'twitter:image', twitterImageUrl ?? undefined)
+
+        // Also update the document title for immediate visual feedback
+        const resolvedTitle = title || ogTitle || twitterTitle
+        if (resolvedTitle && typeof document !== 'undefined') {
+          document.title = resolvedTitle
+        }
       } catch {
         // ignore
       }

@@ -1,0 +1,95 @@
+[
+  {
+    "name": "Cloudflare WARP",
+    "plan": "free",
+    "locations": [
+      "Global/Anycast"
+    ],
+    "description": "Cloudflare’ın WARP uygulaması bağlantıyı optimize eder; çoğu kısıtlı içeriğe erişimi kolaylaştırır.",
+    "href": "https://one.one.one.one/warp/",
+    "features": [
+      "Ücretsiz",
+      "Hızlı kurulum",
+      "Windows/macOS/iOS/Android"
+    ],
+    "imageUrl": "/uploads/1761156333346-xckykl97i79.webp"
+  },
+  {
+    "name": "ProtonVPN Free",
+    "plan": "free",
+    "locations": [
+      "ABD",
+      "Hollanda",
+      "Japonya"
+    ],
+    "description": "ProtonVPN’in ücretsiz planı temel ihtiyaçlar için güvenilir altyapı sunar.",
+    "href": "https://protonvpn.com/",
+    "features": [
+      "Ücretsiz plan",
+      "Güvenilir altyapı",
+      "Çoklu platform"
+    ],
+    "imageUrl": "/uploads/1761156369105-5idoi59t4ik.png"
+  },
+  {
+    "name": "Windscribe Free",
+    "plan": "free",
+    "locations": [
+      "ABD",
+      "Kanada",
+      "Birleşik Krallık"
+    ],
+    "description": "Aylık veri limitiyle gelir; masaüstü ve mobilde pratik kullanım sunar.",
+    "href": "https://windscribe.com/",
+    "features": [
+      "Ücretsiz plan",
+      "Birden fazla lokasyon"
+    ],
+    "imageUrl": "/uploads/1761156392797-zr55p0dgqap.png"
+  },
+  {
+    "name": "Mullvad VPN",
+    "plan": "paid",
+    "locations": [
+      "Avrupa",
+      "ABD"
+    ],
+    "description": "Gizlilik odaklı, hesap gerektirmeyen ücretli VPN; güçlü güvenlik tercihleri.",
+    "href": "https://mullvad.net/",
+    "features": [
+      "Güçlü gizlilik",
+      "Açık net politika",
+      "Çoklu platform"
+    ],
+    "imageUrl": "/uploads/1761156411656-ii34ibs9ppb.png"
+  },
+  {
+    "name": "TunnelBear",
+    "plan": "free",
+    "locations": [
+      "Global"
+    ],
+    "description": "Kullanımı kolay arayüz; düşük veri limiti olan ücretsiz katman sunar.",
+    "href": "https://www.tunnelbear.com/",
+    "features": [
+      "Basit kullanım",
+      "Ücretsiz katman",
+      "Çoklu platform"
+    ],
+    "imageUrl": "/uploads/1761156446157-iz26g11sxg.png"
+  },
+  {
+    "name": "hide.me Free",
+    "plan": "free",
+    "locations": [
+      "Global"
+    ],
+    "description": "Ücretsiz plan ile sınırlı hız ve lokasyon; temel erişim için yeterli.",
+    "href": "https://hide.me/",
+    "features": [
+      "Ücretsiz plan",
+      "Temel hız"
+    ],
+    "imageUrl": "/uploads/1761156472242-t0a9mbnbxjj.png"
+  }
+]

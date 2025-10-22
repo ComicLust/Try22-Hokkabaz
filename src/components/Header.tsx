@@ -37,7 +37,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/kampanyalar', label: 'Aktif Kampanyalar', Icon: Star, active: currentPath === '/kampanyalar' },
     { href: '/yorumlar', label: 'Yorumlar', Icon: MessageSquare, active: currentPath === '/yorumlar' },
     { href: '/banko-kuponlar', label: 'Banko Kuponlar', Icon: Trophy, active: currentPath === '/banko-kuponlar' },
-    { href: '/canli-mac-izle', label: 'Canlı Maç', Icon: Trophy, active: currentPath === '/canli-mac-izle' },
+    // Canlı Maç öğesi buradan kaldırıldı; Eğlence/Kazan altında kalacak
     { href: 'https://t.me/+r577e3x2dhIxNjdk', label: 'Topluluk', Icon: Users, external: true },
     { href: '/guvenilir-telegram', label: 'Telegram Grupları', Icon: Send, active: currentPath === '/guvenilir-telegram' },
   ];

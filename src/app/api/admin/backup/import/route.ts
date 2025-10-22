@@ -30,6 +30,88 @@ async function upsertMany(model: any, rows: any[]) {
   return res.length;
 }
 
+// Upsert helper by a unique field (e.g., 'page', 'slug')
+async function upsertManyByUniqueField(model: any, rows: any[], uniqueField: string) {
+  if (!rows?.length) return 0;
+  let count = 0;
+  for (const row of rows) {
+    const keyVal = row?.[uniqueField];
+    if (keyVal === undefined || keyVal === null || keyVal === '') continue;
+    const createData = { ...row };
+    const updateData = { ...row };
+    // Avoid changing primary key on update and preserve createdAt
+    delete (updateData as any).id;
+    delete (updateData as any).createdAt;
+    await model.upsert({
+      where: { [uniqueField]: keyVal },
+      create: createData,
+      update: updateData,
+    });
+    count += 1;
+  }
+  return count;
+}
+
+// Special upsert for tables with unique `order` field (e.g., MarqueeLogo, CarouselSlide)
+async function upsertManyEnsureUniqueOrder(model: any, rows: any[], orderField: string = 'order') {
+  if (!rows?.length) return 0;
+
+  // Fetch existing ids and orders
+  const existing: Array<{ id: string; [key: string]: any }> = await model.findMany({
+    select: { id: true, [orderField]: true },
+  });
+
+  const used = new Set<number>();
+  let maxOrder = 0;
+  const idToOrder = new Map<string, number>();
+
+  for (const e of existing) {
+    const o = Number(e[orderField] ?? 0);
+    if (Number.isFinite(o)) {
+      used.add(o);
+      if (o > maxOrder) maxOrder = o;
+      idToOrder.set(e.id, o);
+    }
+  }
+
+  const getNextAvailable = () => {
+    maxOrder += 1;
+    used.add(maxOrder);
+    return maxOrder;
+  };
+
+  let count = 0;
+  for (const row of rows) {
+    // Resolve desired order, ensure uniqueness
+    let desired = Number(row[orderField] ?? 0);
+    if (!Number.isFinite(desired) || desired <= 0) {
+      desired = getNextAvailable();
+    }
+
+    const existingOrderForId = idToOrder.get(row.id);
+    if (used.has(desired) && existingOrderForId !== desired) {
+      desired = getNextAvailable();
+    }
+
+    const createData = { ...row, [orderField]: desired };
+    const updateData = { ...row, [orderField]: desired };
+    delete (updateData as any).createdAt;
+
+    const exists = await model.findUnique({ where: { id: row.id }, select: { id: true } });
+    if (exists) {
+      await model.update({ where: { id: row.id }, data: updateData });
+    } else {
+      await model.create({ data: createData });
+    }
+
+    used.add(desired);
+    idToOrder.set(row.id, desired);
+    count += 1;
+  }
+
+  return count;
+}
+
 export async function POST(req: Request) {
   try {
     const fd = await req.formData();
@@ -107,15 +189,18 @@ export async function POST(req: Request) {
     }
     if (tables.carouselSlides?.length) {
       const data = stripUpdatedAt(tables.carouselSlides);
-      results.carouselSlides = await upsertMany(db.carouselSlide, data as any);
+      // Ensure unique order on import
+      results.carouselSlides = await upsertManyEnsureUniqueOrder(db.carouselSlide, data as any, 'order');
     }
     if (tables.marqueeLogos?.length) {
       const data = stripUpdatedAt(tables.marqueeLogos);
-      results.marqueeLogos = await upsertMany(db.marqueeLogo, data as any);
+      // Ensure unique order on import
+      results.marqueeLogos = await upsertManyEnsureUniqueOrder(db.marqueeLogo, data as any, 'order');
     }
     if (tables.seoSettings?.length) {
       const data = stripUpdatedAt(tables.seoSettings);
-      results.seoSettings = await upsertMany(db.seoSetting, data as any);
+      // Upsert by unique 'page' instead of 'id' to avoid duplicates
+      results.seoSettings = await upsertManyByUniqueField(db.seoSetting, data as any, 'page');
     }
     if (tables.telegramGroups?.length) {
       const data = stripUpdatedAt(tables.telegramGroups);
