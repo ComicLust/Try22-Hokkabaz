@@ -90,10 +90,13 @@ export async function middleware(req: NextRequest) {
     return attachNonce(res)
   }
 
-  // Sensitive public API: require auth even for GET
+  // Upload API: allow public POST (validated in route); protect GET/DELETE
   if (pathname.startsWith('/api/upload')) {
-    const res = await requireAuthForApi(req)
-    return attachNonce(res)
+    if (method === 'GET' || method === 'DELETE') {
+      const res = await requireAuthForApi(req)
+      return attachNonce(res)
+    }
+    return attachNonce(NextResponse.next())
   }
 
   // Allow public helpful/not_helpful voting on site reviews (rate-limited in route)
@@ -103,6 +106,10 @@ export async function middleware(req: NextRequest) {
 
   // Allow public comment creation
   if (pathname.startsWith('/api/site-reviews') && method === 'POST') {
+    return attachNonce(NextResponse.next())
+  }
+  // Allow public Telegram suggestions creation (validated and rate-limited in route)
+  if (pathname.startsWith('/api/telegram-suggestions') && method === 'POST') {
     return attachNonce(NextResponse.next())
   }
 
