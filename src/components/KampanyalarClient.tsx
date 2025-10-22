@@ -156,7 +156,7 @@ export default function KampanyalarClient() {
                       <Badge className="bg-gold text-background">{kampanya.badgeLabel ?? 'ÖNE ÇIKAN'}</Badge>
                     </div>
                     <CardHeader>
-                      <div className="relative aspect-video bg-muted rounded-lg mb-4 overflow-hidden">
+                      <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
                         <Image
                           src={kampanya.image}
                           alt={kampanya.title}
@@ -213,7 +213,7 @@ export default function KampanyalarClient() {
               <motion.div key={kampanya.id} variants={fadeInUp}>
                 <Card className="backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold">
                   <CardHeader>
-                    <div className="relative aspect-video bg-muted rounded-lg mb-4 overflow-hidden">
+                    <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
                       <Image
                         src={kampanya.image}
                         alt={kampanya.title}

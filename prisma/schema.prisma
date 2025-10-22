@@ -292,3 +292,34 @@ model BankoMatch {
 
   @@index([couponId])
 }
+
+model PageSponsor {
+  id              String   @id @default(cuid())
+  pageKey         String
+  placement       String
+  imageUrl        String? // eski kolonu migration kaldırdı; null bırakıyoruz
+  desktopImageUrl String?
+  mobileImageUrl  String?
+  clickUrl        String?
+  altText         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([pageKey, placement])
+}
+
+model LiveMatch {
+  id           String   @id @default(cuid())
+  matchTitle   String?
+  embedUrl     String?
+  embedCode    String?
+  league       String?
+  date         DateTime?
+  status       String?
+  isActive     Boolean  @default(true)
+  bannerSetKey String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isActive, date])
+}

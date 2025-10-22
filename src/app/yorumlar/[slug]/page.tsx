@@ -3,14 +3,15 @@ import { db } from '@/lib/db'
 import YorumDetayClient from '@/components/YorumDetayClient'
 const prisma: any = db
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    const brand = await prisma.reviewBrand.findUnique({ where: { slug: params.slug } })
+    const { slug } = await params
+    const brand = await prisma.reviewBrand.findUnique({ where: { slug } })
     if (!brand) return { title: 'Site Yorumları' }
 
-    const canonical = `https://hokkabaz.com/yorumlar/${params.slug}`
+    const canonical = `https://hokkabaz.com/yorumlar/${slug}`
     const title = `${brand.name} Yorumları`
     const description = `${brand.name} için kullanıcı yorumları ve değerlendirmeler`
     const images = brand.logoUrl ? [brand.logoUrl] : undefined
@@ -59,6 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function YorumDetayPage({ params }: Props) {
-  return <YorumDetayClient slug={params.slug} />
+export default async function YorumDetayPage({ params }: Props) {
+  const { slug } = await params
+  return <YorumDetayClient slug={slug} />
 }

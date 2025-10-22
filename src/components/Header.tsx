@@ -37,6 +37,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/kampanyalar', label: 'Aktif Kampanyalar', Icon: Star, active: currentPath === '/kampanyalar' },
     { href: '/yorumlar', label: 'Yorumlar', Icon: MessageSquare, active: currentPath === '/yorumlar' },
     { href: '/banko-kuponlar', label: 'Banko Kuponlar', Icon: Trophy, active: currentPath === '/banko-kuponlar' },
+    { href: '/canli-mac-izle', label: 'Canlı Maç', Icon: Trophy, active: currentPath === '/canli-mac-izle' },
     { href: 'https://t.me/+r577e3x2dhIxNjdk', label: 'Topluluk', Icon: Users, external: true },
     { href: '/guvenilir-telegram', label: 'Telegram Grupları', Icon: Send, active: currentPath === '/guvenilir-telegram' },
   ];
@@ -48,7 +49,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
 
   const funMenu: { href: string; label: string; Icon: any; active?: boolean; external?: boolean; comingSoon?: boolean }[] = [
     { href: '#', label: 'Şans Çarkı', Icon: Trophy, comingSoon: true },
-    { href: '#', label: 'Yayınlar', Icon: Trophy, comingSoon: true },
+    { href: '/canli-mac-izle', label: 'Canlı Maç', Icon: Trophy, active: currentPath === '/canli-mac-izle' },
   ];
 
   const vpnMenu: { href: string; label: string; Icon: any; active?: boolean; external?: boolean; comingSoon?: boolean }[] = [

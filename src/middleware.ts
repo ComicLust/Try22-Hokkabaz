@@ -59,6 +59,11 @@ export async function middleware(req: NextRequest) {
       crypto.getRandomValues(bytes)
       const b64 = Buffer.from(bytes).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
       res.headers.set('x-nonce', b64)
+      // Security headers
+      res.headers.set('x-content-type-options', 'nosniff')
+      res.headers.set('x-frame-options', 'DENY')
+      res.headers.set('referrer-policy', 'strict-origin-when-cross-origin')
+      res.headers.set('permissions-policy', 'camera=(), microphone=(), geolocation=()')
     } catch {}
     return res
   }
@@ -81,6 +86,12 @@ export async function middleware(req: NextRequest) {
 
   // Protect Admin APIs (all methods)
   if (pathname.startsWith('/api/admin')) {
+    const res = await requireAuthForApi(req)
+    return attachNonce(res)
+  }
+
+  // Sensitive public API: require auth even for GET
+  if (pathname.startsWith('/api/upload')) {
     const res = await requireAuthForApi(req)
     return attachNonce(res)
   }

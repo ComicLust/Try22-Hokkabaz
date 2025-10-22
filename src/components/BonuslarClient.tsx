@@ -356,6 +356,26 @@ export default function BonuslarClient() {
                           {String(bonus.shortDescription || bonus.description)}
                         </div>
                       )}
+                      <div className="flex flex-wrap gap-2 justify-center mb-4">
+                        {(Array.isArray(bonus.badges) ? bonus.badges! : [])
+                          .concat(isExpired(bonus) ? ['Süresi Doldu'] : [])
+                          .map((badge, i) => {
+                            const isExpiredBadge = String(badge).toLowerCase() === 'süresi doldu';
+                            return (
+                              <Badge
+                                key={i}
+                                variant={isExpiredBadge ? 'destructive' : 'default'}
+                                className={`text-xs font-semibold px-3 py-1 ${
+                                  isExpiredBadge 
+                                    ? 'uppercase tracking-wide shadow-md bg-red-500 text-white' 
+                                    : 'bg-gold/20 text-gold border-gold/30 hover:bg-gold/30 shadow-sm'
+                                }`}
+                              >
+                                {badge}
+                              </Badge>
+                            );
+                          })}
+                      </div>
                       <div className="space-y-2 mb-4">
                         {(Array.isArray(bonus.features) ? bonus.features : ['Çevrim Şartsız','7/24 Destek']).map((f, i) => (
                           <div key={i} className="flex items-center justify-center text-sm text-muted-foreground">
@@ -387,7 +407,7 @@ export default function BonuslarClient() {
             <div className="text-center text-red-500 py-6">{error}</div>
           )}
           {!loading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {regularBonuses.map((bonus) => (
                 <Card key={bonus.id} className={`relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                   <CardHeader>
@@ -415,8 +435,12 @@ export default function BonuslarClient() {
                           return (
                             <Badge
                               key={i}
-                              variant={isExpiredBadge ? 'destructive' : 'outline'}
-                              className={`text-xs ${isExpiredBadge ? 'uppercase tracking-wide shadow-md' : ''}`}
+                              variant={isExpiredBadge ? 'destructive' : 'default'}
+                              className={`text-xs font-semibold px-3 py-1 ${
+                                isExpiredBadge 
+                                  ? 'uppercase tracking-wide shadow-md bg-red-500 text-white' 
+                                  : 'bg-gold/20 text-gold border-gold/30 hover:bg-gold/30 shadow-sm'
+                              }`}
                             >
                               {badge}
                             </Badge>

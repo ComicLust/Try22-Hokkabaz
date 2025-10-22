@@ -73,9 +73,10 @@ export default function HomeClient() {
       try {
         setBonusesLoading(true);
         setBonusesError(null);
-        const res = await fetch('/api/bonuses?active=true', { cache: 'no-store' });
+        const res = await fetch('/api/bonuses?active=true&featured=true', { cache: 'no-store' });
         const data = await res.json();
-        setBonuses(Array.isArray(data) ? data : []);
+        // Maksimum 12 bonus göster (3 sıra x 4 kolon)
+        setBonuses(Array.isArray(data) ? data.slice(0, 12) : []);
       } catch (e) {
         setBonusesError('Bonuslar yüklenemedi');
       } finally {
@@ -379,7 +380,7 @@ export default function HomeClient() {
                       <Badge className="bg-gold text-background">{kampanya.badgeLabel ?? 'ÖNE ÇIKAN'}</Badge>
                     </div>
                     <CardHeader>
-                      <div className="relative aspect-video bg-muted rounded-lg mb-4 overflow-hidden">
+                      <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
                         <Image
                           src={kampanya.image}
                           alt={kampanya.title}
@@ -437,12 +438,7 @@ export default function HomeClient() {
                 </a>
               </Button>
             </div>
-            <motion.p 
-              className="text-center text-muted-foreground mb-4"
-              variants={fadeInUp}
-            >
-              {bonuses.length} bonus bulundu
-            </motion.p>
+
             <motion.div 
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
               variants={staggerContainer}
@@ -571,7 +567,7 @@ export default function HomeClient() {
                 .map((kampanya) => (
                   <Card key={kampanya.id} className="backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold">
                     <CardHeader>
-                      <div className="relative aspect-video bg-muted rounded-lg mb-4 overflow-hidden">
+                      <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
                         <Image
                           src={kampanya.image}
                           alt={kampanya.title}

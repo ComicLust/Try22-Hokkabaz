@@ -7,6 +7,10 @@ const buildCsp = (isProd: boolean) => [
   "img-src 'self' data: blob: https: http:",
   "font-src 'self' data:",
   "connect-src 'self' https: http: ws:",
+  // Allow generic embeds from HTTPS origins
+  "frame-src 'self' https: http:",
+  // Backward compatibility for some browsers
+  "child-src 'self' https: http:",
   "frame-ancestors 'none'",
   "form-action 'self'",
   "base-uri 'self'",

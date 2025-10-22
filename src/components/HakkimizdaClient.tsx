@@ -107,15 +107,15 @@ export default function HakkimizdaClient() {
               <CardContent>
                 <div className="flex items-center gap-4">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-yellow-500/30">
-                    <Image src="/images/admin-placeholder.jpg" alt="GmanVibes" fill className="object-cover" />
+                    <Image src="/images/agentgman.jpg" alt="AgentGman" fill className="object-cover" />
                   </div>
                   <div>
-                    <p className="font-semibold">GmanVibes</p>
+                    <p className="font-semibold">AgentGman</p>
                     <p className="text-sm text-neutral-400">Admin / Topluluk Yöneticisi</p>
                   </div>
                 </div>
                 <p className="mt-4 text-neutral-300 text-sm">
-                  GmanVibes, stratejik karar süreçlerini koordine eder ve toplulukla düzenli iletişim
+                    AgentGman, stratejik karar süreçlerini koordine eder ve toplulukla düzenli iletişim
                   kurarak operasyonların kurumsal standartlarda ilerlemesini sağlar.
                 </p>
               </CardContent>
@@ -148,7 +148,9 @@ export default function HakkimizdaClient() {
           </div>
 
           <div className="mt-12 text-center">
-            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold shadow-lg">Bize Ulaşın</Button>
+            <Button className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold shadow-lg" asChild>
+              <a href="/iletisim">Bize Ulaşın</a>
+            </Button>
             <p className="mt-2 text-xs text-neutral-400">Kurumsal iş birlikleri için iletişime geçebilirsiniz.</p>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { randomUUID } from 'crypto'
+import { sanitizeText, createIpRateLimiter, getClientIp } from '@/lib/security'
 
 function dicebearAvatar(seed: string) {
   const s = encodeURIComponent(seed)
@@ -48,27 +49,34 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ items, total, page, limit })
 }
 
+const allowPost = createIpRateLimiter(5, 60 * 60 * 1000) // 5 per hour
+
 // Create a new review (goes into approval queue)
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIp(req.headers)
+    if (!allowPost(ip)) {
+      return NextResponse.json({ error: 'Çok fazla deneme, lütfen daha sonra tekrar deneyin' }, { status: 429 })
+    }
+
     const body = await req.json()
     const { brandSlug, siteSlug, author, isAnonymous, content, isPositive } = body || {}
     const slug = brandSlug || siteSlug
-    if (!slug || !content) return NextResponse.json({ error: 'brandSlug and content are required' }, { status: 400 })
+    if (!slug || !content) return NextResponse.json({ error: 'brandSlug ve content zorunlu' }, { status: 400 })
 
     const brand = await db.reviewBrand.findUnique({ where: { slug } })
-    if (!brand) return NextResponse.json({ error: 'Brand not found' }, { status: 404 })
+    if (!brand) return NextResponse.json({ error: 'Marka bulunamadı' }, { status: 404 })
 
     const avatarUrl = dicebearAvatar(randomUUID())
 
     const created = await db.siteReview.create({
       data: {
         brandId: brand.id,
-        author: isAnonymous ? null : (author || null),
+        author: isAnonymous ? null : sanitizeText(author ?? '', 50) || null,
         isAnonymous: Boolean(isAnonymous),
         rating: null,
         isPositive: typeof isPositive === 'boolean' ? isPositive : null,
-        content: String(content),
+        content: sanitizeText(content, 2000),
         isApproved: false,
         avatarUrl,
       },

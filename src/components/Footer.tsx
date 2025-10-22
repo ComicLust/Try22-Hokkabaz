@@ -1,6 +1,6 @@
 "use client";
 
-import { Award } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import SocialBar from "@/components/SocialBar";
 
@@ -21,14 +21,13 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
           {/* Brand Column */}
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gold rounded-full flex items-center justify-center">
-                <Award className="w-5 h-5 text-background" />
-              </div>
+            <div className="flex items-center space-x-3 mb-4">
+              <Image src="/logo.svg" alt="Hokkabaz Logo" width={36} height={36} className="rounded-full bg-gold/10 p-1" />
               <span className="text-xl font-bold text-gold">Hokkabaz</span>
             </div>
-            <p className="text-muted-foreground mb-4 text-sm md:text-base">En güvenilir bahis bonusları</p>
-            {/* Sosyal ikonlar kaldırıldı */}
+            <p className="text-muted-foreground mb-4 text-sm md:text-base">
+              Hokkabaz, güvenilir ve güncel bahis bonuslarını tek yerde toplar. Tüm kampanyaları tarafsızca inceler, kullanım koşullarını anlaşılır şekilde özetleriz. En iyi fırsatları kaçırmamanız için sürekli güncelleme yaparız.
+            </p>
           </div>
 
           {/* Hızlı Linkler */}

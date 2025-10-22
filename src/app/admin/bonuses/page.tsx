@@ -36,6 +36,9 @@ export default function BonusesPage() {
   const [newCategory, setNewCategory] = useState('')
   const [mediaOpenForm, setMediaOpenForm] = useState(false)
 
+  // Drag and drop state
+  const [dragIndex, setDragIndex] = useState<number | null>(null)
+
   // Filters
   const [searchQuery, setSearchQuery] = useState('')
   const [activeFilter, setActiveFilter] = useState<'all'|'active'|'inactive'>('all')
@@ -92,6 +95,26 @@ export default function BonusesPage() {
     if (!confirm('Bu bonus silinsin mi?')) return
     const res = await fetch(`/api/bonuses/${id}`, { method: 'DELETE' })
     if (res.ok) await load()
+  }
+
+  // Drag and drop functions
+  const onDragStart = (index: number) => setDragIndex(index)
+  const onDragOver = (e: React.DragEvent) => e.preventDefault()
+  const onDrop = async (index: number, isFeaturedSection: boolean) => {
+    if (dragIndex === null) return
+    
+    const sourceItems = isFeaturedSection ? featuredItems : listedItems
+    const next = [...sourceItems]
+    const [moved] = next.splice(dragIndex, 1)
+    next.splice(index, 0, moved)
+    
+    // Update priorities based on new order
+    await Promise.all(next.map((item, i) => 
+      updateItem(item.id, { priority: next.length - i })
+    ))
+    
+    setDragIndex(null)
+    await load()
   }
 
   const filtered = useMemo(() => {
@@ -174,8 +197,15 @@ export default function BonusesPage() {
             <Star className="w-5 h-5 mr-2" /> Öne Çıkan Bonuslar
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredItems.map((bonus) => (
-              <div key={bonus.id} className="relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border-2 border-gold rounded-2xl p-4">
+            {featuredItems.map((bonus, index) => (
+              <div 
+                key={bonus.id} 
+                className="relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border-2 border-gold rounded-2xl p-4 cursor-move"
+                draggable
+                onDragStart={() => onDragStart(index)}
+                onDragOver={onDragOver}
+                onDrop={() => onDrop(index, true)}
+              >
                 <div className="absolute top-4 right-4">
                   <span className="text-xs px-2 py-1 rounded-full bg-gold text-background">ÖNE ÇIKAN</span>
                 </div>
@@ -224,8 +254,15 @@ export default function BonusesPage() {
       <section className="space-y-4">
         <h2 className="text-xl font-semibold">Listelenen Bonuslar</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {listedItems.map((bonus) => (
-            <div key={bonus.id} className="backdrop-blur-lg bg-opacity-80 bg-card border rounded-2xl p-4 hover:border-gold transition-colors">
+          {listedItems.map((bonus, index) => (
+            <div 
+              key={bonus.id} 
+              className="backdrop-blur-lg bg-opacity-80 bg-card border rounded-2xl p-4 hover:border-gold transition-colors cursor-move"
+              draggable
+              onDragStart={() => onDragStart(index)}
+              onDragOver={onDragOver}
+              onDrop={() => onDrop(index, false)}
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 rounded-md flex items-center justify-center border bg-background">
                   {bonus.imageUrl ? (
