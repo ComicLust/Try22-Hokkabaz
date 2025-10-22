@@ -33,6 +33,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Docker dağıtımları için daha küçük runtime paketi
+  output: 'standalone',
   // Dev ortamında standart izleme/derleme davranışı
   reactStrictMode: false,
   webpack: (config) => {
