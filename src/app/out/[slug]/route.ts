@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
-export const runtime = 'nodejs'
-
 async function lookupCountry(ip: string | null): Promise<string | null> {
   if (!ip || ip === '127.0.0.1' || ip === '::1') return null
   try {
@@ -19,21 +17,8 @@ async function lookupCountry(ip: string | null): Promise<string | null> {
 export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const accept = req.headers.get('accept') || ''
   const wantsHTML = accept.includes('text/html')
-
-  const slug = params.slug
-  const link = await db.affiliateLink.findUnique({ where: { slug } })
-  if (!link) {
-    return NextResponse.redirect('/', { status: 302 })
-  }
-
   if (wantsHTML) {
-    const targetUrl = link.targetUrl
-    let domain = targetUrl
-    try {
-      domain = new URL(targetUrl).hostname
-    } catch {}
-
-    return new Response(`<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
@@ -97,31 +82,56 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
       const subtitle = document.getElementById('subtitle')
       const domainWrap = document.getElementById('domain')
       const domainName = document.getElementById('domainName')
+      const slug = location.pathname.split('/').filter(Boolean).pop()
+      let targetUrl = null
       setTimeout(() => { if(subtitle) subtitle.textContent = 'Güncel link adresi bulunuyor…' }, 1000)
-      setTimeout(() => {
+      setTimeout(async () => {
+        if (!slug) return
         try {
-          domainName.textContent = ${JSON.stringify(domain)}
-          domainWrap.style.display = 'block'
-        } catch(e) {
-          domainName.textContent = ${JSON.stringify(domain)}
-          domainWrap.style.display = 'block'
-        }
+          const res = await fetch('/api/redirect/'+encodeURIComponent(slug))
+          const data = await res.json()
+          if (res.ok && data.targetUrl) {
+            targetUrl = data.targetUrl
+            try { domainName.textContent = new URL(targetUrl).hostname } catch(e) { domainName.textContent = targetUrl }
+            domainWrap.style.display = 'block'
+          }
+        } catch(e){}
       }, 800)
-      setTimeout(() => { location.href = ${JSON.stringify(targetUrl)} }, 3000)
+      setTimeout(async () => {
+        if (!slug) return
+        try {
+          if (!targetUrl) {
+            const res = await fetch('/api/redirect/'+encodeURIComponent(slug))
+            const data = await res.json()
+            if (res.ok && data.targetUrl) targetUrl = data.targetUrl
+          }
+          if (targetUrl) location.href = targetUrl
+        } catch(e){
+          if(subtitle) subtitle.textContent = 'Yönlendirme hazırlanırken hata oluştu.'
+        }
+      }, 3000)
     })()
   </script>
 </body>
-</html>`, { headers: { 'content-type': 'text/html; charset=utf-8' } })
+</html>`
+    return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8' } })
   }
 
   try {
+    const { slug } = params
+    const link = await db.affiliateLink.findUnique({ where: { slug } })
+    if (!link) return NextResponse.json({ error: 'Link bulunamadı' }, { status: 404 })
+
     const fwd = req.headers.get('x-forwarded-for') || ''
     const ipHeader = fwd.split(',')[0].trim() || req.headers.get('x-real-ip') || req.headers.get('cf-connecting-ip') || null
     const ip = (ipHeader || 'unknown')
     const userAgent = req.headers.get('user-agent') || null
     const country = await lookupCountry(ipHeader)
 
+    // 24 saatlik tekillik penceresi
     const since = new Date(Date.now() - 24 * 60 * 60 * 1000)
+
+    // Tekil IP kontrolü: aynı IP 24 saat içinde bu linke tıkladıysa clicks artmasın
     const existing = await db.affiliateClick.findFirst({ where: { linkId: link.id, ip, createdAt: { gte: since } } })
 
     const ops: any[] = [

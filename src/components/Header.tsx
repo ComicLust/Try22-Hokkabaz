@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Award, Menu, Users, Star, Gift, Trophy, Ticket, Send, Twitter, Facebook, Home, MessageSquare, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -19,6 +19,12 @@ interface HeaderProps {
 
 export default function Header({ currentPath = '/' }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setIsOpen(true)
+    window.addEventListener('open-mobile-menu', handler as EventListener)
+    return () => window.removeEventListener('open-mobile-menu', handler as EventListener)
+  }, [])
 
   const navigationItems = [
     { href: '/', label: 'Ana Sayfa', active: currentPath === '/' },

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import SocialBar from "@/components/SocialBar";
+import MobileBottomNav from "@/components/MobileBottomNav";
 
 const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
@@ -85,6 +86,8 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
           </div>
         </div>
       </div>
+      {/* Mobile bottom navigation (fixed) */}
+      <MobileBottomNav />
     </footer>
   );
 }
