@@ -110,6 +110,7 @@ export default function AdminHome() {
           <Button asChild variant="outline"><a href="/admin/yorumlar/markalar" className="flex items-center justify-between"><span>Yorum Markaları</span><List className="w-4 h-4 ml-2" /></a></Button>
           <Button asChild variant="outline"><a href="/admin/marquee-logos" className="flex items-center justify-between"><span>Anlaşmalı Siteler</span><Images className="w-4 h-4 ml-2" /></a></Button>
           {/* Carousel sayfası kaldırıldı; slider yönetimi Marquee Logolar sayfasında */}
+          <Button asChild variant="outline"><a href="/admin/stories" className="flex items-center justify-between"><span>Story</span><Sliders className="w-4 h-4 ml-2" /></a></Button>
           <Button asChild variant="outline"><a href="/admin/campaigns" className="flex items-center justify-between"><span>Kampanyalar</span><Megaphone className="w-4 h-4 ml-2" /></a></Button>
           <Button asChild variant="outline"><a href="/admin/bonuses" className="flex items-center justify-between"><span>Bonuslar</span><Gift className="w-4 h-4 ml-2" /></a></Button>
           <Button asChild variant="outline"><a href="/admin/seo" className="flex items-center justify-between"><span>Genel SEO</span><LayoutDashboard className="w-4 h-4 ml-2" /></a></Button>

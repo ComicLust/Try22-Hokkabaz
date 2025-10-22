@@ -35,6 +35,15 @@ type Bonus = {
   isFeatured?: boolean | null;
 };
 
+type StorySlide = {
+  id: string;
+  title?: string | null;
+  mobileImageUrl?: string | null;
+  ctaUrl?: string | null;
+  isActive?: boolean | null;
+  order?: number | null;
+};
+
 export default function BonuslarClient() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,6 +56,7 @@ export default function BonuslarClient() {
   const [activeStory, setActiveStory] = useState<{ img: string; label: string; cta?: string } | null>(null);
 
   const [bonuses, setBonuses] = useState<Bonus[]>([]);
+  const [stories, setStories] = useState<StorySlide[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,6 +75,21 @@ export default function BonuslarClient() {
       }
     };
     fetchBonuses();
+  }, []);
+
+  // Story slides (Carousel) çek
+  useEffect(() => {
+    const fetchStories = async () => {
+      try {
+        const res = await fetch('/api/carousel', { cache: 'no-store' });
+        const data = await res.json();
+        const items: StorySlide[] = (Array.isArray(data) ? data : []).filter((s: any) => s.isActive !== false);
+        setStories(items);
+      } catch (e) {
+        // sessiz geç
+      }
+    };
+    fetchStories();
   }, []);
 
   // URL parametresinden başlangıç filtresini uygula (ör. /bonuslar?type=Deneme%20Bonusu)
@@ -124,6 +149,17 @@ export default function BonuslarClient() {
 
   // Instagram story tarzı üst şerit için öğeler
   const storyItems = useMemo(() => {
+    // Önce admin panelinden gelen Story (Carousel) öğelerini kullan
+    const storySlides = stories.filter(s => !!s.mobileImageUrl).sort((a, b) => ((a.order ?? 999) - (b.order ?? 999)));
+    if (storySlides.length > 0) {
+      return storySlides.slice(0, 12).map((s) => ({
+        id: s.id,
+        label: String(s.title ?? "Story"),
+        img: s.mobileImageUrl!,
+        cta: s.ctaUrl || undefined,
+      }));
+    }
+    // Aksi halde featured bonuslardan türet
     const base = featuredBonuses.length ? featuredBonuses : filtered
     const items = base.slice(0, 12).map((b) => ({
       id: b.id,
@@ -141,7 +177,7 @@ export default function BonuslarClient() {
       return [...items, ...placeholders]
     }
     return items
-  }, [featuredBonuses, filtered])
+  }, [stories, featuredBonuses, filtered])
 
   const storyRef = useRef<HTMLDivElement>(null);
   const scrollLeft = () => storyRef.current?.scrollBy({ left: -320, behavior: "smooth" });
@@ -180,6 +216,30 @@ export default function BonuslarClient() {
     draggingRef.current = false;
   };
   const openDetails = (b: Bonus) => { setSelectedBonus(b); setIsDialogOpen(true); };
+
+  // Story dialog için swipe-down kapatma
+  const startYRef = useRef<number | null>(null);
+  const startXRef = useRef<number | null>(null);
+  const onStoryPointerDown = (e: any) => {
+    startYRef.current = e.clientY ?? e.touches?.[0]?.clientY ?? null;
+    startXRef.current = e.clientX ?? e.touches?.[0]?.clientX ?? null;
+  };
+  const onStoryPointerMove = (e: any) => {
+    const y = e.clientY ?? e.touches?.[0]?.clientY;
+    const x = e.clientX ?? e.touches?.[0]?.clientX;
+    if (startYRef.current == null || startXRef.current == null) return;
+    const dy = (y ?? 0) - startYRef.current;
+    const dx = (x ?? 0) - startXRef.current;
+    if (dy > 60 && Math.abs(dx) < 80) {
+      setIsStoryOpen(false);
+      startYRef.current = null;
+      startXRef.current = null;
+    }
+  };
+  const onStoryPointerUp = () => {
+    startYRef.current = null;
+    startXRef.current = null;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -256,7 +316,7 @@ export default function BonuslarClient() {
             <button
               onClick={scrollLeft}
               aria-label="Sola kaydır"
-              className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-full bg-black/50 hover:bg-black/60 text-white shadow-lg backdrop-blur-md"
+              className="absolute left-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center w-9 h-9 rounded-full bg-black/50 hover:bg-black/60 text-white shadow-lg backdrop-blur-md"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -266,7 +326,7 @@ export default function BonuslarClient() {
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onPointerLeave={onPointerLeave}
-              className="overflow-x-auto overflow-y-visible scroll-smooth pl-10 pr-10 py-2 touch-pan-x select-none cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+              className="overflow-x-auto overflow-y-visible scroll-smooth pl-4 sm:pl-10 pr-4 sm:pr-10 py-2 touch-pan-x select-none cursor-grab active:cursor-grabbing snap-x snap-mandatory"
             >
               <div className="flex items-center gap-5">
                 {storyItems.map((item) => (
@@ -293,18 +353,25 @@ export default function BonuslarClient() {
             <button
               onClick={scrollRight}
               aria-label="Sağa kaydır"
-              className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-full bg-black/50 hover:bg-black/60 text-white shadow-lg backdrop-blur-md"
+              className="absolute right-0 top-1/2 -translate-y-1/2 hidden sm:flex items-center justify-center w-9 h-9 rounded-full bg-black/50 hover:bg-black/60 text-white shadow-lg backdrop-blur-md"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
 
-            <div className="pointer-events-none absolute left-0 top-0 h-full w-10 sm:w-12 bg-gradient-to-r from-background to-transparent"></div>
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-10 sm:w-12 bg-gradient-to-l from-background to-transparent"></div>
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-8 sm:w-12 bg-gradient-to-r from-background to-transparent"></div>
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-8 sm:w-12 bg-gradient-to-l from-background to-transparent"></div>
           </div>
         </motion.section>
 
         <Dialog open={isStoryOpen} onOpenChange={setIsStoryOpen}>
-          <DialogContent className="max-w-[720px] p-0 bg-black">
+          <DialogContent className="max-w-[720px] p-0 bg-black"
+            onPointerDown={onStoryPointerDown}
+            onPointerMove={onStoryPointerMove}
+            onPointerUp={onStoryPointerUp}
+            onTouchStart={onStoryPointerDown}
+            onTouchMove={onStoryPointerMove}
+            onTouchEnd={onStoryPointerUp}
+          >
             <DialogHeader className="sr-only">
               <DialogTitle>Story Görseli</DialogTitle>
             </DialogHeader>
@@ -312,6 +379,7 @@ export default function BonuslarClient() {
               {activeStory?.img && (
                 <img src={activeStory.img} alt={activeStory.label} className="w-full h-full object-contain" draggable={false} />
               )}
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 text-xs text-white/70">Aşağı kaydırarak kapat</div>
             </div>
             <div className="p-4 border-t border-border bg-card/40">
               <Button className="w-full" onClick={() => { if (activeStory?.cta) window.open(activeStory.cta, '_blank'); }}>
@@ -472,11 +540,9 @@ export default function BonuslarClient() {
                   <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted mb-4">
                     <Image
                       src={selectedBonus.postImageUrl}
-                      alt="Bonus Post Görseli"
+                      alt={selectedBonus.title}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 768px) 90vw, 560px"
-                      draggable={false}
                     />
                   </div>
                 )}
