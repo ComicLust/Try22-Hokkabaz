@@ -432,7 +432,7 @@ export default function BankoKuponlarClient() {
 
   const contentCarousel = (
     <Carousel opts={{ align: "start" }}>
-      <CarouselContent className="gap-4 px-4">
+      <CarouselContent className="gap-4">
         {coupons.map((coupon, idx) => (
           <CarouselItem key={coupon.id} className="basis-full">
             <Card className={`overflow-hidden ${statusClasses(coupon.status)} rounded-2xl shadow-md`}>
@@ -599,9 +599,9 @@ export default function BankoKuponlarClient() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header currentPath="/banko-kuponlar" />
-      <main className="container mx-auto px-4 py-8 md:pl-72">
+      <main className="container mx-auto px-4 py-8 md:pl-72 pb-20">
         {header}
         {loading && <div className="text-center text-muted-foreground py-10">Yükleniyor…</div>}
         {error && <div className="text-center text-red-500 py-10">{error}</div>}

@@ -69,7 +69,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
   return (
     <>
       {/* Mobile Header only (desktopta gizli) */}
-      <header className="fixed top-0 left-0 right-0 z-50 transform-gpu backdrop-blur-lg bg-background/90 border-b border-border md:hidden">
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-background/90 border-b border-border md:hidden">
         <div className="container mx-auto px-4">
           {/* Mobil Header: logo ortalı, sağda hamburger */}
           <div className="flex md:hidden items-center justify-center h-16 relative">
