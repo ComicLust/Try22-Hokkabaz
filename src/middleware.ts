@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import crypto from 'crypto'
 
 async function sha256(input: string): Promise<string> {
-  return crypto.createHash('sha256').update(input).digest('hex')
+  const data = new TextEncoder().encode(input)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+  return hashHex
 }
 
 function attachNonce(res: NextResponse) {
