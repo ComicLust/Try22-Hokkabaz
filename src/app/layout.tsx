@@ -37,10 +37,7 @@ export const metadata: Metadata = {
     title: "Hokkabaz - En Güvenilir Bahis Bonusları",
     description: "Türkiye'nin en güvenilir bahis ve casino sitelerinin güncel bonuslarını, deneme bonuslarını ve kampanyalarını bulun.",
   },
-  other: {
-    "twitter:image": "https://hokkabaz.com/og-image.jpg",
-    "og:image": "https://hokkabaz.com/og-image.jpg",
-  },
+  // Removed hardcoded og:image and twitter:image to allow dynamic SEO settings
 };
 
 export default function RootLayout({
@@ -72,44 +69,20 @@ export default function RootLayout({
                 // Fail-safe: Next.js FOUC gizleme stilini kaldır ve gövdeyi görünür tut
                 setTimeout(function(){
                   try {
-                    var foucStyle = document.querySelector('style[data-next-hide-fouc]');
-                    if (foucStyle && foucStyle.parentNode) {
-                      foucStyle.parentNode.removeChild(foucStyle);
-                    }
-                    var bodyDisplay = window.getComputedStyle(b).display;
-                    if (bodyDisplay === 'none') {
-                      b.style.display = 'block';
-                    }
-                  } catch(_e){}
-                }, 1000);
-              } catch(e) {}
+                    var el = document.querySelector('style[data-next-hide-fouc]');
+                    if (el && el.parentNode) el.parentNode.removeChild(el);
+                    document.documentElement.style.removeProperty('--next-hide-fouc');
+                  } catch {}
+                }, 50);
+              } catch {}
             })();
-          `}</Script>
+        `}</Script>
+        <AnalyticsInjector />
+        <SeoAutoInjector />
+        <ExternalLinkTracker />
         {children}
         <Toaster />
-        <SeoAutoInjector />
-        <AnalyticsInjector />
-        {/* OneSignal Web SDK (v16) */}
-        {ONE_APP_ID && process.env.NODE_ENV === 'production' && (
-          <>
-            <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
-            <Script id="onesignal-init" strategy="afterInteractive">{`
-              window.OneSignalDeferred = window.OneSignalDeferred || [];
-              OneSignalDeferred.push(async function(OneSignal) {
-                await OneSignal.init({
-                  appId: '${ONE_APP_ID}',
-                  ${""}
-                  ${""}
-                  ${ONE_SAFARI_WEB_ID ? `safari_web_id: '${ONE_SAFARI_WEB_ID}',` : ''}
-                  notifyButton: { enable: true },
-                });
-              });
-            `}</Script>
-          </>
-        )}
-        {/* Dış linkleri otomatik izleme */}
-        <ExternalLinkTracker />
       </body>
     </html>
-  )
+  );
 }
