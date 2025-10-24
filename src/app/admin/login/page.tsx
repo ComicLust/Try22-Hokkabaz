@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -41,30 +41,32 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background">
-      <Card className="w-full max-w-sm bg-neutral-950/60 border-yellow-500/20">
-        <CardHeader className="text-center">
-          <CardTitle className="text-yellow-300">Yönetim Girişi</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-3" onSubmit={onSubmit}>
-            <div>
-              <label className="text-xs text-neutral-400">Kullanıcı Adı</label>
-              <Input value={username} onChange={(e)=>setUsername(e.target.value)} placeholder="admin" />
-            </div>
-            <div>
-              <label className="text-xs text-neutral-400">Şifre</label>
-              <Input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="••••••••" />
-            </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
-            </Button>
-          </form>
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            Tasarım dili: koyu tema ve sarı vurgular
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <Suspense>
+      <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+        <Card className="w-full max-w-sm bg-neutral-950/60 border-yellow-500/20">
+          <CardHeader className="text-center">
+            <CardTitle className="text-yellow-300">Yönetici Girişi</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-3" onSubmit={onSubmit}>
+              <div>
+                <label className="text-xs text-neutral-400">Kullanıcı Adı</label>
+                <Input value={username} onChange={(e)=>setUsername(e.target.value)} placeholder="ornek-kullanici" />
+              </div>
+              <div>
+                <label className="text-xs text-neutral-400">Şifre</label>
+                <Input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="••••••••" />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+              </Button>
+            </form>
+            <p className="mt-3 text-center text-xs text-muted-foreground">
+              Giriş bilgilerinizi Hokkabaz yönetimi sağlar.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </Suspense>
   )
 }
