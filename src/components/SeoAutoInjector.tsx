@@ -107,13 +107,13 @@ export default function SeoAutoInjector() {
         const effectiveOgTitle = (ogTitle ?? title) ?? undefined
         upsertMeta('property', 'og:title', effectiveOgTitle)
         upsertMeta('property', 'og:description', (ogDescription ?? description) ?? undefined)
-        upsertMeta('property', 'og:image', ogImageUrl ?? undefined)
+        upsertMeta('property', 'og:image', toAbsoluteGlobal(ogImageUrl))
 
         // Twitter
         const effectiveTwitterTitle = (twitterTitle ?? title) ?? undefined
         upsertMeta('name', 'twitter:title', effectiveTwitterTitle)
         upsertMeta('name', 'twitter:description', (twitterDescription ?? description) ?? undefined)
-        upsertMeta('name', 'twitter:image', twitterImageUrl ?? undefined)
+        upsertMeta('name', 'twitter:image', toAbsoluteGlobal(twitterImageUrl))
 
         // Also update the document title for immediate visual feedback
         const resolvedTitle = title || ogTitle || twitterTitle
@@ -127,4 +127,18 @@ export default function SeoAutoInjector() {
   }, [pathname])
 
   return null
+}
+
+
+const toAbsoluteGlobal = (u?: string | null): string | undefined => {
+  if (!u) return undefined
+  try {
+    if (/^https?:\/\//i.test(u)) return u
+    const origin = typeof window !== 'undefined' ? window.location.origin : ''
+    if (!origin) return u
+    if (u.startsWith('/')) return origin + u
+    return origin + (u.startsWith('/') ? u : '/' + u)
+  } catch {
+    return undefined
+  }
 }

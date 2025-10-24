@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
 import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { MediaPicker } from '@/components/media/MediaPicker'
 
 type SeoSetting = {
   id: string
@@ -49,6 +51,8 @@ export default function AdminSeoPage() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<Omit<SeoSetting, 'id'>>(emptyForm)
   const [clientOrigin, setClientOrigin] = useState<string>('')
+  const [mediaOpenOg, setMediaOpenOg] = useState(false)
+  const [mediaOpenTwitter, setMediaOpenTwitter] = useState(false)
 
   const editingItem = useMemo(() => items.find(i => i.id === editingId) ?? null, [items, editingId])
 
@@ -347,7 +351,21 @@ export default function AdminSeoPage() {
                   <textarea name="ogDescription" value={form.ogDescription ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2 h-20" />
                 </label>
                 <label className="block text-sm">OG Image URL
-                  <input name="ogImageUrl" value={form.ogImageUrl ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" />
+                  <div className="mt-1 flex items-center gap-2">
+                    <input name="ogImageUrl" value={form.ogImageUrl ?? ''} onChange={handleChange} className="flex-1 border rounded px-3 py-2" />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenOg(true)}>Görsel Seç / Yükle</Button>
+                  </div>
+                  {form.ogImageUrl && (
+                    <div className="mt-2">
+                      <img src={form.ogImageUrl as string} alt="OG preview" className="w-40 h-24 object-cover rounded border" />
+                    </div>
+                  )}
+                  <MediaPicker
+                    open={mediaOpenOg}
+                    onOpenChange={setMediaOpenOg}
+                    onSelect={(url) => setForm(prev => ({ ...prev, ogImageUrl: url }))}
+                    title="OG Görsel Seç / Yükle"
+                  />
                 </label>
               </div>
               <div className="grid grid-cols-1 gap-3">
@@ -358,7 +376,21 @@ export default function AdminSeoPage() {
                   <textarea name="twitterDescription" value={form.twitterDescription ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2 h-20" />
                 </label>
                 <label className="block text-sm">Twitter Image URL
-                  <input name="twitterImageUrl" value={form.twitterImageUrl ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" />
+                  <div className="mt-1 flex items-center gap-2">
+                    <input name="twitterImageUrl" value={form.twitterImageUrl ?? ''} onChange={handleChange} className="flex-1 border rounded px-3 py-2" />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenTwitter(true)}>Görsel Seç / Yükle</Button>
+                  </div>
+                  {form.twitterImageUrl && (
+                    <div className="mt-2">
+                      <img src={form.twitterImageUrl as string} alt="Twitter preview" className="w-40 h-24 object-cover rounded border" />
+                    </div>
+                  )}
+                  <MediaPicker
+                    open={mediaOpenTwitter}
+                    onOpenChange={setMediaOpenTwitter}
+                    onSelect={(url) => setForm(prev => ({ ...prev, twitterImageUrl: url }))}
+                    title="Twitter Görsel Seç / Yükle"
+                  />
                 </label>
               </div>
               <div className="flex items-center gap-4">
