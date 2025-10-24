@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import SeoArticle from "@/components/SeoArticle";
 
 type Match = {
   homeTeam: string;
@@ -686,6 +687,7 @@ export default function BankoKuponlarClient() {
           </>
         )}
       </main>
+      <SeoArticle slug="banko-kuponlar" />
       <Footer />
     </div>
   );

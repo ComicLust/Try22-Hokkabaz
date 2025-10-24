@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import LiveMatchClient from "@/components/LiveMatchClient";
+import SeoArticle from "@/components/SeoArticle";
 
 export default function Page() {
   return (
@@ -13,6 +14,7 @@ export default function Page() {
           <LiveMatchClient />
         </div>
       </main>
+      <SeoArticle slug="canli-mac-izle" />
       <Footer />
     </div>
   );

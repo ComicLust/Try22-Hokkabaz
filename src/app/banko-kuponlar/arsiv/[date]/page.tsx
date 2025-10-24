@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle2, XCircle, Hourglass, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import SeoArticle from "@/components/SeoArticle";
 // removed: import { headers } from "next/headers";
 
 function formatDateTR(dateIso?: string) {
@@ -117,6 +118,7 @@ export default async function Page({ params }: { params: { date: string } }) {
           </div>
         )}
       </main>
+      <SeoArticle slug="banko-kuponlar" />
       <Footer />
     </div>
   );

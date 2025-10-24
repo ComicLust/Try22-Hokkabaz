@@ -7,6 +7,7 @@ import { Shield, ExternalLink } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { readFile } from 'fs/promises'
 import path from 'path'
+import SeoArticle from '@/components/SeoArticle'
 
 export const dynamic = 'force-dynamic'
 
@@ -104,6 +105,8 @@ export default async function VpnOnerileriPage() {
           </p>
         </section>
       </main>
+
+      <SeoArticle slug="vpn-onerileri" />
       <Footer />
     </div>
   )

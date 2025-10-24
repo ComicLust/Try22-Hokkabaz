@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, BookOpen, CheckCircle2, XCircle, Hourglass } from "lucide-react";
+import SeoArticle from "@/components/SeoArticle";
 
 function formatDateTR(dateIso?: string) {
   if (!dateIso) return "";
@@ -173,6 +174,7 @@ export default function BankoKuponlarArchiveClient() {
           <Button variant="outline" onClick={() => setPage((p) => p + 1)}>Sonraki</Button>
         </div>
       </main>
+      <SeoArticle slug="banko-kuponlar" />
       <Footer />
     </div>
   );

@@ -323,3 +323,12 @@ model LiveMatch {
 
   @@index([isActive, date])
 }
+
+model PageArticle {
+  id        String   @id @default(cuid())
+  slug      String   @unique // Örn: "kampanyalar", "bonuslar", "yorumlar", "anlasmali-siteler"...
+  title     String?
+  content   String   // HTML içerik
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

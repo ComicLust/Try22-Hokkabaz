@@ -37,8 +37,13 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
             <ul className="space-y-2">
               <li><a href="/" className="text-muted-foreground hover:text-gold transition-colors text-sm md:text-base">Ana Sayfa</a></li>
               <li><a href="/kampanyalar" className="text-muted-foreground hover:text-gold transition-colors">Kampanyalar</a></li>
-              <li><a href="/bonuslar" className="text-muted-foreground hover:text-gold transition-colors">Deneme Bonusları</a></li>
-              <li><a href="/anlasmali-siteler" className="text-muted-foreground hover:text-gold transition-colors">Anlaşmalı Siteler</a></li>
+              <li><a href="/bonuslar" className="text-muted-foreground hover:text-gold transition-colors">Bonuslar</a></li>
+              <li><a href="/yorumlar" className="text-muted-foreground hover:text-gold transition-colors">Yorumlar</a></li>
+              <li><a href="/anlasmali-siteler" className="text-muted-foreground hover:text-gold transition-colors">Güvenilir Siteler</a></li>
+              <li><a href="/banko-kuponlar" className="text-muted-foreground hover:text-gold transition-colors">Banko Kuponlar</a></li>
+              <li><a href="/canli-mac-izle" className="text-muted-foreground hover:text-gold transition-colors">Canlı Maç İzle</a></li>
+              <li><a href="/vpn-onerileri" className="text-muted-foreground hover:text-gold transition-colors">VPN Önerileri</a></li>
+              <li><a href="/guvenilir-telegram" className="text-muted-foreground hover:text-gold transition-colors">Telegram Grupları</a></li>
             </ul>
           </div>
 
@@ -48,8 +53,9 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
             <ul className="space-y-2">
               <li><a href="/hakkimizda" className="text-muted-foreground hover:text-gold transition-colors">Hakkımızda</a></li>
               <li><a href="/iletisim" className="text-muted-foreground hover:text-gold transition-colors">İletişim</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-gold transition-colors">Kullanım Koşulları</a></li>
-              <li><a href="#" className="text-muted-foreground hover:text-gold transition-colors">Gizlilik Politikası</a></li>
+              <li><a href="/kullanim-kosullari" className="text-muted-foreground hover:text-gold transition-colors">Kullanım Koşulları</a></li>
+              <li><a href="/gizlilik-politikasi" className="text-muted-foreground hover:text-gold transition-colors">Gizlilik Politikası</a></li>
+              <li><a href="/dmca" className="text-muted-foreground hover:text-gold transition-colors">DMCA</a></li>
             </ul>
           </div>
 

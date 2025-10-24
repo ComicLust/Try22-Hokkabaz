@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import SeoArticle from "@/components/SeoArticle";
 
 export default function AnlasmaliSitelerClient() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -452,6 +453,7 @@ export default function AnlasmaliSitelerClient() {
 
       </main>
 
+      <SeoArticle slug="anlasmali-siteler" />
       <Footer />
     </div>
   );

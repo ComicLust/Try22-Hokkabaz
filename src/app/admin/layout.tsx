@@ -181,6 +181,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Link href="/admin/telegram/approval"><Sliders className="size-4" /> Telegram Onay</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/page-articles')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/page-articles"><LayoutDashboard className="size-4" /> Sayfa Makaleleri</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroup>
 

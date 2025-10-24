@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import TelegramPanel from '@/components/TelegramPanel';
+import FAQDesktop from '@/components/FAQDesktop';
 
 // Telegram Icon Component
 const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -607,7 +608,6 @@ export default function HomeClient() {
             </div>
           </div>
         </section>
-
         {/* Telegram Sohbet Paneli */}
         <section className="py-12">
           <div className="container mx-auto px-4">
@@ -633,6 +633,7 @@ export default function HomeClient() {
             </div>
           </div>
         </section>
+        <FAQDesktop />
       </main>
 
       {/* Footer kaldırıldı: tek bir global Footer kullanılacak */}

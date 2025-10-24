@@ -13,7 +13,7 @@ function isYouTubeEmbed(url: string): boolean {
   }
 }
 
-export default function LiveMatchClient({ liveMatch }: { liveMatch: any }) {
+export default function LiveMatchClient({ liveMatch }: { liveMatch?: any }) {
   const [embedUrl, setEmbedUrl] = useState<string | null>(null);
   const [embedCode, setEmbedCode] = useState<string | null>(null);
   const [topSponsor, setTopSponsor] = useState<any | null>(null);

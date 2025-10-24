@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Search, Award, Calendar, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import SeoArticle from "@/components/SeoArticle";
 
 type Bonus = {
   id: string;
@@ -217,26 +218,66 @@ export default function BonuslarClient() {
   };
   const openDetails = (b: Bonus) => { setSelectedBonus(b); setIsDialogOpen(true); };
 
-  // Story dialog için swipe-down kapatma
+  // Story dialog için swipe-down kapatma ve swipe-up link açma
   const startYRef = useRef<number | null>(null);
   const startXRef = useRef<number | null>(null);
+  const [swipeDirection, setSwipeDirection] = useState<'up' | 'down' | null>(null);
+  const [swipeDistance, setSwipeDistance] = useState(0);
+
   const onStoryPointerDown = (e: any) => {
     startYRef.current = e.clientY ?? e.touches?.[0]?.clientY ?? null;
     startXRef.current = e.clientX ?? e.touches?.[0]?.clientX ?? null;
+    setSwipeDirection(null);
+    setSwipeDistance(0);
   };
+
   const onStoryPointerMove = (e: any) => {
     const y = e.clientY ?? e.touches?.[0]?.clientY;
     const x = e.clientX ?? e.touches?.[0]?.clientX;
     if (startYRef.current == null || startXRef.current == null) return;
+    
     const dy = (y ?? 0) - startYRef.current;
     const dx = (x ?? 0) - startXRef.current;
-    if (dy > 60 && Math.abs(dx) < 80) {
-      setIsStoryOpen(false);
-      startYRef.current = null;
-      startXRef.current = null;
+    const absDy = Math.abs(dy);
+    const absDx = Math.abs(dx);
+    
+    // Only process vertical swipes (ignore horizontal)
+    if (absDy > 10 && absDx < 80) {
+      setSwipeDistance(absDy);
+      
+      if (dy > 0) {
+        // Swiping down
+        setSwipeDirection('down');
+        if (dy > 80) {
+          // Close story on sufficient downward swipe
+          setIsStoryOpen(false);
+          setSwipeDirection(null);
+          setSwipeDistance(0);
+          startYRef.current = null;
+          startXRef.current = null;
+        }
+      } else {
+        // Swiping up
+        setSwipeDirection('up');
+        if (dy < -80 && activeStory?.cta) {
+          // Navigate to CTA on sufficient upward swipe
+          window.open(activeStory.cta, '_blank');
+          setIsStoryOpen(false);
+          setSwipeDirection(null);
+          setSwipeDistance(0);
+          startYRef.current = null;
+          startXRef.current = null;
+        }
+      }
     }
   };
+
   const onStoryPointerUp = () => {
+    // Reset swipe state after a short delay to allow visual feedback
+    setTimeout(() => {
+      setSwipeDirection(null);
+      setSwipeDistance(0);
+    }, 200);
     startYRef.current = null;
     startXRef.current = null;
   };
@@ -375,15 +416,76 @@ export default function BonuslarClient() {
             <DialogHeader className="sr-only">
               <DialogTitle>Story Görseli</DialogTitle>
             </DialogHeader>
-            <div className="relative w-full aspect-[9/16] sm:aspect-[9/16] bg-black">
+            <div className="relative w-full aspect-[9/16] sm:aspect-[9/16] bg-black overflow-hidden">
               {activeStory?.img && (
                 <img src={activeStory.img} alt={activeStory.label} className="w-full h-full object-contain" draggable={false} />
               )}
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 text-xs text-white/70">Aşağı kaydırarak kapat</div>
+              
+              {/* Swipe Instructions Overlay */}
+              <div className="absolute inset-0 pointer-events-none">
+                {/* Top instruction - Swipe up */}
+                <div className={`absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full backdrop-blur-md transition-all duration-300 ${
+                  swipeDirection === 'up' 
+                    ? 'bg-green-500/80 text-white scale-110' 
+                    : 'bg-black/60 text-white/80'
+                }`}>
+                  <div className="text-center">
+                    <div className="text-sm font-medium">↑ Yukarı Kaydırarak Bonusu Al</div>
+                    {swipeDirection === 'up' && (
+                      <div className="text-xs mt-1 opacity-90">
+                        {swipeDistance > 60 ? 'Bırakın!' : 'Devam edin...'}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Bottom instruction - Swipe down */}
+                <div className={`absolute bottom-20 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full backdrop-blur-md transition-all duration-300 ${
+                  swipeDirection === 'down' 
+                    ? 'bg-red-500/80 text-white scale-110' 
+                    : 'bg-black/60 text-white/80'
+                }`}>
+                  <div className="text-center">
+                    <div className="text-sm font-medium">↓ Aşağı Kaydırarak Kapat</div>
+                    {swipeDirection === 'down' && (
+                      <div className="text-xs mt-1 opacity-90">
+                        {swipeDistance > 60 ? 'Bırakın!' : 'Devam edin...'}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Visual swipe indicator */}
+                {swipeDirection && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className={`w-16 h-16 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-200 ${
+                      swipeDirection === 'up' 
+                        ? 'bg-green-500/40 text-green-200' 
+                        : 'bg-red-500/40 text-red-200'
+                    }`}>
+                      <div className={`text-2xl transition-transform duration-200 ${
+                        swipeDistance > 60 ? 'scale-125' : 'scale-100'
+                      }`}>
+                        {swipeDirection === 'up' ? '↑' : '↓'}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
+            
+            {/* Bottom CTA Button */}
             <div className="p-4 border-t border-border bg-card/40">
-              <Button className="w-full" onClick={() => { if (activeStory?.cta) window.open(activeStory.cta, '_blank'); }}>
-                Bonusu Al
+              <Button 
+                className="w-full" 
+                onClick={() => { 
+                  if (activeStory?.cta) {
+                    window.open(activeStory.cta, '_blank');
+                  }
+                }}
+                disabled={!activeStory?.cta}
+              >
+                {activeStory?.cta ? 'Bonusu Al' : 'Link Mevcut Değil'}
               </Button>
             </div>
            </DialogContent>
@@ -580,6 +682,7 @@ export default function BonuslarClient() {
 
       </main>
 
+      <SeoArticle slug="bonuslar" />
       <Footer />
     </div>
   );

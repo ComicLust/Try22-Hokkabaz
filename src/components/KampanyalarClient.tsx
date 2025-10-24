@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SeoArticle from '@/components/SeoArticle';
 
 type ApiCampaign = {
   id: string;
@@ -312,6 +313,7 @@ export default function KampanyalarClient() {
           </div>
         </DialogContent>
       </Dialog>
+      <SeoArticle slug="kampanyalar" />
       <Footer />
     </div>
   );

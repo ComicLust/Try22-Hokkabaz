@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import SeoArticle from "@/components/SeoArticle";
 
 type ReviewBrand = { id: string; name: string; slug: string; logoUrl?: string | null; createdAt: string; }
 type ReviewStat = { brandId: string; slug: string; name: string; logoUrl?: string | null; createdAt: string; isActive?: boolean; reviewCount: number; lastReviewAt?: string | null; positiveCount: number; negativeCount: number }
@@ -184,6 +185,7 @@ export default function YorumlarClient() {
         )}
 
       </main>
+      <SeoArticle slug="yorumlar" />
       <Footer />
     </div>
   )

@@ -7,6 +7,7 @@ import { db } from '@/lib/db'
 import ActiveCounter from '@/components/ActiveCounter'
 import ClientOnly from '@/components/ClientOnly'
 import TelegramSuggestionCard from '@/components/TelegramSuggestionCard'
+import SeoArticle from '@/components/SeoArticle'
 
 function formatMembers(n: number) {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
@@ -147,6 +148,8 @@ export default async function GuvenilirTelegramPage() {
           </div>
         </section>
       </main>
+
+      <SeoArticle slug="guvenilir-telegram" />
       <Footer />
     </div>
   )
