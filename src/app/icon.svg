@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hokkabaz Hat Icon">
+  <defs>
+    <linearGradient id="hatGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE580"/>
+      <stop offset="100%" stop-color="#D4AF37"/>
+    </linearGradient>
+  </defs>
+  <!-- Simple black hat with gold band, derived from brand logo -->
+  <!-- brim -->
+  <ellipse cx="32" cy="42" rx="22" ry="6" fill="#0B0B0B"/>
+  <!-- hat body -->
+  <rect x="18" y="16" width="28" height="22" rx="4" fill="#0B0B0B"/>
+  <!-- gold band -->
+  <rect x="18" y="28" width="28" height="5" rx="2.5" fill="url(#hatGold)"/>
+</svg>

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, useScroll, useMotionValue, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import { Search, Filter, Star, Shield, Clock, Calendar, TrendingUp, Check, ExternalLink, CreditCard, Zap, Users, Award, X } from 'lucide-react';
+import { Search, Filter, Star, Shield, Clock, Calendar, TrendingUp, Check, ExternalLink, CreditCard, Zap, Users, Award, X, BadgeCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -335,9 +335,9 @@ export default function HomeClient() {
       description: 'Piyasada bulunan en yüksek bonus miktarlarını sizler için derledik.'
     },
     {
-      icon: CreditCard,
-      title: 'Güvenilir Ödemeler',
-      description: 'Anında ve güvenli ödeme seçenekleri ile paranız her zaman güvende.'
+      icon: BadgeCheck,
+      title: 'Tarafsız İncelemeler',
+      description: 'Bonus ve kampanyaları tarafsız analiz edip doğrulanmış bilgileri sunuyoruz.'
     },
     {
       icon: Users,
