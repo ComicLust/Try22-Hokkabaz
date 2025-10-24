@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar, Trophy, Info, BookOpen, Clock, Target, Percent, CheckCircle2, XCircle, Hourglass, Award, Check, Star, ThumbsUp, ThumbsDown, Bell, Edit, Trash2, Archive } from "lucide-react";
+import { Calendar, Trophy, Info, BookOpen, Clock, Target, Percent, CheckCircle2, XCircle, Hourglass, Award, Check, Star, ThumbsUp, ThumbsDown, Edit, Trash2, Archive } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
@@ -232,23 +232,7 @@ export default function BankoKuponlarClient() {
     }
   };
 
-  const requestReminder = async () => {
-    try {
-      const w = typeof window !== 'undefined' ? (window as any) : undefined;
-      const OneSignal = w?.OneSignal;
-      if (!OneSignal) {
-        alert('Bildirim servisi yüklenemedi. Lütfen daha sonra deneyin.');
-        return;
-      }
-      OneSignal.push(async function() {
-        await OneSignal.registerForPushNotifications();
-        await OneSignal.sendTag('banko_reminder', 'true');
-      });
-      alert('Hatırlatma açıldı: Her gün 18:00 bildirim gönderilecek.');
-    } catch {
-      alert('Bildirim izni alınamadı. Lütfen daha sonra deneyin.');
-    }
-  };
+  // Push bildirim entegrasyonu kaldırıldı; hatırlatma özelliği devre dışı.
 
   const editCoupon = (couponId: string) => {
     // Admin paneline yönlendir
@@ -327,7 +311,7 @@ export default function BankoKuponlarClient() {
         <Button asChild size="sm" variant="outline" className="inline-flex items-center gap-2">
           <a href="/banko-kuponlar/arsiv"><BookOpen className="w-4 h-4" /> Önceki Günlerin Kuponları</a>
         </Button>
-        <Button size="sm" variant="outline" onClick={requestReminder} className="inline-flex items-center gap-2"><Bell className="w-4 h-4" /> Hatırlat</Button>
+        {/* Hatırlat düğmesi kaldırıldı */}
       </div>
     </section>
   );

@@ -68,8 +68,8 @@ export default function AdminBankoKuponlarClient() {
   const [editPublish, setEditPublish] = useState<boolean>(true)
 
   // Notification management
-  const [notifyStats, setNotifyStats] = useState<{ activeUsers: number | null; dailyReminderOnRate: number | null; message?: string } | null>(null)
-  const [testMessage, setTestMessage] = useState('Bugünün kuponları hazır!')
+  // (deleted) const [notifyStats, setNotifyStats] = useState<{ activeUsers: number | null; dailyReminderOnRate: number | null; message?: string } | null>(null)
+  // (deleted) const [testMessage, setTestMessage] = useState('Bugünün kuponları hazır!')
 
   async function loadList() {
     setLoading(true)
@@ -91,16 +91,16 @@ export default function AdminBankoKuponlarClient() {
     if (json.ok) setStats(json.data)
   }
 
-  async function loadNotifyStats() {
-    const res = await fetch(`/api/admin/onesignal/stats`, { credentials: 'include' })
-    const json = await res.json()
-    if (json.ok) setNotifyStats(json.data)
-  }
+  // (deleted) async function loadNotifyStats() {
+  // (deleted)   const res = await fetch(`/api/admin/onesignal/stats`, { credentials: 'include' })
+  // (deleted)   const json = await res.json()
+  // (deleted)   if (json.ok) setNotifyStats(json.data)
+  // (deleted) }
 
   useEffect(() => {
     loadList()
     loadStats()
-    loadNotifyStats()
+    // (deleted) loadNotifyStats()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -463,49 +463,8 @@ export default function AdminBankoKuponlarClient() {
         </div>
       )}
 
-      {/* Notification Management */}
-      <div className="p-4 border rounded">
-        <div className="flex items-center justify-between mb-3">
-          <div className="font-semibold">📢 Hatırlatma Bildirimi</div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div>
-            <div className="text-sm text-gray-600">Aktif kullanıcı</div>
-            <div className="text-xl font-bold">{notifyStats?.activeUsers ?? '-'}</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-600">Günlük Hatırlatma Açık</div>
-            <div className="text-xl font-bold">{notifyStats?.dailyReminderOnRate != null ? `${notifyStats.dailyReminderOnRate}%` : '-'}</div>
-          </div>
-          <div>
-            {notifyStats?.message && <div className="text-xs text-gray-500">{notifyStats.message}</div>}
-          </div>
-        </div>
-        <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-          <div className="md:col-span-2">
-            <label className="text-sm">Test mesajı</label>
-            <input className="w-full border rounded px-3 py-2" value={testMessage} onChange={(e) => setTestMessage(e.target.value)} />
-          </div>
-          <div className="flex gap-2">
-            <button
-              className="px-4 py-2 bg-indigo-600 text-white rounded"
-              onClick={async () => {
-                const res = await fetch('/api/admin/onesignal/test-notification', {
-                  method: 'POST',
-                  credentials: 'include',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ message: testMessage }),
-                })
-                const json = await res.json()
-                if (json.ok) alert('Test bildirimi gönderildi')
-                else alert(json.error || 'Bildirimi gönderme hatası')
-              }}
-            >
-              Test Bildirimi Gönder
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Push bildirim yönetimi kaldırıldı */}
+      {/* Push bildirim yönetimi kaldırıldı */}
     </div>
   )
 }
