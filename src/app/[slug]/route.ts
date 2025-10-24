@@ -23,7 +23,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
   const slug = params.slug
   const link = await db.affiliateLink.findUnique({ where: { slug } })
   if (!link) {
-    return NextResponse.redirect('/', { status: 302 })
+    return NextResponse.redirect(new URL('/', req.url), { status: 302 })
   }
 
   if (wantsHTML) {
@@ -145,7 +145,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
 
     await db.$transaction(ops)
 
-    return NextResponse.redirect(link.targetUrl, { status: 302 })
+    return NextResponse.redirect(new URL(link.targetUrl, req.url), { status: 302 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Redirect error' }, { status: 500 })
   }

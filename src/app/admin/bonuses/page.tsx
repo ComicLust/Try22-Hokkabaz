@@ -3,27 +3,35 @@ import { useEffect, useMemo, useState } from 'react'
 import { Award, Calendar, Check, Clock, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MediaPicker } from '@/components/media/MediaPicker'
+import { slugifyTr } from '@/lib/slugify'
 
 type Bonus = {
   id: string
   title: string
   slug: string
+  description?: string | null
+  shortDescription?: string | null
   bonusType?: string | null
   gameCategory?: string | null
   amount?: number | null
   wager?: number | null
   minDeposit?: number | null
   imageUrl?: string | null
+  postImageUrl?: string | null
   ctaUrl?: string | null
   badges?: string[] | null
   features?: string[] | null
   validityText?: string | null
-  shortDescription?: string | null
   startDate?: string | null
   endDate?: string | null
   isActive: boolean
   isFeatured?: boolean
   priority?: number
+  isApproved?: boolean
+  brandId?: string | null
+  brand?: { name?: string | null; slug?: string | null } | null
+  createdByLoginId?: string | null
+  createdByName?: string | null
 }
 
 export default function BonusesPage() {
@@ -35,6 +43,11 @@ export default function BonusesPage() {
   const [newType, setNewType] = useState('')
   const [newCategory, setNewCategory] = useState('')
   const [mediaOpenForm, setMediaOpenForm] = useState(false)
+  const [mediaOpenPost, setMediaOpenPost] = useState(false)
+  const [newBadge, setNewBadge] = useState('')
+  const [newFeature, setNewFeature] = useState('')
+  const [availableBadges, setAvailableBadges] = useState<string[]>([])
+  const [sendForApproval, setSendForApproval] = useState(false)
 
   // Drag and drop state
   const [dragIndex, setDragIndex] = useState<number | null>(null)
@@ -51,31 +64,42 @@ export default function BonusesPage() {
     const data = await res.json()
     setItems(data)
     setLoading(false)
+    // önerilen rozetleri topla
+    try {
+      const uniq = Array.from(new Set((data || []).flatMap((b: any) => Array.isArray(b.badges) ? b.badges : []))) as string[]
+      setAvailableBadges(uniq)
+      const types = Array.from(new Set((data || []).map((b: any) => b.bonusType).filter(Boolean)))
+      const cats = Array.from(new Set((data || []).map((b: any) => b.gameCategory).filter(Boolean)))
+      if (types.length) setTypeOptions((prev) => Array.from(new Set<string>([...prev, ...(types as string[])])))
+      if (cats.length) setCategoryOptions((prev) => Array.from(new Set<string>([...prev, ...(cats as string[])])))
+    } catch {}
   }
 
   useEffect(() => {
     load()
-    ;(async () => {
-      try {
-        const res = await fetch('/api/bonuses')
-        const all = await res.json()
-        const types = Array.from(new Set((all || []).map((b: any) => b.bonusType).filter(Boolean)))
-        const cats = Array.from(new Set((all || []).map((b: any) => b.gameCategory).filter(Boolean)))
-        if (types.length) setTypeOptions((prev) => Array.from(new Set<string>([...prev, ...(types as string[])])))
-        if (cats.length) setCategoryOptions((prev) => Array.from(new Set<string>([...prev, ...(cats as string[])])))
-      } catch {}
-    })()
   }, [])
 
   const createItem = async (e: React.FormEvent) => {
     e.preventDefault()
+    const payload = { ...form } as any
+    // tarihleri ISO ya çevir
+    if (typeof payload.startDate === 'string' && payload.startDate) {
+      payload.startDate = new Date(payload.startDate).toISOString()
+    }
+    if (typeof payload.endDate === 'string' && payload.endDate) {
+      payload.endDate = new Date(payload.endDate).toISOString()
+    }
+    if (sendForApproval) payload.isApproved = false
     const res = await fetch('/api/bonuses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+      body: JSON.stringify(payload),
     })
     if (res.ok) {
       setForm({ isActive: true, isFeatured: false, priority: 0 })
+      setSendForApproval(false)
+      setNewBadge('')
+      setNewFeature('')
       await load()
     } else {
       alert('Oluşturma hatası')
@@ -141,7 +165,7 @@ export default function BonusesPage() {
 
       return matchesSearch && matchesActive && matchesAmount && matchesFeatured
     })
-  }, [items, searchQuery, activeFilter, amountFilter, featuredFilter])
+  }, [items, searchQuery, activeFilter, featuredFilter, amountFilter])
 
   const featuredItems = filtered.filter((b) => !!b.isFeatured)
   const listedItems = filtered.filter((b) => !b.isFeatured)
@@ -218,6 +242,9 @@ export default function BonusesPage() {
                 </div>
                 <div className="text-center space-y-2">
                   <div className="text-lg font-medium">{bonus.title}</div>
+                  {bonus.brandId && (
+                    <div className="text-xs text-muted-foreground">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug || '—'}</div>
+                  )}
                   <div className="text-3xl font-bold text-gold">{bonus.amount ?? 0} TL</div>
                   <div className="text-muted-foreground">{bonus.bonusType ?? 'Bonus'}</div>
                   <div className="space-y-1">
@@ -271,9 +298,14 @@ export default function BonusesPage() {
                     <Award className="w-6 h-6 text-gold" />
                   )}
                 </div>
-                <span className="text-xs border rounded-full px-2 py-1">{bonus.wager ? `${bonus.wager}x` : 'wager yok'}</span>
+                {(bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug) && (
+                  <span className="text-xs border rounded-full px-2 py-1">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug}</span>
+                )}
               </div>
               <div className="text-lg font-medium">{bonus.title}</div>
+              {bonus.brandId && (
+                <div className="text-xs text-muted-foreground mb-1">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug || '—'}</div>
+              )}
               <div className="text-2xl font-bold text-gold">{bonus.amount ?? 0} TL</div>
               <div className="text-xs text-muted-foreground mb-4">
                 <Calendar className="w-3 h-3 inline mr-1" /> Min. Yatırım: {bonus.minDeposit ?? 0} TL
@@ -301,22 +333,67 @@ export default function BonusesPage() {
       </section>
 
       {/* Hızlı Ekle Formu */}
-      <form onSubmit={createItem} className="border rounded-md p-4 space-y-3">
+      <form onSubmit={createItem} className="border rounded-md p-4 space-y-4">
+        {/* Görseller */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <label className="text-sm">Bet Sitesi Logosu</label>
+            <div className="flex items-center gap-2">
+              <input
+                className="border rounded-md px-3 py-2 flex-1"
+                placeholder="Görsel URL"
+                value={form.imageUrl ?? ''}
+                onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
+              />
+              <Button type="button" variant="outline" onClick={() => setMediaOpenForm(true)}>Görsel Seç / Yükle</Button>
+              <MediaPicker
+                open={mediaOpenForm}
+                onOpenChange={setMediaOpenForm}
+                onSelect={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+                title="Logo Seç / Yükle"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm">Bonus Kare Görseli (Instagram post)</label>
+            <div className="flex items-center gap-2">
+              <input
+                className="border rounded-md px-3 py-2 flex-1"
+                placeholder="Kare görsel URL"
+                value={form.postImageUrl ?? ''}
+                onChange={(e) => setForm((f) => ({ ...f, postImageUrl: e.target.value }))}
+              />
+              <Button type="button" variant="outline" onClick={() => setMediaOpenPost(true)}>Görsel Seç / Yükle</Button>
+              <MediaPicker
+                open={mediaOpenPost}
+                onOpenChange={setMediaOpenPost}
+                onSelect={(url) => setForm((f) => ({ ...f, postImageUrl: url }))}
+                title="Kare Görsel Seç / Yükle"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Başlık ve slug */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <input
             className="border rounded-md px-3 py-2"
             placeholder="Başlık"
             value={form.title ?? ''}
-            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value, slug: slugifyTr(e.target.value, { withHyphens: true, maxLen: 64 }) }))}
             required
           />
           <input
             className="border rounded-md px-3 py-2"
-            placeholder="Slug"
+            type="hidden"
             value={form.slug ?? ''}
-            onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+            readOnly
             required
           />
+        </div>
+
+        {/* Tür & Kategori */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Bonus Türü */}
           <div className="space-y-2">
             <select
@@ -379,10 +456,14 @@ export default function BonusesPage() {
               >Ekle</button>
             </div>
           </div>
+        </div>
+
+        {/* Sayısal alanlar */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <input
             type="number"
             className="border rounded-md px-3 py-2"
-            placeholder="Tutar"
+            placeholder="Tutar (TL)"
             value={form.amount ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, amount: Number(e.target.value) }))}
           />
@@ -396,32 +477,147 @@ export default function BonusesPage() {
           <input
             type="number"
             className="border rounded-md px-3 py-2"
-            placeholder="Min. Yatırım"
+            placeholder="Min. Yatırım (TL)"
             value={form.minDeposit ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, minDeposit: Number(e.target.value) }))}
           />
-          <div className="flex items-center gap-2">
-            <input
-              className="border rounded-md px-3 py-2 flex-1"
-              placeholder="Görsel URL"
-              value={form.imageUrl ?? ''}
-              onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
-            />
-            <Button type="button" variant="outline" onClick={() => setMediaOpenForm(true)}>Görsel Seç / Yükle</Button>
-            <MediaPicker
-              open={mediaOpenForm}
-              onOpenChange={setMediaOpenForm}
-              onSelect={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
-              title="Bonus Görseli Seç / Yükle"
-            />
-          </div>
+        </div>
+
+        {/* CTA */}
+        <div>
           <input
-            className="border rounded-md px-3 py-2"
+            className="border rounded-md px-3 py-2 w-full"
             placeholder="CTA URL"
             value={form.ctaUrl ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, ctaUrl: e.target.value }))}
           />
         </div>
+
+        {/* Açıklamalar */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <label className="text-sm">Açıklama</label>
+            <textarea
+              className="border rounded-md px-3 py-2 w-full"
+              rows={3}
+              value={form.description ?? ''}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm">Kısa Açıklama (kart/metin alanı için)</label>
+            <input
+              className="border rounded-md px-3 py-2 w-full"
+              placeholder="Örn: Çevrim şartsız deneme bonusu"
+              value={form.shortDescription ?? ''}
+              onChange={(e) => setForm((f) => ({ ...f, shortDescription: e.target.value }))}
+            />
+          </div>
+        </div>
+
+        {/* Geçerlilik ve Tarihler */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input
+            className="border rounded-md px-3 py-2"
+            placeholder="Geçerlilik Metni"
+            value={form.validityText ?? ''}
+            onChange={(e) => setForm((f) => ({ ...f, validityText: e.target.value }))}
+          />
+          <div className="space-y-2">
+            <label className="text-sm">Başlangıç Tarihi</label>
+            <input
+              type="date"
+              className="border rounded-md px-3 py-2 w-full"
+              value={form.startDate ? String(form.startDate).substring(0, 10) : ''}
+              onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm">Bitiş Tarihi</label>
+            <input
+              type="date"
+              className="border rounded-md px-3 py-2 w-full"
+              value={form.endDate ? String(form.endDate).substring(0, 10) : ''}
+              onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
+            />
+          </div>
+        </div>
+
+        {/* Rozetler */}
+        <div className="space-y-2">
+          <label className="text-sm">Rozetler</label>
+          <div className="flex flex-wrap gap-2 mb-2">
+            {(form.badges ?? []).map((tag, i) => (
+              <span key={i} className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded border">
+                {tag}
+                <button type="button" className="text-red-500" onClick={() => setForm(f => ({ ...f, badges: (f.badges ?? []).filter((t) => t !== tag) }))}>x</button>
+              </span>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              className="border rounded-md px-3 py-2 w-full"
+              placeholder="Örn: Lisanslı, SSL, 18+"
+              value={newBadge}
+              onChange={(e) => setNewBadge(e.target.value)}
+            />
+            <button
+              type="button"
+              className="px-3 py-2 rounded-md border"
+              onClick={() => {
+                const raw = newBadge.trim();
+                if (!raw) return;
+                const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+                if (parts.length === 0) return;
+                setForm(f => ({ ...f, badges: Array.from(new Set([...(f.badges ?? []), ...parts])) }))
+                setNewBadge('')
+              }}
+            >Ekle</button>
+          </div>
+          {availableBadges.length > 0 && (
+            <div className="text-xs text-muted-foreground mt-2">
+              Önerilen: {availableBadges.map((t) => (
+                <button key={t} type="button" className="mr-2 underline" onClick={() => setForm(f => ({ ...f, badges: Array.from(new Set([...(f.badges ?? []), t])) }))}>{t}</button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Özellikler */}
+        <div className="space-y-2">
+          <label className="text-sm">Özellikler / Alt Yazılar</label>
+          <div className="space-y-2">
+            {(form.features ?? []).map((feat, idx) => (
+              <div key={idx} className="flex items-center gap-2">
+                <input className="border rounded-md px-3 py-2 w-full" value={feat} onChange={(e) => {
+                  const arr = [...(form.features ?? [])];
+                  arr[idx] = e.target.value;
+                  setForm(f => ({ ...f, features: arr }))
+                }} />
+                <button type="button" className="px-3 py-2 rounded-md border" onClick={() => setForm(f => ({ ...f, features: (f.features ?? []).filter((_, i) => i !== idx) }))}>Sil</button>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              className="border rounded-md px-3 py-2 w-full"
+              placeholder="Örn: Çevrim Şartsız"
+              value={newFeature}
+              onChange={(e) => setNewFeature(e.target.value)}
+            />
+            <button
+              type="button"
+              className="px-3 py-2 rounded-md border"
+              onClick={() => {
+                const val = newFeature.trim(); if (!val) return;
+                setForm(f => ({ ...f, features: [...(f.features ?? []), val] }))
+                setNewFeature('')
+              }}
+            >Ekle</button>
+          </div>
+        </div>
+
+        {/* Durumlar ve aksiyonlar */}
         <div className="flex items-center gap-4">
           <label className="flex items-center gap-2">
             <input
@@ -449,7 +645,10 @@ export default function BonusesPage() {
             />
           </div>
         </div>
-        <button type="submit" className="px-4 py-2 rounded-md bg-primary text-primary-foreground">Ekle</button>
+        <div className="flex gap-2">
+          <button type="submit" className="px-4 py-2 rounded-md bg-primary text-primary-foreground">Kaydet</button>
+          <button type="submit" className="px-4 py-2 rounded-md border" onClick={() => { setSendForApproval(true); }}>Onaya Gönder</button>
+        </div>
       </form>
 
       {loading && <div className="p-3">Yükleniyor...</div>}

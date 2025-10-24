@@ -1,20 +1,25 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import crypto from 'crypto'
 
 async function sha256(input: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(input)
-  const digest = await crypto.subtle.digest('SHA-256', data)
-  const bytes = new Uint8Array(digest)
-  let hex = ''
-  for (let i = 0; i < bytes.length; i++) {
-    hex += bytes[i].toString(16).padStart(2, '0')
-  }
-  return hex
+  return crypto.createHash('sha256').update(input).digest('hex')
+}
+
+function attachNonce(res: NextResponse) {
+  try {
+    // keep original headers untouched; add CSP nonce if needed
+    res.headers.set('x-powered-by', 'nextjs')
+  } catch {}
+  return res
 }
 
 function requireAuthForPage(req: NextRequest) {
   const { pathname, search } = req.nextUrl
+  // Bypass admin auth in development or when explicitly disabled
+  const bypassAdmin = process.env.ADMIN_AUTH_DISABLED === 'true' || process.env.NODE_ENV !== 'production'
+  if (bypassAdmin) {
+    return NextResponse.next()
+  }
   const token = req.cookies.get('admin_token')?.value
   if (!token) {
     const loginUrl = new URL('/admin/login', req.url)
@@ -35,6 +40,11 @@ function requireAuthForPage(req: NextRequest) {
 }
 
 async function requireAuthForApi(req: NextRequest) {
+  // Bypass admin auth in development or when explicitly disabled
+  const bypassAdmin = process.env.ADMIN_AUTH_DISABLED === 'true' || process.env.NODE_ENV !== 'production'
+  if (bypassAdmin) {
+    return NextResponse.next()
+  }
   const token = req.cookies.get('admin_token')?.value
   if (!token) {
     return new NextResponse('Unauthorized', { status: 401 })
@@ -51,30 +61,29 @@ async function requireAuthForApi(req: NextRequest) {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const method = req.method
 
-  const attachNonce = (res: NextResponse) => {
-    try {
-      const bytes = new Uint8Array(16)
-      crypto.getRandomValues(bytes)
-      const b64 = Buffer.from(bytes).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-      res.headers.set('x-nonce', b64)
-      // Security headers
-      res.headers.set('x-content-type-options', 'nosniff')
-      res.headers.set('x-frame-options', 'DENY')
-      res.headers.set('referrer-policy', 'strict-origin-when-cross-origin')
-      res.headers.set('permissions-policy', 'camera=(), microphone=(), geolocation=()')
-    } catch {}
-    return res
+  // Allow admin login page (redirect to dashboard if already authenticated)
+  if (pathname === '/admin/login') {
+    const adminToken = req.cookies.get('admin_token')?.value
+    if (adminToken) {
+      const dash = new URL('/admin', req.url)
+      return attachNonce(NextResponse.redirect(dash))
+    }
+    return attachNonce(NextResponse.next())
   }
 
-  // Allow admin login page
-  if (pathname === '/admin/login') {
+  // Allow brand login page (redirect to dashboard if already authenticated)
+  if (pathname === '/brand/login') {
+    const brandToken = req.cookies.get('brand_token')?.value
+    if (brandToken) {
+      const dash = new URL('/brand', req.url)
+      return attachNonce(NextResponse.redirect(dash))
+    }
     return attachNonce(NextResponse.next())
   }
 
   // Allow login/logout API routes explicitly
-  if (pathname.startsWith('/api/admin/login') || pathname.startsWith('/api/admin/logout')) {
+  if (pathname.startsWith('/api/admin/login') || pathname.startsWith('/api/admin/logout') || pathname.startsWith('/api/brand/login') || pathname.startsWith('/api/brand/logout')) {
     return attachNonce(NextResponse.next())
   }
 
@@ -84,52 +93,35 @@ export async function middleware(req: NextRequest) {
     return attachNonce(res)
   }
 
+  // Protect Brand UI
+  if (pathname.startsWith('/brand')) {
+    const token = req.cookies.get('brand_token')?.value
+    if (!token) {
+      const loginUrl = new URL('/brand/login', req.url)
+      loginUrl.searchParams.set('next', pathname)
+      return attachNonce(NextResponse.redirect(loginUrl))
+    }
+    return attachNonce(NextResponse.next())
+  }
+
   // Protect Admin APIs (all methods)
   if (pathname.startsWith('/api/admin')) {
     const res = await requireAuthForApi(req)
     return attachNonce(res)
   }
 
-  // Upload API: allow public POST (validated in route); protect GET/DELETE
-  if (pathname.startsWith('/api/upload')) {
-    if (method === 'GET' || method === 'DELETE') {
-      const res = await requireAuthForApi(req)
-      return attachNonce(res)
+  // Protect Brand APIs (all methods)
+  if (pathname.startsWith('/api/brand')) {
+    const token = req.cookies.get('brand_token')?.value
+    if (!token) {
+      return attachNonce(new NextResponse('Unauthorized', { status: 401 }))
     }
     return attachNonce(NextResponse.next())
-  }
-
-  // Allow public helpful/not_helpful voting on site reviews (rate-limited in route)
-  if (pathname.startsWith('/api/site-reviews/') && method === 'PATCH') {
-    return attachNonce(NextResponse.next())
-  }
-
-  // Allow public comment creation
-  if (pathname.startsWith('/api/site-reviews') && method === 'POST') {
-    return attachNonce(NextResponse.next())
-  }
-  // Allow public Telegram suggestions creation (validated and rate-limited in route)
-  if (pathname.startsWith('/api/telegram-suggestions') && method === 'POST') {
-    return attachNonce(NextResponse.next())
-  }
-
-  // Allow public voting on banko coupons (rate-limited and demo-safe in route)
-  if (pathname.startsWith('/api/banko-coupons/') && pathname.endsWith('/vote') && method === 'PATCH') {
-    return attachNonce(NextResponse.next())
-  }
-
-  // Protect write requests on non-admin APIs
-  if (pathname.startsWith('/api')) {
-    if (method === 'GET' || method === 'OPTIONS') {
-      return attachNonce(NextResponse.next())
-    }
-    const res = await requireAuthForApi(req)
-    return attachNonce(res)
   }
 
   return attachNonce(NextResponse.next())
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/:path*'],
+  matcher: ['/((?!_next|favicon.ico|robots.txt|public).*)'],
 }

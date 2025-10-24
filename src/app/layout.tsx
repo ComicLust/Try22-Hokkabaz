@@ -47,6 +47,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const ONE_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID || ''
+  const ONE_SAFARI_WEB_ID = process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID || ''
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden`}>
@@ -67,6 +68,20 @@ export default function RootLayout({
                   }
                 });
                 obs.observe(b, { attributes: true, attributeFilter: attrs });
+
+                // Fail-safe: Next.js FOUC gizleme stilini kaldır ve gövdeyi görünür tut
+                setTimeout(function(){
+                  try {
+                    var foucStyle = document.querySelector('style[data-next-hide-fouc]');
+                    if (foucStyle && foucStyle.parentNode) {
+                      foucStyle.parentNode.removeChild(foucStyle);
+                    }
+                    var bodyDisplay = window.getComputedStyle(b).display;
+                    if (bodyDisplay === 'none') {
+                      b.style.display = 'block';
+                    }
+                  } catch(_e){}
+                }, 1000);
               } catch(e) {}
             })();
           `}</Script>
@@ -74,17 +89,19 @@ export default function RootLayout({
         <Toaster />
         <SeoAutoInjector />
         <AnalyticsInjector />
-        {/* OneSignal Web SDK */}
+        {/* OneSignal Web SDK (v16) */}
         {ONE_APP_ID && process.env.NODE_ENV === 'production' && (
           <>
-            <Script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" strategy="afterInteractive" />
+            <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="afterInteractive" />
             <Script id="onesignal-init" strategy="afterInteractive">{`
-              window.OneSignal = window.OneSignal || [];
-              OneSignal.push(function() {
-                OneSignal.init({
+              window.OneSignalDeferred = window.OneSignalDeferred || [];
+              OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.init({
                   appId: '${ONE_APP_ID}',
-                  allowLocalhostAsSecureOrigin: true,
-                  notifyButton: { enable: true }
+                  ${""}
+                  ${""}
+                  ${ONE_SAFARI_WEB_ID ? `safari_web_id: '${ONE_SAFARI_WEB_ID}',` : ''}
+                  notifyButton: { enable: true },
                 });
               });
             `}</Script>

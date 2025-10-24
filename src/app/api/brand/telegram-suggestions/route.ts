@@ -2,17 +2,52 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { sanitizeText, isSafeHttpUrl, isSafeLocalUploadPath, createIpRateLimiter, getClientIp } from '@/lib/security'
 
-const allowPost = createIpRateLimiter(5, 60 * 60 * 1000) // 5 per hour
+const allowPost = createIpRateLimiter(10, 60 * 60 * 1000) // 10 per hour per IP (brand UI is protected)
 
-// Public: create a new Telegram group/channel suggestion
+// Brand: list telegram suggestions for current brand (supports status filter)
+export async function GET(req: NextRequest) {
+  try {
+    const brandId = req.cookies.get('brand_id')?.value
+    if (!brandId) return NextResponse.json({ error: 'Yetkilendirme gerekli' }, { status: 401 })
+
+    const { searchParams } = new URL(req.url)
+    const status = (searchParams.get('status') || 'all') as 'pending' | 'approved' | 'rejected' | 'all'
+
+    const where: any = { brandId }
+    if (status === 'pending') { where.isApproved = false; where.isRejected = false }
+    if (status === 'approved') where.isApproved = true
+    if (status === 'rejected') where.isRejected = true
+
+    const items = await (db as any).telegramSuggestion.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    })
+    return NextResponse.json(items)
+  } catch (e: any) {
+    return NextResponse.json({ error: e?.message ?? 'Listeleme hatası' }, { status: 400 })
+  }
+}
+
+// Brand: create a new Telegram group/channel suggestion with per-brand pending limit
 export async function POST(req: NextRequest) {
   try {
+    const brandId = req.cookies.get('brand_id')?.value
+    if (!brandId) return NextResponse.json({ error: 'Yetkilendirme gerekli' }, { status: 401 })
+
     const ip = getClientIp(req.headers)
     if (!allowPost(ip)) {
       return NextResponse.json({ error: 'Çok fazla deneme, lütfen daha sonra tekrar deneyin' }, { status: 429 })
     }
 
-    const body = await req.json()
+    // En fazla 3 adet onay bekleyen öneri
+    const pendingCount = await (db as any).telegramSuggestion.count({
+      where: { brandId, isApproved: false, isRejected: false },
+    })
+    if (pendingCount >= 3) {
+      return NextResponse.json({ error: 'En fazla 3 öneri onay bekleyebilir' }, { status: 400 })
+    }
+
+    const body = await req.json().catch(() => ({}))
     const { name, ctaUrl, adminUsername, members, imageUrl, type } = body || {}
     // Optional single badge (string) or badges array with max 1 item
     const badgeLabel: string | undefined = typeof body?.badge === 'string' ? body.badge : undefined
@@ -71,6 +106,7 @@ export async function POST(req: NextRequest) {
         isApproved: false,
         isRejected: false,
         badges,
+        brand: { connect: { id: brandId } },
       },
     })
 
@@ -78,21 +114,4 @@ export async function POST(req: NextRequest) {
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Oluşturma hatası' }, { status: 400 })
   }
-}
-
-// Optional: list suggestions (defaults to pending)
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const status = (searchParams.get('status') || 'pending') as 'pending' | 'approved' | 'rejected' | 'all'
-
-  const where: any = {}
-  if (status === 'pending') { where.isApproved = false; where.isRejected = false }
-  if (status === 'approved') where.isApproved = true
-  if (status === 'rejected') where.isRejected = true
-
-  const items = await (db as any).telegramSuggestion.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-  })
-  return NextResponse.json(items)
 }

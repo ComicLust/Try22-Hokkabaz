@@ -29,6 +29,7 @@ type Bonus = {
 // MediaPicker entegrasyonu için UI importları
 import { Button } from '@/components/ui/button'
 import { MediaPicker } from '@/components/media/MediaPicker'
+import { slugifyTr } from '@/lib/slugify'
 
 export default function BonusEditPage() {
   const { id } = useParams() as { id: string }
@@ -166,15 +167,16 @@ export default function BonusEditPage() {
               <input
                 className="border rounded-md px-3 py-2 w-full"
                 value={item.title}
-                onChange={(e) => setItem({ ...item, title: e.target.value })}
+                onChange={(e) => setItem((prev) => prev ? { ...prev, title: e.target.value, slug: (prev.slug && prev.slug.length > 0) ? prev.slug : slugifyTr(e.target.value, { withHyphens: true, maxLen: 64 }) } : prev)}
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 hidden">
               <label className="text-sm">Slug</label>
               <input
                 className="border rounded-md px-3 py-2 w-full"
+                type="hidden"
                 value={item.slug}
-                onChange={(e) => setItem({ ...item, slug: e.target.value })}
+                readOnly
               />
             </div>
 

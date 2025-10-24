@@ -17,9 +17,11 @@ type FormState = {
   members: string
   imageUrl: string
   type: 'GROUP' | 'CHANNEL'
+  badge?: string
 }
 
-export default function TelegramSuggestionCard() {
+// Add optional apiPath prop to allow posting to brand-specific endpoint
+export default function TelegramSuggestionCard({ apiPath = '/api/telegram-suggestions', onSubmitted }: { apiPath?: string, onSubmitted?: () => void }) {
   const [open, setOpen] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [state, setState] = React.useState<FormState>({
@@ -29,6 +31,7 @@ export default function TelegramSuggestionCard() {
     members: '',
     imageUrl: '',
     type: 'GROUP',
+    badge: '',
   })
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const { toast } = useToast()
@@ -106,8 +109,9 @@ export default function TelegramSuggestionCard() {
         members: state.members ? Number(state.members) : null,
         imageUrl: state.imageUrl.trim() || null,
         type: state.type,
+        badge: state.badge?.trim() ? state.badge.trim() : undefined,
       }
-      const res = await fetch('/api/telegram-suggestions', {
+      const res = await fetch(apiPath, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -116,11 +120,12 @@ export default function TelegramSuggestionCard() {
         const j = await res.json().catch(() => ({}))
         throw new Error(j?.error || 'Gönderim hatası')
       }
-      toast({ title: 'Öneri gönderildi', description: 'Onay sonrası listede görünecektir.' })
+      toast({ title: 'Öneri gönderildi', description: 'Listede durumu görüntüleyebilirsiniz.' })
       setSubmitted(true)
       setOpen(false)
-      setState({ name: '', ctaUrl: '', adminUsername: '', members: '', imageUrl: '', type: 'GROUP' })
+      setState({ name: '', ctaUrl: '', adminUsername: '', members: '', imageUrl: '', type: 'GROUP', badge: '' })
       regenCaptcha()
+      try { onSubmitted && onSubmitted() } catch {}
     } catch (e) {
       console.error(e)
       toast({ title: 'Hata', description: (e as Error).message, variant: 'destructive' })
@@ -182,6 +187,11 @@ export default function TelegramSuggestionCard() {
                   <Label>Üye Sayısı</Label>
                   <Input value={state.members} onChange={(e) => onChange('members', e.target.value)} placeholder="Sayı" />
                   {errors.members && <p className="text-sm text-red-600 mt-1">{errors.members}</p>}
+                </div>
+                <div>
+                  <Label>Rozet (opsiyonel, tek)</Label>
+                  <Input value={state.badge ?? ''} onChange={(e) => onChange('badge', e.target.value)} placeholder="Örn: Lisanslı" />
+                  <p className="text-[11px] text-muted-foreground mt-1">Yalnızca tek bir rozet girin.</p>
                 </div>
                 <div className="col-span-2">
                   <Label>Görsel</Label>

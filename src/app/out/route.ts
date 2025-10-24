@@ -178,7 +178,7 @@ export async function GET(req: Request) {
 
     await db.$transaction(ops)
 
-    return NextResponse.redirect(link.targetUrl, { status: 302 })
+    return NextResponse.redirect(new URL(link.targetUrl, req.url), { status: 302 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Redirect error' }, { status: 500 })
   }

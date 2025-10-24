@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   SidebarProvider,
   Sidebar,
@@ -43,6 +43,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname()
   const router = useRouter()
   const [loggingOut, setLoggingOut] = useState(false)
+  const [pendingBonusCount, setPendingBonusCount] = useState<number>(0)
+  
+  useEffect(() => {
+    const loadPending = async () => {
+      try {
+        const res = await fetch('/api/admin/bonuses?status=pending&page=1&limit=1')
+        const data = await res.json()
+        setPendingBonusCount(Number(data?.total || 0))
+      } catch {}
+    }
+    loadPending()
+  }, [])
+
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
   const segments = pathname.split('/').filter(Boolean)
   const labelMap: Record<string, string> = {
@@ -54,6 +67,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     'push-notifications': 'Push Notifications',
     campaigns: 'Kampanyalar',
     bonuses: 'Bonuslar',
+    'bonus-onay': 'Bonus Onay',
     'banko-kuponlar': 'Banko Kuponlar',
     telegram: 'Telegram',
     yorumlar: 'Yorumlar',
@@ -66,14 +80,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const labelFor = (seg: string) => labelMap[seg] ?? seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
   const breadcrumb = segments.map((seg, idx) => ({ href: '/' + segments.slice(0, idx + 1).join('/'), label: labelFor(seg) }))
 
-  if (pathname === '/admin/login') {
-    return (
-      <div className="p-4 min-h-screen flex items-center justify-center">
-        <div className="w-full max-w-md">{children}</div>
-      </div>
-    )
-  }
-
   const handleLogout = async () => {
     try {
       setLoggingOut(true)
@@ -83,6 +89,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       setLoggingOut(false)
     }
     router.replace('/admin/login')
+  }
+
+  if (pathname === '/admin/login') {
+    return (
+      <div className="p-4 min-h-screen flex items-center justify-center">
+        <div className="w-full max-w-md">{children}</div>
+      </div>
+    )
   }
 
   return (
@@ -184,6 +198,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/page-articles')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/page-articles"><LayoutDashboard className="size-4" /> Sayfa Makaleleri</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+
+          <SidebarSeparator />
+
+          <SidebarGroup>
+            <SidebarGroupLabel>Onay</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/bonuses/bonus-onay')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/bonuses/bonus-onay"><Gift className="size-4" /> Bonus Onay {pendingBonusCount > 0 && (<span className="ml-auto text-xs px-2 py-0.5 rounded bg-primary/15 text-primary">{pendingBonusCount}</span>)}</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

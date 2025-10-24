@@ -10,6 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { Edit, Plus, Trash2 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import BrandManagersSection from './BrandManagersSection'
 
 interface User {
   id: string
@@ -131,6 +132,8 @@ export default function AdminUsersPage() {
           </Table>
         </CardContent>
       </Card>
+      {/* Marka Yöneticileri Bölümü */}
+      <BrandManagersSection />
     </div>
   )
 }

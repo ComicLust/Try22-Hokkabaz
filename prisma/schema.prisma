@@ -57,7 +57,6 @@ model Bonus {
   slug       String   @unique
   description String?
   shortDescription String?
-  // Kategoriler: Bonus türü ve oyun/alan kategorisi
   bonusType   String?
   gameCategory String?
   amount     Int?
@@ -74,6 +73,13 @@ model Bonus {
   isActive   Boolean  @default(true)
   isFeatured Boolean  @default(false)
   priority   Int      @default(0)
+  // Brand ownership & approval
+  brandId    String?
+  brand      ReviewBrand? @relation(fields: [brandId], references: [id])
+  isApproved Boolean  @default(true)
+  // Sender info (brand manager)
+  createdByLoginId String?
+  createdByName     String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -188,6 +194,9 @@ model ReviewBrand {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   reviews          SiteReview[]
+  brandManagers    BrandManager[]
+  bonuses          Bonus[]
+  telegramSuggestions TelegramSuggestion[]
 }
 
 model TelegramSuggestion {
@@ -200,6 +209,10 @@ model TelegramSuggestion {
   type         TelegramType @default(GROUP)
   isApproved   Boolean  @default(false)
   isRejected   Boolean  @default(false)
+  badges       Json?
+  // Brand ownership
+  brandId      String?
+  brand        ReviewBrand? @relation(fields: [brandId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -331,4 +344,15 @@ model PageArticle {
   content   String   // HTML içerik
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model BrandManager {
+  id           String       @id @default(cuid())
+  brandId      String
+  brand        ReviewBrand  @relation(fields: [brandId], references: [id])
+  loginId      String       @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
