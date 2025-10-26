@@ -7,6 +7,7 @@ import SeoAutoInjector from '@/components/SeoAutoInjector'
 import ExternalLinkTracker from '@/components/ExternalLinkTracker'
 import Script from "next/script"
 import { db } from '@/lib/db'
+import { unstable_noStore as noStore } from 'next/cache'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,6 +20,7 @@ const GeistMonoInit = Geist_Mono({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.net'
+export const revalidate = 0
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -44,6 +46,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  noStore()
   const geistMono = GeistMonoInit
   let orgJsonLd: any
   try {
