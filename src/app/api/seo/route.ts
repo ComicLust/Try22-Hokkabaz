@@ -5,10 +5,14 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const page = searchParams.get('page') ?? undefined
   if (page) {
-    const item = await (db as any).seoSetting.findUnique({ where: { page } })
+    const item = await (db as any).seoSetting.findUnique({ where: { page }, select: {
+      id: true, page: true, title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } })
     return NextResponse.json(item ?? null)
   }
-  const items = await (db as any).seoSetting.findMany({ orderBy: { page: 'asc' } })
+  const items = await (db as any).seoSetting.findMany({ orderBy: { page: 'asc' }, select: {
+    id: true, page: true, title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+  } })
   return NextResponse.json(items)
 }
 

@@ -4,7 +4,9 @@ import YorumlarClient from '@/components/YorumlarClient'
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/yorumlar' } })
+    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/yorumlar' }, select: {
+      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } })
     const title = seo?.title ?? 'Bet Siteleri Yorumları'
     const description = seo?.description ?? 'Bet sitelerinin kullanıcı yorumları, arama ve sıralama seçenekleriyle liste halinde.'
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)
@@ -24,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
         description: ogDescription,
         url: 'https://hokkabaz.net/yorumlar',
         siteName: 'Hokkabaz',
-        type: seo?.ogType ?? 'website',
+        type: 'website',
         locale: 'tr_TR',
         images,
       },

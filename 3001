@@ -378,3 +378,62 @@ prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `ma
 [32m[nodemon] starting `npx tsx server.ts`[39m
 > Ready on http://0.0.0.0:3000
 > Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+Port 3002 in use. Retrying on 3003...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+> Ready on http://0.0.0.0:3003
+> Socket.IO server running at ws://0.0.0.0:3003/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename '/Users/orkundede/Downloads/workspace-695f5f49-0d66-4531-b713-ae8d10f5ced2/.next/cache/webpack/client-development/0.pack.gz_' -> '/Users/orkundede/Downloads/workspace-695f5f49-0d66-4531-b713-ae8d10f5ced2/.next/cache/webpack/client-development/0.pack.gz'
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+Port 3001 in use. Retrying on 3002...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+> Ready on http://0.0.0.0:3002
+> Socket.IO server running at ws://0.0.0.0:3002/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio

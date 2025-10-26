@@ -6,8 +6,12 @@ export async function generateMetadata(): Promise<Metadata> {
   try {
     const slugNew = "guvenilir-bahis-siteleri-listesi";
     const slugOld = "anlasmali-siteler";
-    const seoNew = await (db as any).seoSetting.findFirst({ where: { page: slugNew } });
-    const seo = seoNew ?? await (db as any).seoSetting.findFirst({ where: { page: slugOld } });
+    const seoNew = await (db as any).seoSetting.findFirst({ where: { page: slugNew }, select: {
+      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } });
+    const seo = seoNew ?? await (db as any).seoSetting.findFirst({ where: { page: slugOld }, select: {
+      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } });
 
     const defaultTitle = "Güvenilir Bahis Siteleri Listesi";
     const defaultDesc = "Güvenilir bahis siteleri listesi ve öne çıkan bonuslar";
@@ -41,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
         title: seo.ogTitle ?? seo.title ?? undefined,
         description: seo.ogDescription ?? seo.description ?? undefined,
         images: seo.ogImageUrl ? [{ url: seo.ogImageUrl }] : [{ url: defaultImage }],
-        type: seo.ogType ?? 'website',
+        type: 'website',
       },
       twitter: {
         title: seo.twitterTitle ?? seo.title ?? undefined,

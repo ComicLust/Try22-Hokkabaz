@@ -25,7 +25,9 @@ function badgeClass(b: string) {
 
 export default async function GuvenilirTelegramPage() {
   noStore()
-  const seo = await (db as any).seoSetting.findUnique({ where: { page: '/guvenilir-telegram' } })
+  const seo = await (db as any).seoSetting.findUnique({ where: { page: '/guvenilir-telegram' }, select: {
+    title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+  } })
   const pageTitle = seo?.title ?? 'Güvenilir Telegram Grupları'
   const pageDescription = seo?.description ?? 'Seçtiğimiz güvenilir kanal ve grupları aşağıda bulabilirsiniz.'
   const items = await (db as any).telegramGroup.findMany({
@@ -157,7 +159,9 @@ export default async function GuvenilirTelegramPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/guvenilir-telegram' } })
+    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/guvenilir-telegram' }, select: {
+      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } })
     const title = seo?.title ?? 'Güvenilir Telegram Grupları'
     const description = seo?.description ?? 'Seçtiğimiz güvenilir kanal ve grupları aşağıda bulabilirsiniz.'
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)
@@ -177,7 +181,7 @@ export async function generateMetadata(): Promise<Metadata> {
         description: ogDescription,
         url: 'https://hokkabaz.net/guvenilir-telegram',
         siteName: 'Hokkabaz',
-        type: seo?.ogType ?? 'website',
+        type: 'website',
         locale: 'tr_TR',
         images,
       },

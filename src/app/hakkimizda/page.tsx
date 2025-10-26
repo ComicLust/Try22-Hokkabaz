@@ -6,7 +6,9 @@ export default function Page() {
   return <HakkimizdaClient />
 }
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await (db as any).seoSetting.findUnique({ where: { page: '/hakkimizda' } })
+  const s = await (db as any).seoSetting.findUnique({ where: { page: '/hakkimizda' }, select: {
+    title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true,
+  } })
   const title = s?.title ?? 'Hakkımızda - Hokkabaz'
   const description = s?.description ?? 'Ekibimiz ve yaklaşımımız hakkında bilgiler.'
   const canonical = s?.canonicalUrl ?? undefined
@@ -19,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: s?.ogDescription ?? description,
       images: s?.ogImageUrl ? [s.ogImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
       url: canonical,
-      type: s?.ogType ?? 'website',
+      type: 'website',
     },
     twitter: {
       title: s?.twitterTitle ?? title,

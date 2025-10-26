@@ -45,7 +45,16 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const geistMono = GeistMonoInit
-  const orgSetting = await (db as any).seoSetting.findUnique({ where: { page: '__organization__' } })
+  let orgJsonLd: any
+  try {
+    const orgSetting = await (db as any).seoSetting.findUnique({
+      where: { page: '__organization__' },
+      select: { structuredData: true },
+    })
+    orgJsonLd = orgSetting?.structuredData
+  } catch {
+    orgJsonLd = null
+  }
   const defaultOrg = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -54,7 +63,7 @@ export default async function RootLayout({
     logo: SITE_URL + "/logo.svg",
     image: SITE_URL + "/uploads/1760732951329-fzch33159aq.jpg"
   }
-  const orgJsonLd = orgSetting?.structuredData ?? defaultOrg
+  if (!orgJsonLd) orgJsonLd = defaultOrg
 
   return (
     <html lang="tr" suppressHydrationWarning>
