@@ -100,7 +100,9 @@ export default function Page() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await (db as any).seoSetting.findUnique({ where: { page: '/' } })
+  const s = await (db as any).seoSetting.findUnique({ where: { page: '/' }, select: {
+    title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true,
+  } })
   const title = s?.title ?? 'Hokkabaz'
   const description = s?.description ?? 'Güvenilir bahis ve casino içerikleri'
   const canonical = s?.canonicalUrl ?? undefined
@@ -111,7 +113,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: s?.ogTitle ?? title,
       description: s?.ogDescription ?? description,
-      type: s?.ogType ?? 'website',
+      type: 'website',
       images: s?.ogImageUrl ? [s.ogImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
       url: canonical,
     },

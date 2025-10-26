@@ -13,7 +13,9 @@ export default function BankoKuponlarPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: "/banko-kuponlar" } });
+    const seo = await (db as any).seoSetting.findUnique({ where: { page: "/banko-kuponlar" }, select: {
+      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } });
     const title = seo?.title ?? "Banko Kuponlar";
     const description = seo?.description ?? "Her gün 18:00’de güncellenen banko kuponlar ve maç sonuçları.";
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean);
@@ -33,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
         description: ogDescription,
         url: "https://hokkabaz.net/banko-kuponlar",
         siteName: "Hokkabaz",
-        type: seo?.ogType ?? "website",
+        type: "website",
         locale: "tr_TR",
         images,
       },

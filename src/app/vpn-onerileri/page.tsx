@@ -114,7 +114,9 @@ export default async function VpnOnerileriPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/vpn-onerileri' } })
+    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/vpn-onerileri' }, select: {
+      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } })
     const title = seo?.title ?? 'VPN Önerileri'
     const description = seo?.description ?? 'Türkiye’de engellenmiş sitelere erişim için ücretsiz ve güvenilir seçenekler.'
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)
@@ -134,7 +136,7 @@ export async function generateMetadata(): Promise<Metadata> {
         description: ogDescription,
         url: 'https://hokkabaz.net/vpn-onerileri',
         siteName: 'Hokkabaz',
-        type: seo?.ogType ?? 'website',
+        type: 'website',
         locale: 'tr_TR',
         images,
       },

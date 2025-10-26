@@ -39,7 +39,9 @@ export default async function BonuslarPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: "/bonuslar" } });
+    const seo = await (db as any).seoSetting.findUnique({ where: { page: "/bonuslar" }, select: {
+      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+    } });
     const title = seo?.title ?? "Bonuslar";
     const description = seo?.description ?? "Güncel bonuslar, fırsatlar ve promosyonlar.";
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean);
@@ -59,7 +61,7 @@ export async function generateMetadata(): Promise<Metadata> {
         description: ogDescription,
         url: "https://hokkabaz.net/bonuslar",
         siteName: "Hokkabaz",
-        type: seo?.ogType ?? "website",
+        type: "website",
         locale: "tr_TR",
         images,
       },
