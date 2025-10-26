@@ -9,7 +9,7 @@ const labelMap: Record<string, string> = {
   "": "Ana Sayfa",
   "kampanyalar": "Kampanyalar",
   "bonuslar": "Bonuslar",
-  "anlasmali-siteler": "Anlaşmalı Siteler",
+  "guvenilir-bahis-siteleri-listesi": "Güvenilir Bahis Siteleri Listesi",
   "yorumlar": "Yorumlar",
   "guvenilir-telegram": "Güvenilir Telegram",
   "hakkimizda": "Hakkımızda",

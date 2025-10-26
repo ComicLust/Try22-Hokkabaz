@@ -12,9 +12,11 @@ type SeoSetting = {
   description?: string | null
   keywords?: string | null
   canonicalUrl?: string | null
+  ogType?: string | null
   ogTitle?: string | null
   ogDescription?: string | null
   ogImageUrl?: string | null
+  ogLogoUrl?: string | null
   twitterTitle?: string | null
   twitterDescription?: string | null
   twitterImageUrl?: string | null
@@ -25,15 +27,24 @@ type SeoSetting = {
   updatedAt?: string
 }
 
+type OrganizationSchema = {
+  name: string
+  url: string
+  logo: string
+  image: string
+}
+
 const emptyForm: Omit<SeoSetting, 'id'> = {
   page: '',
   title: '',
   description: '',
   keywords: '',
   canonicalUrl: '',
+  ogType: '',
   ogTitle: '',
   ogDescription: '',
   ogImageUrl: '',
+  ogLogoUrl: '',
   twitterTitle: '',
   twitterDescription: '',
   twitterImageUrl: '',
@@ -52,7 +63,101 @@ export default function AdminSeoPage() {
   const [form, setForm] = useState<Omit<SeoSetting, 'id'>>(emptyForm)
   const [clientOrigin, setClientOrigin] = useState<string>('')
   const [mediaOpenOg, setMediaOpenOg] = useState(false)
+  const [mediaOpenOgLogo, setMediaOpenOgLogo] = useState(false)
   const [mediaOpenTwitter, setMediaOpenTwitter] = useState(false)
+  
+  // Organization schema state
+  const [orgSchema, setOrgSchema] = useState<OrganizationSchema>({
+    name: 'Hokkabaz',
+    url: 'https://hokkabaz.net',
+    logo: 'https://hokkabaz.net/logo.svg',
+    image: 'https://hokkabaz.net/uploads/1760732951329-fzch33159aq.jpg'
+  })
+  const [orgLoading, setOrgLoading] = useState(false)
+  const [mediaOpenOrgLogo, setMediaOpenOrgLogo] = useState(false)
+  const [mediaOpenOrgImage, setMediaOpenOrgImage] = useState(false)
+
+  // Slug taşıma state
+  const [fromSlug, setFromSlug] = useState('anlasmali-siteler')
+  const [toSlug, setToSlug] = useState('guvenilir-bahis-siteleri-listesi')
+  const [migrating, setMigrating] = useState(false)
+
+  const reloadSeoItems = async () => {
+    try {
+      const res = await fetch('/api/seo')
+      const data = await res.json()
+      setItems(Array.isArray(data) ? data : [])
+    } catch {}
+  }
+
+  const migrateSlug = async () => {
+    if (!fromSlug.trim() || !toSlug.trim()) {
+      toast({ title: 'Hata', description: 'Her iki slug da zorunlu', variant: 'destructive' })
+      return
+    }
+    setMigrating(true)
+    try {
+      const res = await fetch('/api/admin/seo/migrate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fromSlug: fromSlug.trim(), toSlug: toSlug.trim() }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || data?.ok === false) throw new Error(data?.error || 'Taşıma hatası')
+      toast({ title: 'Slug Taşındı', description: `İşlem: ${data.action}` })
+      // Kayıt listesini tazele
+      try { await reloadSeoItems() } catch {}
+    } catch (e: any) {
+      toast({ title: 'Hata', description: e?.message || 'Taşıma başarısız', variant: 'destructive' })
+    } finally {
+      setMigrating(false)
+    }
+  }
+
+  // --- Görsel Uyarı Yardımcıları ---
+  type ImageAudit = { absoluteUrl: string, width?: number, height?: number, ratio?: number, ext?: string, warnings: string[] }
+  const toAbsolute = (url?: string | null) => {
+    const u = (url || '').trim()
+    if (!u) return ''
+    if (/^https?:\/\//i.test(u)) return u
+    const path = u.startsWith('/') ? u : `/${u}`
+    return clientOrigin ? `${clientOrigin}${path}` : path
+  }
+  const inferExt = (u: string) => {
+    const clean = (u || '').split('?')[0].toLowerCase()
+    const m = clean.match(/\.([a-z0-9]+)$/)
+    return m?.[1]
+  }
+  const loadDims = (abs: string): Promise<{ width?: number, height?: number }> => new Promise((resolve) => {
+    if (!abs) return resolve({})
+    const img = new Image()
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
+    img.onerror = () => resolve({})
+    img.src = abs
+  })
+  const auditImage = async (url: string | null | undefined, kind: 'og' | 'twitter'): Promise<ImageAudit | null> => {
+    const absoluteUrl = toAbsolute(url)
+    if (!absoluteUrl) return null
+    const { width, height } = await loadDims(absoluteUrl)
+    const ratio = (width && height && height > 0) ? (width / height) : undefined
+    const ext = inferExt(absoluteUrl)
+    const warnings: string[] = []
+    const allowed = ['jpg', 'jpeg', 'png', 'webp']
+    if (ext && !allowed.includes(ext)) warnings.push('Tür önerisi: jpg/png/webp kullanın.')
+    if (!ext) warnings.push('Tür tespit edilemedi: URL uzantısı yok gibi görünüyor.')
+    if (ratio) {
+      const diff = Math.abs(ratio - 1.91)
+      if (diff > 0.1) warnings.push('Önerilen oran ~1.91:1 (Facebook/Twitter paylaşımları için).')
+    }
+    if (kind === 'og') {
+      if ((width ?? 0) < 1200 || (height ?? 0) < 630) warnings.push('OG için önerilen minimum: 1200x630 piksel.')
+    } else {
+      if ((width ?? 0) < 600 || (height ?? 0) < 335) warnings.push('Twitter için önerilen minimum: 600x335 piksel.')
+    }
+    return { absoluteUrl, width, height, ratio, ext, warnings }
+  }
+  const [ogAudit, setOgAudit] = useState<ImageAudit | null>(null)
+  const [twAudit, setTwAudit] = useState<ImageAudit | null>(null)
 
   const editingItem = useMemo(() => items.find(i => i.id === editingId) ?? null, [items, editingId])
 
@@ -95,6 +200,7 @@ export default function AdminSeoPage() {
       }
     }
     load()
+    loadOrganizationSchema()
   }, [])
 
   useEffect(() => {
@@ -121,9 +227,11 @@ export default function AdminSeoPage() {
         description: editingItem.description ?? '',
         keywords: editingItem.keywords ?? '',
         canonicalUrl: editingItem.canonicalUrl ?? '',
+        ogType: editingItem.ogType ?? '',
         ogTitle: editingItem.ogTitle ?? '',
         ogDescription: editingItem.ogDescription ?? '',
         ogImageUrl: editingItem.ogImageUrl ?? '',
+        ogLogoUrl: editingItem.ogLogoUrl ?? '',
         twitterTitle: editingItem.twitterTitle ?? '',
         twitterDescription: editingItem.twitterDescription ?? '',
         twitterImageUrl: editingItem.twitterImageUrl ?? '',
@@ -135,6 +243,28 @@ export default function AdminSeoPage() {
       setForm(emptyForm)
     }
   }, [editingItem])
+
+  // Görsel oran/tür uyarılarını hesapla
+  useEffect(() => {
+    (async () => {
+      if (form.ogImageUrl) {
+        const a = await auditImage(form.ogImageUrl, 'og')
+        setOgAudit(a)
+      } else {
+        setOgAudit(null)
+      }
+    })()
+  }, [form.ogImageUrl, clientOrigin])
+  useEffect(() => {
+    (async () => {
+      if (form.twitterImageUrl) {
+        const a = await auditImage(form.twitterImageUrl, 'twitter')
+        setTwAudit(a)
+      } else {
+        setTwAudit(null)
+      }
+    })()
+  }, [form.twitterImageUrl, clientOrigin])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -155,9 +285,11 @@ export default function AdminSeoPage() {
           description: data.description ?? '',
           keywords: data.keywords ?? '',
           canonicalUrl: data.canonicalUrl ?? '',
+          ogType: data.ogType ?? '',
           ogTitle: data.ogTitle ?? '',
           ogDescription: data.ogDescription ?? '',
           ogImageUrl: data.ogImageUrl ?? '',
+          ogLogoUrl: data.ogLogoUrl ?? '',
           twitterTitle: data.twitterTitle ?? '',
           twitterDescription: data.twitterDescription ?? '',
           twitterImageUrl: data.twitterImageUrl ?? '',
@@ -243,6 +375,75 @@ export default function AdminSeoPage() {
     }
   }
 
+  // Organization schema functions
+  const loadOrganizationSchema = async () => {
+    try {
+      const res = await fetch('/api/seo?page=__organization__')
+      const data = await res.json()
+      if (data && data.structuredData) {
+        const org = data.structuredData
+        setOrgSchema({
+          name: org.name || 'Hokkabaz',
+          url: org.url || 'https://hokkabaz.net',
+          logo: org.logo || 'https://hokkabaz.net/logo.svg',
+          image: org.image || 'https://hokkabaz.net/uploads/1760732951329-fzch33159aq.jpg'
+        })
+      }
+    } catch (err) {
+      console.error('Organization schema yüklenemedi:', err)
+    }
+  }
+
+  const saveOrganizationSchema = async () => {
+    setOrgLoading(true)
+    setError(null)
+    try {
+      const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        ...orgSchema
+      }
+      
+      // Check if organization record exists
+      const checkRes = await fetch('/api/seo?page=__organization__')
+      const existingData = await checkRes.json()
+      
+      const payload = {
+        page: '__organization__',
+        title: 'Organization Schema',
+        structuredData
+      }
+      
+      const res = await fetch(existingData?.id ? `/api/seo/${existingData.id}` : '/api/seo', {
+        method: existingData?.id ? 'PATCH' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error ?? 'Organization schema kaydetme hatası')
+      
+      toast({ 
+        title: 'Organization Schema Kaydedildi', 
+        description: 'Değişiklikler tüm sayfalara yansıtılacak.' 
+      })
+    } catch (e: any) {
+      setError(e?.message ?? 'Organization schema kaydetme hatası')
+      toast({ 
+        title: 'Kaydetme hatası', 
+        description: e?.message ?? 'Organization schema kaydedilemedi.', 
+        variant: 'destructive' as any 
+      })
+    } finally {
+      setOrgLoading(false)
+    }
+  }
+
+  const handleOrgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setOrgSchema(prev => ({ ...prev, [name]: value }))
+  }
+
   // hydration uyarısını engellemek için clientOrigin + suppressHydrationWarning kullanılır
 
   return (
@@ -255,6 +456,8 @@ export default function AdminSeoPage() {
       {error && (
         <div className="rounded bg-red-50 text-red-700 px-3 py-2">{error}</div>
       )}
+
+      {/* Organization Schema Editing — moved to bottom */}
 
       {/* Otomatik ayarlar bilgilendirme */}
       <section className="border rounded p-4 bg-muted/30 text-sm space-y-2">
@@ -344,6 +547,9 @@ export default function AdminSeoPage() {
                 <input name="canonicalUrl" value={form.canonicalUrl ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" placeholder="https://site.com/" />
               </label>
               <div className="grid grid-cols-1 gap-3">
+                <label className="block text-sm">OG Type
+                  <input name="ogType" value={form.ogType ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" placeholder="website, article" />
+                </label>
                 <label className="block text-sm">OG Title
                   <input name="ogTitle" value={form.ogTitle ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" />
                 </label>
@@ -360,11 +566,41 @@ export default function AdminSeoPage() {
                       <img src={form.ogImageUrl as string} alt="OG preview" className="w-40 h-24 object-cover rounded border" />
                     </div>
                   )}
+                  {/* Uyarılar */}
+                  {ogAudit && (
+                    <div className="mt-2 text-xs">
+                      <div className="text-gray-600">Boyut: {ogAudit.width ?? '?'}x{ogAudit.height ?? '?'} | Oran: {ogAudit.ratio ? ogAudit.ratio.toFixed(2) : '?'}:1 | Tür: {(ogAudit.ext || '?').toUpperCase()}</div>
+                      {ogAudit.warnings.length > 0 ? (
+                        <ul className="mt-1 list-disc pl-5 text-yellow-700">
+                          {ogAudit.warnings.map((w) => (<li key={w}>{w}</li>))}
+                        </ul>
+                      ) : (
+                        <div className="mt-1 text-green-700">Uygun görünür.</div>
+                      )}
+                    </div>
+                  )}
                   <MediaPicker
                     open={mediaOpenOg}
                     onOpenChange={setMediaOpenOg}
                     onSelect={(url) => setForm(prev => ({ ...prev, ogImageUrl: url }))}
                     title="OG Görsel Seç / Yükle"
+                  />
+                </label>
+                <label className="block text-sm">OG Logo URL
+                  <div className="mt-1 flex items-center gap-2">
+                    <input name="ogLogoUrl" value={form.ogLogoUrl ?? ''} onChange={handleChange} className="flex-1 border rounded px-3 py-2" />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenOgLogo(true)}>Logo Seç / Yükle</Button>
+                  </div>
+                  {form.ogLogoUrl && (
+                    <div className="mt-2">
+                      <img src={form.ogLogoUrl as string} alt="OG logo preview" className="w-32 h-20 object-contain rounded border" />
+                    </div>
+                  )}
+                  <MediaPicker
+                    open={mediaOpenOgLogo}
+                    onOpenChange={setMediaOpenOgLogo}
+                    onSelect={(url) => setForm(prev => ({ ...prev, ogLogoUrl: url }))}
+                    title="OG Logo Seç / Yükle"
                   />
                 </label>
               </div>
@@ -383,6 +619,19 @@ export default function AdminSeoPage() {
                   {form.twitterImageUrl && (
                     <div className="mt-2">
                       <img src={form.twitterImageUrl as string} alt="Twitter preview" className="w-40 h-24 object-cover rounded border" />
+                    </div>
+                  )}
+                  {/* Uyarılar */}
+                  {twAudit && (
+                    <div className="mt-2 text-xs">
+                      <div className="text-gray-600">Boyut: {twAudit.width ?? '?'}x{twAudit.height ?? '?'} | Oran: {twAudit.ratio ? twAudit.ratio.toFixed(2) : '?'}:1 | Tür: {(twAudit.ext || '?').toUpperCase()}</div>
+                      {twAudit.warnings.length > 0 ? (
+                        <ul className="mt-1 list-disc pl-5 text-yellow-700">
+                          {twAudit.warnings.map((w) => (<li key={w}>{w}</li>))}
+                        </ul>
+                      ) : (
+                        <div className="mt-1 text-green-700">Uygun görünür.</div>
+                      )}
                     </div>
                   )}
                   <MediaPicker
@@ -420,9 +669,133 @@ export default function AdminSeoPage() {
         </div>
       </section>
 
+      {/* Organization Schema Editing — dark themed at bottom */}
+      <section className="mt-10 border border-gray-800 rounded p-6 bg-gray-900 text-gray-100 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Organization Schema (Global)</h2>
+          <div className="text-sm text-gray-300">Tüm sayfalarda görünür</div>
+        </div>
+        <div className="text-sm text-gray-300 mb-4">
+          Bu bilgiler sitenin Organization JSON-LD şemasını oluşturur ve arama motorlarına kimliğini tanıtır.
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <label className="block text-sm font-medium">
+              Organizasyon Adı
+              <input
+                name="name"
+                value={orgSchema.name}
+                onChange={handleOrgChange}
+                className="mt-1 w-full border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
+                placeholder="Hokkabaz"
+              />
+            </label>
+            <label className="block text-sm font-medium">
+              Site URL
+              <input
+                name="url"
+                value={orgSchema.url}
+                onChange={handleOrgChange}
+                className="mt-1 w-full border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
+                placeholder="https://hokkabaz.net"
+              />
+            </label>
+          </div>
+          <div className="space-y-3">
+            <label className="block text-sm font-medium">
+              Logo URL
+              <div className="mt-1 flex items-center gap-2">
+                <input
+                  name="logo"
+                  value={orgSchema.logo}
+                  onChange={handleOrgChange}
+                  className="flex-1 border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
+                  placeholder="https://hokkabaz.net/logo.svg"
+                />
+                <Button type="button" variant="outline" onClick={() => setMediaOpenOrgLogo(true)}>
+                  Logo Seç
+                </Button>
+              </div>
+              {orgSchema.logo && (
+                <div className="mt-2">
+                  <img src={orgSchema.logo} alt="Organization logo" className="w-32 h-20 object-contain rounded border border-gray-700 bg-gray-900" />
+                </div>
+              )}
+            </label>
+            <label className="block text-sm font-medium">
+              Temsili Görsel URL
+              <div className="mt-1 flex items-center gap-2">
+                <input
+                  name="image"
+                  value={orgSchema.image}
+                  onChange={handleOrgChange}
+                  className="flex-1 border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
+                  placeholder="https://hokkabaz.net/uploads/..."
+                />
+                <Button type="button" variant="outline" onClick={() => setMediaOpenOrgImage(true)}>
+                  Görsel Seç
+                </Button>
+              </div>
+              {orgSchema.image && (
+                <div className="mt-2">
+                  <img src={orgSchema.image} alt="Organization image" className="w-40 h-24 object-cover rounded border border-gray-700 bg-gray-900" />
+                </div>
+              )}
+            </label>
+          </div>
+        </div>
+        <div className="flex gap-2 pt-2">
+          <button
+            disabled={orgLoading}
+            onClick={saveOrganizationSchema}
+            className="px-4 py-2 rounded bg-blue-600 text-white disabled:opacity-50 flex items-center gap-2"
+          >
+            {orgLoading && <span className="inline-block w-4 h-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />}
+            Organization Schema Kaydet
+          </button>
+        </div>
+
+        {/* Media Pickers for Organization */}
+        <MediaPicker
+          open={mediaOpenOrgLogo}
+          onOpenChange={setMediaOpenOrgLogo}
+          onSelect={(url) => setOrgSchema(prev => ({ ...prev, logo: url }))}
+          title="Organization Logo Seç / Yükle"
+        />
+        <MediaPicker
+          open={mediaOpenOrgImage}
+          onOpenChange={setMediaOpenOrgImage}
+          onSelect={(url) => setOrgSchema(prev => ({ ...prev, image: url }))}
+          title="Organization Görsel Seç / Yükle"
+        />
+      </section>
+
+      {/* Slug Taşıma */}
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold">Slug Taşıma</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <label className="block text-sm">Eski Slug
+            <input value={fromSlug} onChange={(e) => setFromSlug(e.target.value)} className="mt-1 w-full border rounded px-3 py-2" placeholder="anlasmali-siteler" />
+          </label>
+          <label className="block text-sm">Yeni Slug
+            <input value={toSlug} onChange={(e) => setToSlug(e.target.value)} className="mt-1 w-full border rounded px-3 py-2" placeholder="guvenilir-bahis-siteleri-listesi" />
+          </label>
+        </div>
+        <div className="flex items-center gap-4 pt-2">
+          <Button disabled={migrating} onClick={migrateSlug} className="px-3 py-2 rounded bg-blue-600 text-white disabled:opacity-50">
+            {migrating ? 'Taşınıyor...' : 'Taşı'}
+          </Button>
+          <div className="text-xs text-gray-600">
+            Not: SEO kayıtlarını taşır/birleştirir; rota listeleri ve harici linkler ayrı yönetilir.
+          </div>
+        </div>
+      </section>
+
       <section className="text-sm text-gray-500">
         Öneri: Ana sayfa için `page` alanını `/` olarak gir.
       </section>
     </div>
   )
+
+
 }

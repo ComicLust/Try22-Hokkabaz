@@ -10,7 +10,7 @@ export default function MobileBottomNav() {
     { href: '/bonuslar', label: 'Bonuslar', Icon: Gift },
     { href: '/kampanyalar', label: 'Kampanyalar', Icon: Megaphone },
     { href: '/yorumlar', label: 'Yorumlar', Icon: MessageSquare },
-    { href: '/anlasmali-siteler', label: 'Siteler', Icon: Globe },
+    { href: '/guvenilir-bahis-siteleri-listesi', label: 'Siteler', Icon: Globe },
   ]
 
   const isActive = (href: string) => {

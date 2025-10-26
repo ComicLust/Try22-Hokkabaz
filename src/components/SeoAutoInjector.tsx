@@ -13,7 +13,14 @@ export default function SeoAutoInjector() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     const origin = window.location.origin
-    const canonical = origin + pathname
+    const rawSearch = window.location.search || ''
+    const params = new URLSearchParams(rawSearch)
+    const canonicalParams = new URLSearchParams()
+    // Keep pagination in canonical; drop tracking/sort params
+    const pageParam = params.get('page')
+    if (pageParam && pageParam !== '1') canonicalParams.set('page', pageParam)
+    const canonicalSearch = canonicalParams.toString() ? `?${canonicalParams.toString()}` : ''
+    const canonical = origin + pathname + canonicalSearch
 
     const head = document.head
 
@@ -83,9 +90,11 @@ export default function SeoAutoInjector() {
           title,
           description,
           keywords,
+          ogType,
           ogTitle,
           ogDescription,
           ogImageUrl,
+          ogLogoUrl,
           twitterTitle,
           twitterDescription,
           twitterImageUrl,
@@ -107,7 +116,9 @@ export default function SeoAutoInjector() {
         const effectiveOgTitle = (ogTitle ?? title) ?? undefined
         upsertMeta('property', 'og:title', effectiveOgTitle)
         upsertMeta('property', 'og:description', (ogDescription ?? description) ?? undefined)
+        upsertMeta('property', 'og:type', ogType ?? 'website')
         upsertMeta('property', 'og:image', toAbsoluteGlobal(ogImageUrl))
+        upsertMeta('property', 'og:logo', toAbsoluteGlobal(ogLogoUrl))
 
         // Twitter
         const effectiveTwitterTitle = (twitterTitle ?? title) ?? undefined

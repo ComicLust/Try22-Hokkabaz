@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const ogDescription = seo?.ogDescription ?? description;
     const twitterTitle = seo?.twitterTitle ?? title;
     const twitterDescription = seo?.twitterDescription ?? description;
-    const images = seo?.ogImageUrl ? [seo.ogImageUrl] : undefined;
+    const images = seo?.ogImageUrl ? [seo.ogImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'];
 
     return {
       title,
@@ -31,9 +31,9 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        url: "https://hokkabaz.com/banko-kuponlar",
+        url: "https://hokkabaz.net/banko-kuponlar",
         siteName: "Hokkabaz",
-        type: "website",
+        type: seo?.ogType ?? "website",
         locale: "tr_TR",
         images,
       },
@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
         card: "summary_large_image",
         title: twitterTitle,
         description: twitterDescription,
-        images,
+        images: seo?.twitterImageUrl ? [seo.twitterImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
       },
       robots: {
         index: seo?.robotsIndex ?? true,

@@ -111,13 +111,14 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: s?.ogTitle ?? title,
       description: s?.ogDescription ?? description,
-      images: s?.ogImageUrl ? [s.ogImageUrl] : undefined,
+      type: s?.ogType ?? 'website',
+      images: s?.ogImageUrl ? [s.ogImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
       url: canonical,
     },
     twitter: {
       title: s?.twitterTitle ?? title,
       description: s?.twitterDescription ?? description,
-      images: s?.twitterImageUrl ? [s.twitterImageUrl] : undefined,
+      images: s?.twitterImageUrl ? [s.twitterImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
       card: 'summary_large_image',
     },
     robots: {

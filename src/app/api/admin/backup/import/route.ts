@@ -154,6 +154,13 @@ export async function POST(req: Request) {
       results.siteReviews = await upsertMany(db.siteReview, data as any);
     }
 
+    // BrandManager (depends on ReviewBrand)
+    if (tables.brandManagers?.length) {
+      const data = stripUpdatedAt(tables.brandManagers);
+      // Upsert by unique loginId to avoid duplicate id conflicts
+      results.brandManagers = await upsertManyByUniqueField(db.brandManager, data as any, 'loginId');
+    }
+
     // AffiliateLink then AffiliateClick
     if (tables.affiliateLinks?.length) {
       const data = stripUpdatedAt(tables.affiliateLinks);
@@ -213,6 +220,24 @@ export async function POST(req: Request) {
     if (tables.analyticsCodes?.length) {
       const data = stripUpdatedAt(tables.analyticsCodes);
       results.analyticsCodes = await upsertMany(db.analyticsCode, data as any);
+    }
+
+    // PageArticle (unique slug)
+    if (tables.pageArticles?.length) {
+      const data = stripUpdatedAt(tables.pageArticles);
+      results.pageArticles = await upsertManyByUniqueField(db.pageArticle, data as any, 'slug');
+    }
+
+    // PageSponsor
+    if (tables.pageSponsors?.length) {
+      const data = stripUpdatedAt(tables.pageSponsors);
+      results.pageSponsors = await upsertMany(db.pageSponsor, data as any);
+    }
+
+    // LiveMatch
+    if (tables.liveMatches?.length) {
+      const data = stripUpdatedAt(tables.liveMatches);
+      results.liveMatches = await upsertMany(db.liveMatch, data as any);
     }
 
     return NextResponse.json({ ok: true, inserted: results });

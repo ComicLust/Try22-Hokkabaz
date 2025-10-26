@@ -30,7 +30,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/', label: 'Ana Sayfa', active: currentPath === '/' },
     { href: '/kampanyalar', label: 'Kampanyalar', active: currentPath === '/kampanyalar' },
     { href: '/bonuslar', label: 'Bonuslar', active: currentPath === '/bonuslar' },
-    { href: '/anlasmali-siteler', label: 'Güvenilir Siteler', active: currentPath === '/anlasmali-siteler' },
+    { href: '/guvenilir-bahis-siteleri-listesi', label: 'Güvenilir Siteler', active: currentPath === '/guvenilir-bahis-siteleri-listesi' },
     { href: '/yorumlar', label: 'Yorumlar', active: currentPath === '/yorumlar' },
     { href: '/banko-kuponlar', label: 'Banko Kuponlar', active: currentPath === '/banko-kuponlar' },
     { href: '/hakkimizda', label: 'Hakkımızda', active: currentPath === '/hakkimizda' },
@@ -39,7 +39,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
 
   const primaryMenu: { href: string; label: string; Icon: any; active?: boolean; external?: boolean; comingSoon?: boolean }[] = [
     { href: '/', label: 'Ana Sayfa', Icon: Home, active: currentPath === '/' },
-    { href: '/anlasmali-siteler', label: 'Güvenilir Siteler', Icon: Award, active: currentPath === '/anlasmali-siteler' },
+    { href: '/guvenilir-bahis-siteleri-listesi', label: 'Güvenilir Siteler', Icon: Award, active: currentPath === '/guvenilir-bahis-siteleri-listesi' },
     { href: '/kampanyalar', label: 'Aktif Kampanyalar', Icon: Star, active: currentPath === '/kampanyalar' },
     { href: '/yorumlar', label: 'Yorumlar', Icon: MessageSquare, active: currentPath === '/yorumlar' },
     { href: '/banko-kuponlar', label: 'Banko Kuponlar', Icon: Trophy, active: currentPath === '/banko-kuponlar' },

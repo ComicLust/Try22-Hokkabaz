@@ -39,7 +39,7 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
               <li><a href="/kampanyalar" className="text-muted-foreground hover:text-gold transition-colors">Kampanyalar</a></li>
               <li><a href="/bonuslar" className="text-muted-foreground hover:text-gold transition-colors">Bonuslar</a></li>
               <li><a href="/yorumlar" className="text-muted-foreground hover:text-gold transition-colors">Yorumlar</a></li>
-              <li><a href="/anlasmali-siteler" className="text-muted-foreground hover:text-gold transition-colors">Güvenilir Siteler</a></li>
+              <li><a href="/guvenilir-bahis-siteleri-listesi" className="text-muted-foreground hover:text-gold transition-colors">Güvenilir Siteler</a></li>
               <li><a href="/banko-kuponlar" className="text-muted-foreground hover:text-gold transition-colors">Banko Kuponlar</a></li>
               <li><a href="/canli-mac-izle" className="text-muted-foreground hover:text-gold transition-colors">Canlı Maç İzle</a></li>
               <li><a href="/vpn-onerileri" className="text-muted-foreground hover:text-gold transition-colors">VPN Önerileri</a></li>

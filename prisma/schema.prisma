@@ -129,9 +129,11 @@ model SeoSetting {
   description     String?
   keywords        String?
   canonicalUrl    String?
+  ogType          String? // e.g., "website", "article"
   ogTitle         String?
   ogDescription   String?
   ogImageUrl      String?
+  ogLogoUrl       String?
   twitterTitle    String?
   twitterDescription String?
   twitterImageUrl String?

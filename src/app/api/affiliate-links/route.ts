@@ -12,7 +12,7 @@ function slugify(input: string) {
 
 const RESERVED_SLUGS = new Set([
   'admin', 'api', 'out',
-  'hakkimizda', 'iletisim', 'kampanyalar', 'bonuslar', 'anlasmali-siteler', 'guvenilir-telegram', 'vpn-onerileri', 'yorumlar',
+  'hakkimizda', 'iletisim', 'kampanyalar', 'bonuslar', 'anlasmali-siteler', 'guvenilir-bahis-siteleri-listesi', 'guvenilir-telegram', 'vpn-onerileri', 'yorumlar',
   'sitemap.xml', 'favicon.ico', 'robots.txt'
 ])
 

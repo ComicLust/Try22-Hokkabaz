@@ -37,6 +37,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   // Dev ortamında standart izleme/derleme davranışı
   reactStrictMode: false,
+  trailingSlash: false,
   webpack: (config) => {
     return config;
   },
@@ -49,6 +50,15 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: securityHeaders,
+      },
+    ];
+  },
+  async redirects() {
+    return [
+      {
+        source: "/anlasmali-siteler",
+        destination: "/guvenilir-bahis-siteleri-listesi",
+        permanent: true,
       },
     ];
   },

@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { db } from '@/lib/db'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.com'
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.net'
 
   // Static routes that exist in app directory (non-admin, non-api)
   const staticRoutes: string[] = [
@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/kampanyalar',
     '/bonuslar',
     '/yorumlar',
-    '/anlasmali-siteler',
+    '/guvenilir-bahis-siteleri-listesi',
     '/guvenilir-telegram',
     '/banko-kuponlar',
     '/banko-kuponlar/arsiv',

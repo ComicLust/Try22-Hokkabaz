@@ -203,7 +203,7 @@ export default function AnlasmaliSitelerClient() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header currentPath="/anlasmali-siteler" />
+      <Header currentPath="/guvenilir-bahis-siteleri-listesi" />
 
       <main className="container mx-auto px-4 py-8 space-y-16 md:pl-72">
         <section className="w-full rounded-xl border border-border bg-gradient-to-b from-[#0d0d0d] to-[#151515] p-3">
@@ -453,7 +453,7 @@ export default function AnlasmaliSitelerClient() {
 
       </main>
 
-      <SeoArticle slug="anlasmali-siteler" />
+      <SeoArticle slug="guvenilir-bahis-siteleri-listesi" />
       <Footer />
     </div>
   );

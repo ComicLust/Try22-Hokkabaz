@@ -909,7 +909,7 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
                     <input
                       type="text"
                       className="border rounded-md px-2 py-1"
-                      placeholder="/anlasmali-siteler"
+                      placeholder="/guvenilir-bahis-siteleri-listesi"
                       defaultValue={s.ctaUrl ?? ''}
                       onBlur={(e) => updateSlide(s.id, { ctaUrl: e.target.value })}
                     />

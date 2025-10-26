@@ -35,6 +35,10 @@ export async function GET() {
       affiliateClicks,
       bankoCoupons,
       bankoMatches,
+      pageArticles,
+      pageSponsors,
+      liveMatches,
+      brandManagers,
     ] = await Promise.all([
       db.user.findMany(),
       db.post.findMany(),
@@ -53,6 +57,10 @@ export async function GET() {
       db.affiliateClick.findMany(),
       (db as any).bankoCoupon.findMany(),
       (db as any).bankoMatch.findMany(),
+      db.pageArticle.findMany(),
+      db.pageSponsor.findMany(),
+      db.liveMatch.findMany(),
+      db.brandManager.findMany(),
     ]);
 
     const backup = {
@@ -79,6 +87,10 @@ export async function GET() {
         affiliateClicks,
         bankoCoupons,
         bankoMatches,
+        pageArticles,
+        pageSponsors,
+        liveMatches,
+        brandManagers,
       },
     };
 

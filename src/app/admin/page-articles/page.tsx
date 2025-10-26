@@ -8,7 +8,7 @@ const pages: { slug: string; label: string }[] = [
   { slug: 'kampanyalar', label: 'Kampanyalar' },
   { slug: 'bonuslar', label: 'Bonuslar' },
   { slug: 'yorumlar', label: 'Yorumlar' },
-  { slug: 'anlasmali-siteler', label: 'Güvenilir Siteler' },
+  { slug: 'guvenilir-bahis-siteleri-listesi', label: 'Güvenilir Siteler' },
   { slug: 'banko-kuponlar', label: 'Banko Kuponlar' },
   { slug: 'canli-mac-izle', label: 'Canlı Maç İzle' },
   { slug: 'vpn-onerileri', label: 'VPN Önerileri' },

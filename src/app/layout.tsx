@@ -5,21 +5,23 @@ import { Toaster } from "@/components/ui/toaster";
 import AnalyticsInjector from '@/components/AnalyticsInjector'
 import SeoAutoInjector from '@/components/SeoAutoInjector'
 import ExternalLinkTracker from '@/components/ExternalLinkTracker'
-// removed: import PermissionPrompt from '@/components/push/PermissionPrompt'
 import Script from "next/script"
-// removed: import { Suspense } from "react"
+import { db } from '@/lib/db'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+const GeistMonoInit = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.net'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Hokkabaz - En Güvenilir Bahis Bonusları",
   description: "Türkiye'nin en güvenilir bahis ve casino sitelerinin güncel bonuslarını, deneme bonuslarını ve kampanyalarını bulun. Çevrimsiz bonuslar, anında çekim ve lisanslı siteler.",
   keywords: ["bahis bonusları", "deneme bonusu", "çevrimsiz bonus", "casino bonusu", "güvenilir bahis siteleri", "hoşgeldin bonusu", "bedava bonus", "bahis kampanyaları"],
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Hokkabaz - En Güvenilir Bahis Bonusları",
     description: "Türkiye'nin en güvenilir bahis ve casino sitelerinin güncel bonuslarını, deneme bonuslarını ve kampanyalarını bulun.",
-    url: "https://hokkabaz.com",
+    url: SITE_URL,
     siteName: "Hokkabaz",
     type: "website",
     locale: "tr_TR",
@@ -37,14 +39,23 @@ export const metadata: Metadata = {
     title: "Hokkabaz - En Güvenilir Bahis Bonusları",
     description: "Türkiye'nin en güvenilir bahis ve casino sitelerinin güncel bonuslarını, deneme bonuslarını ve kampanyalarını bulun.",
   },
-  // Removed hardcoded og:image and twitter:image to allow dynamic SEO settings
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const ONE_APP_ID = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID || ''
-  const ONE_SAFARI_WEB_ID = process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID || ''
+  const geistMono = GeistMonoInit
+  const orgSetting = await (db as any).seoSetting.findUnique({ where: { page: '__organization__' } })
+  const defaultOrg = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Hokkabaz",
+    url: SITE_URL,
+    logo: SITE_URL + "/logo.svg",
+    image: SITE_URL + "/uploads/1760732951329-fzch33159aq.jpg"
+  }
+  const orgJsonLd = orgSetting?.structuredData ?? defaultOrg
+
   return (
     <html lang="tr" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground overflow-x-hidden`}>
@@ -78,6 +89,22 @@ export default function RootLayout({
             })();
         `}</Script>
         <AnalyticsInjector />
+        <Script id="global-org-jsonld" type="application/ld+json" strategy="beforeInteractive">
+          {JSON.stringify(orgJsonLd)}
+        </Script>
+        <Script id="global-website-jsonld" type="application/ld+json" strategy="beforeInteractive">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Hokkabaz",
+            url: SITE_URL,
+            potentialAction: {
+              "@type": "SearchAction",
+              target: SITE_URL + "/?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </Script>
         <SeoAutoInjector />
         <ExternalLinkTracker />
         {children}

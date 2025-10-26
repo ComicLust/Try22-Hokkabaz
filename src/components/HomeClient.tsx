@@ -516,7 +516,7 @@ export default function HomeClient() {
                 Güvenilir Bahis Siteleri
               </motion.h2>
               <Button variant="outline" className="hover:border-gold hover:text-gold transition-colors" asChild>
-                <a href="/anlasmali-siteler">
+                <a href="/guvenilir-bahis-siteleri-listesi">
                   Tümünü Gör
                 </a>
               </Button>
@@ -565,6 +565,7 @@ export default function HomeClient() {
               {kampanyalar
                 .filter(k => !k.featured && k.status === 'active')
                 .sort((a, b) => a.title.localeCompare(b.title))
+                .slice(0, 6)
                 .map((kampanya) => (
                   <Card key={kampanya.id} className="backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold">
                     <CardHeader>
