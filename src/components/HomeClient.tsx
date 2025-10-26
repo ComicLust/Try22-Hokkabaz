@@ -537,7 +537,7 @@ export default function HomeClient() {
 
             {/* İki sıra anlaştığımız markalar */}
             <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full justify-items-center"
+              className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full justify-items-center"
               variants={staggerContainer}
             >
               {homeBrandGrid.map((b, i) => (

@@ -137,7 +137,8 @@ export async function POST(req: Request) {
     // Users, Posts
     if (tables.users?.length) {
       const data = stripUpdatedAt(tables.users);
-      results.users = await upsertMany(db.user, data as any);
+      // Upsert by unique 'email' to avoid duplicate id conflicts
+      results.users = await upsertManyByUniqueField(db.user, data as any, 'email');
     }
     if (tables.posts?.length) {
       const data = stripUpdatedAt(tables.posts);
@@ -147,16 +148,35 @@ export async function POST(req: Request) {
     // ReviewBrand then SiteReview
     if (tables.reviewBrands?.length) {
       const data = stripUpdatedAt(tables.reviewBrands);
-      results.reviewBrands = await upsertMany(db.reviewBrand, data as any);
+      // Upsert by unique 'slug' to avoid duplicate id conflicts
+      results.reviewBrands = await upsertManyByUniqueField(db.reviewBrand, data as any, 'slug');
     }
     if (tables.siteReviews?.length) {
-      const data = stripUpdatedAt(tables.siteReviews);
+      // Remap brandId based on brand slug mapping to prevent FK issues
+      const backupBrands = stripUpdatedAt(tables.reviewBrands || []);
+      const allBrands = await db.reviewBrand.findMany({ select: { id: true, slug: true } });
+      const slugToId = new Map(allBrands.map((b: any) => [b.slug, b.id]));
+      const backupIdToSlug = new Map(backupBrands.map((b: any) => [b.id, b.slug]));
+      const data = stripUpdatedAt(tables.siteReviews).map((r: any) => {
+        const slug = backupIdToSlug.get(r.brandId);
+        const actualId = slug ? slugToId.get(slug) : undefined;
+        return { ...r, brandId: actualId ?? r.brandId };
+      });
       results.siteReviews = await upsertMany(db.siteReview, data as any);
     }
 
     // BrandManager (depends on ReviewBrand)
     if (tables.brandManagers?.length) {
-      const data = stripUpdatedAt(tables.brandManagers);
+      // Remap brandId to actual ReviewBrand id by slug
+      const backupBrands = stripUpdatedAt(tables.reviewBrands || []);
+      const allBrands = await db.reviewBrand.findMany({ select: { id: true, slug: true } });
+      const slugToId = new Map(allBrands.map((b: any) => [b.slug, b.id]));
+      const backupIdToSlug = new Map(backupBrands.map((b: any) => [b.id, b.slug]));
+      const data = stripUpdatedAt(tables.brandManagers).map((m: any) => {
+        const slug = backupIdToSlug.get(m.brandId);
+        const actualId = slug ? slugToId.get(slug) : undefined;
+        return { ...m, brandId: actualId ?? m.brandId };
+      });
       // Upsert by unique loginId to avoid duplicate id conflicts
       results.brandManagers = await upsertManyByUniqueField(db.brandManager, data as any, 'loginId');
     }
@@ -164,10 +184,20 @@ export async function POST(req: Request) {
     // AffiliateLink then AffiliateClick
     if (tables.affiliateLinks?.length) {
       const data = stripUpdatedAt(tables.affiliateLinks);
-      results.affiliateLinks = await upsertMany(db.affiliateLink, data as any);
+      // Upsert by unique 'slug' to avoid duplicate conflicts
+      results.affiliateLinks = await upsertManyByUniqueField(db.affiliateLink, data as any, 'slug');
     }
     if (tables.affiliateClicks?.length) {
-      const data = stripUpdatedAt(tables.affiliateClicks);
+      // Remap linkId to actual AffiliateLink id by slug
+      const backupLinks = stripUpdatedAt(tables.affiliateLinks || []);
+      const allLinks = await db.affiliateLink.findMany({ select: { id: true, slug: true } });
+      const slugToId = new Map(allLinks.map((l: any) => [l.slug, l.id]));
+      const backupIdToSlug = new Map(backupLinks.map((l: any) => [l.id, l.slug]));
+      const data = stripUpdatedAt(tables.affiliateClicks).map((c: any) => {
+        const slug = backupIdToSlug.get(c.linkId);
+        const actualId = slug ? slugToId.get(slug) : undefined;
+        return { ...c, linkId: actualId ?? c.linkId };
+      });
       results.affiliateClicks = await upsertMany(db.affiliateClick, data as any);
     }
 
@@ -184,15 +214,27 @@ export async function POST(req: Request) {
     // Core content tables
     if (tables.campaigns?.length) {
       const data = stripUpdatedAt(tables.campaigns);
-      results.campaigns = await upsertMany(db.campaign, data as any);
+      // Upsert by unique 'slug' to avoid duplicate conflicts
+      results.campaigns = await upsertManyByUniqueField(db.campaign, data as any, 'slug');
     }
     if (tables.bonuses?.length) {
-      const data = stripUpdatedAt(tables.bonuses);
-      results.bonuses = await upsertMany(db.bonus, data as any);
+      // Remap brandId to actual ReviewBrand id by slug
+      const backupBrands = stripUpdatedAt(tables.reviewBrands || []);
+      const allBrands = await db.reviewBrand.findMany({ select: { id: true, slug: true } });
+      const slugToId = new Map(allBrands.map((b: any) => [b.slug, b.id]));
+      const backupIdToSlug = new Map(backupBrands.map((b: any) => [b.id, b.slug]));
+      const data = stripUpdatedAt(tables.bonuses).map((b: any) => {
+        const slug = b.brandId ? backupIdToSlug.get(b.brandId) : undefined;
+        const actualId = slug ? slugToId.get(slug) : undefined;
+        return { ...b, brandId: actualId ?? b.brandId };
+      });
+      // Upsert by unique 'slug' to avoid duplicate conflicts
+      results.bonuses = await upsertManyByUniqueField(db.bonus, data as any, 'slug');
     }
     if (tables.partnerSites?.length) {
       const data = stripUpdatedAt(tables.partnerSites);
-      results.partnerSites = await upsertMany(db.partnerSite, data as any);
+      // Upsert by unique 'slug' for deterministic merging
+      results.partnerSites = await upsertManyByUniqueField(db.partnerSite, data as any, 'slug');
     }
     if (tables.carouselSlides?.length) {
       const data = stripUpdatedAt(tables.carouselSlides);
@@ -214,7 +256,16 @@ export async function POST(req: Request) {
       results.telegramGroups = await upsertMany(db.telegramGroup, data as any);
     }
     if (tables.telegramSuggestions?.length) {
-      const data = stripUpdatedAt(tables.telegramSuggestions);
+      // Remap brandId to actual ReviewBrand id by slug
+      const backupBrands = stripUpdatedAt(tables.reviewBrands || []);
+      const allBrands = await db.reviewBrand.findMany({ select: { id: true, slug: true } });
+      const slugToId = new Map(allBrands.map((b: any) => [b.slug, b.id]));
+      const backupIdToSlug = new Map(backupBrands.map((b: any) => [b.id, b.slug]));
+      const data = stripUpdatedAt(tables.telegramSuggestions).map((t: any) => {
+        const slug = t.brandId ? backupIdToSlug.get(t.brandId) : undefined;
+        const actualId = slug ? slugToId.get(slug) : undefined;
+        return { ...t, brandId: actualId ?? t.brandId };
+      });
       results.telegramSuggestions = await upsertMany(db.telegramSuggestion, data as any);
     }
     if (tables.analyticsCodes?.length) {

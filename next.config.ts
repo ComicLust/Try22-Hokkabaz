@@ -2,11 +2,11 @@ import type { NextConfig } from "next";
 
 const buildCsp = (isProd: boolean) => [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://yastatic.net",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://yastatic.net https://static.cloudflareinsights.com https://cloudflareinsights.com https://analytics.tiktok.com https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://scripts.clarity.ms https://connect.facebook.net https://static.hotjar.com https://script.hotjar.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https: http:",
   "font-src 'self' data:",
-  "connect-src 'self' https: http: ws:",
+  "connect-src 'self' https: http: ws: wss:",
   // Allow generic embeds from HTTPS origins
   "frame-src 'self' https: http:",
   // Backward compatibility for some browsers
@@ -14,7 +14,6 @@ const buildCsp = (isProd: boolean) => [
   "frame-ancestors 'none'",
   "form-action 'self'",
   "base-uri 'self'",
-  ...(isProd ? ["upgrade-insecure-requests"] : []),
 ].join('; ')
 
 const securityHeaders = [
@@ -24,7 +23,25 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=(), payment=()" },
   {
     key: "Content-Security-Policy",
-    value: buildCsp(process.env.NODE_ENV === 'production'),
+    value: (() => {
+      const isProd = process.env.NODE_ENV === 'production'
+      const allowUpgrade = isProd && process.env.ENABLE_UPGRADE_INSECURE_REQUESTS === 'true'
+      const base = [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://yastatic.net https://static.cloudflareinsights.com https://cloudflareinsights.com https://analytics.tiktok.com https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://scripts.clarity.ms https://connect.facebook.net https://static.hotjar.com https://script.hotjar.com",
+        "style-src 'self' 'unsafe-inline'",
+        "img-src 'self' data: blob: https: http:",
+        "font-src 'self' data:",
+        "connect-src 'self' https: http: ws: wss:",
+        "frame-src 'self' https: http:",
+        "child-src 'self' https: http:",
+        "frame-ancestors 'none'",
+        "form-action 'self'",
+        "base-uri 'self'",
+      ]
+      if (allowUpgrade) base.push("upgrade-insecure-requests")
+      return base.join('; ')
+    })(),
   },
 ];
 
