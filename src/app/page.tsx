@@ -6,28 +6,8 @@ import Script from 'next/script'
 export default function Page() {
   return (
     <>
-      {/* SSR fallback: boş ekranı önlemek için minimal içerik */}
       <div id="app-root">
         <HomeClient />
-      </div>
-      <div id="fallback" className="min-h-screen bg-background text-foreground">
-        <div className="container mx-auto px-4 py-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <a href="/" className="font-semibold text-lg text-gold">Hokkabaz</a>
-            <span className="text-xs text-muted-foreground">Temel görünüm</span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Sayfa yüklenemedi veya gömülü tarayıcıda (ör. Telegram) bir sorun oluştu. Aşağıdaki bağlantılar üzerinden içeriğe erişebilirsiniz.
-          </p>
-          <nav className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            <a href="/kampanyalar" className="px-3 py-2 rounded-md ring-1 ring-border hover:bg-gold/5 transition-colors">Kampanyalar</a>
-            <a href="/bonuslar" className="px-3 py-2 rounded-md ring-1 ring-border hover:bg-gold/5 transition-colors">Bonuslar</a>
-            <a href="/guvenilir-bahis-siteleri-listesi" className="px-3 py-2 rounded-md ring-1 ring-border hover:bg-gold/5 transition-colors">Güvenilir Siteler</a>
-            <a href="/banko-kuponlar" className="px-3 py-2 rounded-md ring-1 ring-border hover:bg-gold/5 transition-colors">Banko Kuponlar</a>
-            <a href="/vpn-onerileri" className="px-3 py-2 rounded-md ring-1 ring-border hover:bg-gold/5 transition-colors">VPN Önerileri</a>
-            <a href="/guvenilir-telegram" className="px-3 py-2 rounded-md ring-1 ring-border hover:bg-gold/5 transition-colors">Telegram Grupları</a>
-          </nav>
-        </div>
       </div>
       <Script id="faq-schema" type="application/ld+json" strategy="afterInteractive">
         {JSON.stringify({

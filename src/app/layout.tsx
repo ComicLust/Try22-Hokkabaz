@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./fallback.css";
-const HydrationMarker = () => null;
-import HydrationMarker from "@/components/HydrationMarker";
 import { Toaster } from "@/components/ui/toaster";
 import AnalyticsInjector from '@/components/AnalyticsInjector'
 import SeoAutoInjector from '@/components/SeoAutoInjector'
@@ -111,7 +109,7 @@ export default async function RootLayout({
           {`try{document.documentElement.setAttribute('data-hydrated','1')}catch(e){}`}
         </Script>
         <noscript>
-          <div id="fallback" style="padding:16px">
+          <div id="fallback" style={{ padding: 16 }}>
             Site açılışında sorun yaşıyorsanız lütfen cihazınızın JavaScript ayarını kontrol edin. Temel görünüm yükleniyor.
           </div>
         </noscript>
