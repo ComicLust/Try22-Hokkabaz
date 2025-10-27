@@ -69,7 +69,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
   return (
     <>
       {/* Mobile Header only (desktopta gizli) */}
-      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-background/90 border-b border-border md:hidden">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 border-b border-border md:hidden">
         <div className="container mx-auto px-4">
           {/* Mobil Header: logo ortalı, sağda hamburger */}
           <div className="flex md:hidden items-center justify-center h-16 relative">
@@ -82,7 +82,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                   <Menu className="w-6 h-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85vw] max-w-[380px] bg-background border-r border-gold/20 p-0">
+              <SheetContent side="left" className="w-[85vw] max-w-[380px] bg-background border-r border-gold/20 p-0 transform-gpu will-change-transform contain-paint duration-200">
                 <div className="flex h-full flex-col">
                   <SheetHeader className="sr-only">
                     <SheetTitle>Mobil Menü</SheetTitle>
@@ -95,7 +95,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                 </div>
                 {/* Ana Sayfa ayrı buton kaldırıldı; menü listesinde ilk öğe olarak gösteriliyor */}
                 {/* Menü İçerik */}
-                <div className="flex-1 min-h-0 px-4 py-4 space-y-6 overflow-y-auto">
+                <div className="flex-1 min-h-0 px-4 py-4 space-y-6 overflow-y-auto content-auto momentum-scroll">
                   {/* Üst grup */}
                   <div className="space-y-2">
                     {primaryMenu.map((item) => (
@@ -103,9 +103,9 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                         key={item.label}
                         href={item.href}
                         onClick={handleNavigationClick}
-                        className={`group flex items-center justify-between rounded-lg px-3 py-3 transition-all border ${
+                        className={`group flex items-center justify-between rounded-lg px-3 py-3 transition-colors border ${
                           item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/60 border-border hover:border-gold/50 hover:bg-gold/5'
-                        } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20`}
+                        } shadow-smooth`}
                         target={item.external ? '_blank' : undefined}
                         rel={item.external ? 'noopener noreferrer nofollow' : undefined}
                       >
