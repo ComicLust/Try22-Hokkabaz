@@ -96,6 +96,22 @@
   --text-primary: #FFFFFF;
   --text-secondary: rgba(255, 255, 255, 0.6);
   --border-divider: rgba(255, 255, 255, 0.1);
+  /* Hokkabaz özel renkler */
+  --hokkabaz-gold: #FFD700;
+  --hokkabaz-gold-dark: #B8860B;
+  --hokkabaz-gold-light: #FFED4E;
+  --hokkabaz-secondary: #1A1A1A;
+  --hokkabaz-accent: #2A2A2A;
+}
+
+/* Bonuslar menü öğesi için özel stiller */
+.gold-border {
+  border: 1px solid var(--hokkabaz-gold) !important;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 215, 0, 0.03)) !important;
+}
+
+.gold-glow {
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.25), 0 0 20px rgba(255, 215, 0, 0.08) !important;
 }
 
 .dark {
@@ -325,5 +341,26 @@
   }
   .no-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome, Safari */
+  }
+
+  /* Performans yardımcıları: büyük listelerde boyama ve görünürlük optimizasyonu */
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1000px;
+  }
+
+  .contain-paint {
+    contain: layout paint style;
+  }
+
+  /* Daha hafif gölge ve animasyon varsayılanı (eski cihazlar için daha akıcı) */
+  .shadow-smooth {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    transition: box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+  }
+
+  /* iOS momentum scroll (overflow containerlarda etkili) */
+  .momentum-scroll {
+    -webkit-overflow-scrolling: touch;
   }
 }

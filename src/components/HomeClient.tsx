@@ -373,10 +373,10 @@ export default function HomeClient() {
               </Button>
             </div>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-4">Türkiye'nin en güvenilir bahis sitelerinin en cazip bonus ve kampanyaları</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredKampanyalar.map((kampanya) => (
                 <motion.div key={kampanya.id} variants={fadeInUp}>
-                  <Card className="relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-xl transition-all duration-300">
+                  <Card className="relative overflow-hidden md:backdrop-blur-sm bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-lg transition-colors duration-200 shadow-smooth">
                     <div className="absolute top-4 right-4 z-10">
                       <Badge className="bg-gold text-background">{kampanya.badgeLabel ?? 'ÖNE ÇIKAN'}</Badge>
                     </div>
@@ -441,12 +441,12 @@ export default function HomeClient() {
             </div>
 
             <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+              className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
               variants={staggerContainer}
             >
               {bonuses.map((bonus) => (
                 <motion.div key={bonus.id} variants={fadeInUp}>
-                  <Card className={`backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold ${isExpired(bonus) ? 'opacity-60' : ''}`}>
+                  <Card className={`md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                     <CardHeader>
                       <div className="mx-auto mb-4 w-full max-w-[240px] h-[72px] sm:h-[80px] bg-muted flex items-center justify-center border rounded-md p-2">
                         {(bonus as any).imageUrl ? (
@@ -537,11 +537,11 @@ export default function HomeClient() {
 
             {/* İki sıra anlaştığımız markalar */}
             <motion.div 
-              className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full justify-items-center"
+              className="content-auto grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full justify-items-center"
               variants={staggerContainer}
             >
               {homeBrandGrid.map((b, i) => (
-                <a key={`home-brand-${i}`} href={b.href} target="_blank" rel="noopener noreferrer" className="relative group rounded-xl border border-border bg-gradient-to-br from-[#111] to-[#1a1a1a] p-5 text-center hover:border-gold hover:shadow-[0_0_22px_rgba(255,215,0,0.25)] transition-all w-full">
+                <a key={`home-brand-${i}`} href={b.href} target="_blank" rel="noopener noreferrer" className="relative group rounded-xl border border-border bg-gradient-to-br from-[#111] to-[#1a1a1a] p-5 text-center hover:border-gold shadow-smooth transition-colors w-full">
                   <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
                   <img src={b.img} alt="logo" className="w-[220px] h-[73px] mx-auto opacity-90 group-hover:opacity-100 transition-opacity object-contain" />
                 </a>
@@ -561,13 +561,13 @@ export default function HomeClient() {
                 </a>
               </Button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {kampanyalar
                 .filter(k => !k.featured && k.status === 'active')
                 .sort((a, b) => a.title.localeCompare(b.title))
                 .slice(0, 6)
                 .map((kampanya) => (
-                  <Card key={kampanya.id} className="backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold">
+                  <Card key={kampanya.id} className="md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth">
                     <CardHeader>
                       <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
                         <Image

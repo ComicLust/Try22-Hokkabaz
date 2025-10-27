@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Award, Menu, Users, Star, Gift, Trophy, Ticket, Send, Twitter, Facebook, Home, MessageSquare, Shield } from 'lucide-react';
+import { Award, Menu, Users, Star, Gift, Trophy, Ticket, Send, Twitter, Facebook, Home, MessageSquare, Shield, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -103,7 +103,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                         key={item.label}
                         href={item.href}
                         onClick={handleNavigationClick}
-                        className={`flex items-center justify-between rounded-lg px-3 py-3 transition-all border ${
+                        className={`group flex items-center justify-between rounded-lg px-3 py-3 transition-all border ${
                           item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/60 border-border hover:border-gold/50 hover:bg-gold/5'
                         } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20`}
                         target={item.external ? '_blank' : undefined}
@@ -113,9 +113,14 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                           <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
                           <span className="text-sm font-medium">{item.label}</span>
                         </div>
-                        {item.comingSoon && (
-                          <span className="text-xs text-foreground/60">Eklenecek</span>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {item.comingSoon && (
+                            <span className="text-xs text-foreground/60">Eklenecek</span>
+                          )}
+                          <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                            item.active ? 'text-gold opacity-100' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                          }`} />
+                        </div>
                       </a>
                     ))}
                   </div>
@@ -129,19 +134,27 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                           key={item.label}
                           href={item.href}
                           onClick={handleNavigationClick}
-                          className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
+                          className={`group flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
                             item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/40 border-border hover:border-gold/50 hover:bg-gold/5'
                           } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20 ${
-                            item.label === 'Bonuslar' ? 'gold-border gold-glow hover:scale-[1.03] hover:shadow-gold/40' : ''
+                            item.label === 'Bonuslar' ? 'ring-2 ring-gold/30 bg-gradient-to-r from-gold/10 to-gold/5 border-gold/60 hover:ring-gold/50 hover:scale-[1.03] hover:shadow-gold/40' : ''
                           }`}
                         >
                           <div className="flex items-center gap-2">
-                            <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
-                            <span className="text-sm">{item.label}</span>
+                            <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : item.label === 'Bonuslar' ? 'text-gold' : 'text-foreground/70'}`} />
+                            <span className={`text-sm ${item.label === 'Bonuslar' ? 'font-semibold text-gold' : ''}`}>{item.label}</span>
+                            {item.label === 'Bonuslar' && (
+                              <span className="text-xs bg-gold/20 text-gold px-1.5 py-0.5 rounded-full font-medium">HOT</span>
+                            )}
                           </div>
-                          {item.comingSoon && (
-                            <span className="text-xs text-foreground/60">Eklenecek</span>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {item.comingSoon && (
+                              <span className="text-xs text-foreground/60">Eklenecek</span>
+                            )}
+                            <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                              item.active ? 'text-gold opacity-100' : item.label === 'Bonuslar' ? 'text-gold opacity-70 group-hover:opacity-100 group-hover:translate-x-1' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                            }`} />
+                          </div>
                         </a>
                       ))}
                     </div>
@@ -156,7 +169,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                           key={item.label}
                           href={item.href}
                           onClick={handleNavigationClick}
-                          className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
+                          className={`group flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
                             item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/40 border-border hover:border-gold/50 hover:bg-gold/5'
                           } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20`}
                         >
@@ -164,9 +177,14 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                             <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
                             <span className="text-sm">{item.label}</span>
                           </div>
-                          {item.comingSoon && (
-                            <span className="text-xs text-foreground/60">Eklenecek</span>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {item.comingSoon && (
+                              <span className="text-xs text-foreground/60">Eklenecek</span>
+                            )}
+                            <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                              item.active ? 'text-gold opacity-100' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                            }`} />
+                          </div>
                         </a>
                       ))}
                     </div>
@@ -181,7 +199,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                           key={item.label}
                           href={item.href}
                           onClick={handleNavigationClick}
-                          className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
+                          className={`group flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
                             item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/40 border-border hover:border-gold/50 hover:bg-gold/5'
                           } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20`}
                         >
@@ -189,9 +207,14 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                             <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
                             <span className="text-sm">{item.label}</span>
                           </div>
-                          {item.comingSoon && (
-                            <span className="text-xs text-foreground/60">Eklenecek</span>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {item.comingSoon && (
+                              <span className="text-xs text-foreground/60">Eklenecek</span>
+                            )}
+                            <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                              item.active ? 'text-gold opacity-100' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                            }`} />
+                          </div>
                         </a>
                       ))}
                     </div>
@@ -279,7 +302,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                 <a
                   key={item.label}
                   href={item.href}
-                  className={`flex items-center justify-between rounded-lg px-3 py-3 transition-all border ${
+                  className={`group flex items-center justify-between rounded-lg px-3 py-3 transition-all border ${
                     item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/60 border-border hover:border-gold/50 hover:bg-gold/5'
                   } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20`}
                   target={item.external ? '_blank' : undefined}
@@ -289,9 +312,14 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                     <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
                     <span className="text-sm font-medium">{item.label}</span>
                   </div>
-                  {item.comingSoon && (
-                    <span className="text-xs text-foreground/60">Eklenecek</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {item.comingSoon && (
+                      <span className="text-xs text-foreground/60">Eklenecek</span>
+                    )}
+                    <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                      item.active ? 'text-gold opacity-100' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                    }`} />
+                  </div>
                 </a>
               ))}
             </div>
@@ -304,19 +332,27 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                   <a
                     key={item.label}
                     href={item.href}
-                    className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
+                    className={`group flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
                       item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/40 border-border hover:border-gold/50 hover:bg-gold/5'
                     } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20 ${
-                      item.label === 'Bonuslar' ? 'gold-border gold-glow hover:scale-[1.03] hover:shadow-gold/40' : ''
+                      item.label === 'Bonuslar' ? 'gold-border gold-glow' : ''
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
-                      <span className="text-sm">{item.label}</span>
+                      <item.Icon className={`w-4 h-4 ${item.active || item.label === 'Bonuslar' ? 'text-gold' : 'text-foreground/70'}`} />
+                      <span className={`text-sm ${item.label === 'Bonuslar' ? 'text-gold font-medium' : ''}`}>{item.label}</span>
+                      {item.label === 'Bonuslar' && (
+                        <span className="text-xs bg-gradient-to-r from-gold to-yellow-400 text-black px-1.5 py-0.5 rounded-full font-bold">HOT</span>
+                      )}
                     </div>
-                    {item.comingSoon && (
-                      <span className="text-xs text-foreground/60">Eklenecek</span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {item.comingSoon && (
+                        <span className="text-xs text-foreground/60">Eklenecek</span>
+                      )}
+                      <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                        item.active || item.label === 'Bonuslar' ? 'text-gold opacity-100' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                      }`} />
+                    </div>
                   </a>
                 ))}
               </div>
@@ -330,7 +366,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                   <a
                     key={item.label}
                     href={item.href}
-                    className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
+                    className={`group flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
                       item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/40 border-border hover:border-gold/50 hover:bg-gold/5'
                     } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20`}
                   >
@@ -338,9 +374,14 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                       <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
                       <span className="text-sm">{item.label}</span>
                     </div>
-                    {item.comingSoon && (
-                      <span className="text-xs text-foreground/60">Eklenecek</span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {item.comingSoon && (
+                        <span className="text-xs text-foreground/60">Eklenecek</span>
+                      )}
+                      <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                        item.active ? 'text-gold opacity-100' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                      }`} />
+                    </div>
                   </a>
                 ))}
               </div>
@@ -354,7 +395,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                   <a
                     key={item.label}
                     href={item.href}
-                    className={`flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
+                    className={`group flex items-center justify-between rounded-lg px-3 py-2.5 transition-all border ${
                       item.active ? 'bg-gold/10 border-gold text-gold' : 'bg-secondary-bg/40 border-border hover:border-gold/50 hover:bg-gold/5'
                     } hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-gold/20`}
                   >
@@ -362,9 +403,14 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                       <item.Icon className={`w-4 h-4 ${item.active ? 'text-gold' : 'text-foreground/70'}`} />
                       <span className="text-sm">{item.label}</span>
                     </div>
-                    {item.comingSoon && (
-                      <span className="text-xs text-foreground/60">Eklenecek</span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {item.comingSoon && (
+                        <span className="text-xs text-foreground/60">Eklenecek</span>
+                      )}
+                      <ChevronRight className={`w-4 h-4 transition-all duration-200 ${
+                        item.active ? 'text-gold opacity-100' : 'text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:text-gold group-hover:translate-x-1'
+                      }`} />
+                    </div>
                   </a>
                 ))}
               </div>

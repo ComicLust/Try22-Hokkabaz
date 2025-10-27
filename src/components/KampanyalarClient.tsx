@@ -149,10 +149,10 @@ export default function KampanyalarClient() {
               <Star className="w-6 h-6 mr-2" />
               Öne Çıkan Kampanyalar
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredKampanyalar.map((kampanya) => (
                 <motion.div key={kampanya.id} variants={fadeInUp}>
-                  <Card className="relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-xl transition-all duration-300">
+                  <Card className="relative overflow-hidden md:backdrop-blur-sm bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-lg transition-colors duration-200 shadow-smooth">
                     <div className="absolute top-4 right-4 z-10">
                       <Badge className="bg-gold text-background">{kampanya.badgeLabel ?? 'ÖNE ÇIKAN'}</Badge>
                     </div>
@@ -202,7 +202,7 @@ export default function KampanyalarClient() {
         >
           <h2 className="text-2xl font-bold text-gold mb-6">Aktif Kampanyalar</h2>
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={staggerContainer}
             initial="initial"
             animate="animate"
@@ -212,7 +212,7 @@ export default function KampanyalarClient() {
               .sort((a, b) => a.title.localeCompare(b.title))
               .map((kampanya) => (
               <motion.div key={kampanya.id} variants={fadeInUp}>
-                <Card className="backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:border-gold">
+                <Card className="md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth">
                   <CardHeader>
                     <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
                       <Image

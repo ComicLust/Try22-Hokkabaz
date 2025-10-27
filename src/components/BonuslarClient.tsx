@@ -500,10 +500,10 @@ export default function BonuslarClient() {
               <Star className="w-6 h-6 mr-2" />
               Öne Çıkan Bonuslar
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredBonuses.map((bonus) => (
                 <motion.div key={bonus.id} variants={fadeInUp}>
-                  <Card className={`relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-xl transition-all duration-300 ${isExpired(bonus) ? 'opacity-60' : ''}`}>
+                  <Card className={`relative overflow-hidden md:backdrop-blur-sm bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-lg transition-colors duration-200 shadow-smooth ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                     <div className="absolute top-4 right-4">
                       {isExpired(bonus) && (
                         <Badge variant="destructive" className="uppercase tracking-wide shadow-md">Süresi Doldu</Badge>
@@ -577,9 +577,17 @@ export default function BonuslarClient() {
             <div className="text-center text-red-500 py-6">{error}</div>
           )}
           {!loading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {regularBonuses.map((bonus) => (
-                <Card key={bonus.id} className={`relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-xl transition-all duration-300 ${isExpired(bonus) ? 'opacity-60' : ''}`}>
+                <Card key={bonus.id} className={`relative overflow-hidden md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 shadow-smooth ${isExpired(bonus) ? 'opacity-60' : ''}`}>
+                  <div className="absolute top-4 right-4">
+                    {isExpired(bonus) && (
+                      <Badge variant="destructive" className="bg-red-600 text-white">Süresi Doldu</Badge>
+                    )}
+                    {!isExpired(bonus) && 'isFavourite' in (bonus as any) && (bonus as any)['isFavourite'] && (
+                       <Badge variant="outline" className="border-yellow-400 text-yellow-400">Favori</Badge>
+                     )}
+                   </div>
                   <CardHeader>
                     <div className="mx-auto mb-4 w-full max-w-[200px] h-[56px] sm:h-[64px] bg-muted flex items-center justify-center border rounded-md p-2">
                       {bonus.imageUrl ? (
