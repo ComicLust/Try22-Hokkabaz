@@ -192,7 +192,16 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-sm">Doğrulama:</span>
                   <span className="font-mono text-sm">{captchaA} + {captchaB} =</span>
-                  <Input className="w-16 sm:w-20 h-8" value={captchaInput} onChange={(e)=>setCaptchaInput(e.target.value)} placeholder="?" />
+                  <Input
+                    className="w-16 sm:w-20 h-8"
+                    value={captchaInput}
+                    onChange={(e)=>setCaptchaInput(e.target.value)}
+                    placeholder="?"
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    aria-label="Doğrulama sayısı"
+                  />
                   <Button size="sm" variant="outline" type="button" onClick={regenCaptcha}>Yenile</Button>
                 </div>
                 <Button size="sm" className="w-full sm:w-auto" onClick={()=>{ if (!captchaOk) { toast({ variant: 'destructive', title: 'Doğrulama gerekli', description: 'Captcha hatalı' }); return } ; handleSubmit() }} disabled={submitting || typeof isPositive !== 'boolean' || (!isAnonymous && !author.trim())}>{submitting ? 'Gönderiliyor…' : 'Yorumu Gönder'}</Button>

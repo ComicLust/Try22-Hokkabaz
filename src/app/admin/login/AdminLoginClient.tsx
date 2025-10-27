@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -15,8 +15,19 @@ export default function AdminLoginClient() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
+  // Simple math captcha
+  const [captchaA, setCaptchaA] = useState<number>(() => Math.floor(Math.random() * 5) + 2)
+  const [captchaB, setCaptchaB] = useState<number>(() => Math.floor(Math.random() * 5) + 2)
+  const [captchaInput, setCaptchaInput] = useState<string>('')
+  const captchaOk = useMemo(() => Number(captchaInput) === (captchaA + captchaB), [captchaInput, captchaA, captchaB])
+  const regenCaptcha = () => { setCaptchaA(Math.floor(Math.random() * 5) + 2); setCaptchaB(Math.floor(Math.random() * 5) + 2); setCaptchaInput('') }
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!captchaOk) {
+      toast({ title: 'Doğrulama gerekli', description: 'Captcha hatalı', variant: 'destructive' })
+      return
+    }
     setLoading(true)
     try {
       const res = await fetch('/api/admin/login', {
@@ -55,6 +66,21 @@ export default function AdminLoginClient() {
             <div>
               <label className="text-xs text-neutral-400">Şifre</label>
               <Input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="••••••••" />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-xs text-neutral-400">Doğrulama</label>
+              <span className="font-mono text-xs">{captchaA} + {captchaB} =</span>
+              <Input
+                className="w-16 h-8"
+                value={captchaInput}
+                onChange={(e)=>setCaptchaInput(e.target.value)}
+                placeholder="?"
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                aria-label="Doğrulama sayısı"
+              />
+              <Button type="button" size="sm" variant="outline" onClick={regenCaptcha}>Yenile</Button>
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
