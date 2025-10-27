@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "./fallback.css";
+const HydrationMarker = () => null;
+import HydrationMarker from "@/components/HydrationMarker";
 import { Toaster } from "@/components/ui/toaster";
 import AnalyticsInjector from '@/components/AnalyticsInjector'
 import SeoAutoInjector from '@/components/SeoAutoInjector'
@@ -104,6 +107,14 @@ export default async function RootLayout({
         <Script id="global-org-jsonld" type="application/ld+json" strategy="beforeInteractive">
           {JSON.stringify(orgJsonLd)}
         </Script>
+        <Script id="hydration-marker" strategy="beforeInteractive">
+          {`try{document.documentElement.setAttribute('data-hydrated','1')}catch(e){}`}
+        </Script>
+        <noscript>
+          <div id="fallback" style="padding:16px">
+            Site açılışında sorun yaşıyorsanız lütfen cihazınızın JavaScript ayarını kontrol edin. Temel görünüm yükleniyor.
+          </div>
+        </noscript>
         <Script id="global-website-jsonld" type="application/ld+json" strategy="beforeInteractive">
           {JSON.stringify({
             "@context": "https://schema.org",
