@@ -14,6 +14,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Search, Award, Calendar, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import SeoArticle from "@/components/SeoArticle";
+import InAppOpenBar from "@/components/InAppOpenBar";
 
 type Bonus = {
   id: string;
@@ -285,6 +286,7 @@ export default function BonuslarClient() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/bonuslar" />
+      <InAppOpenBar />
 
       <main className="container mx-auto px-4 py-8 md:pl-72">
         {/* Arama + Filtreler */}

@@ -15,6 +15,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import TelegramPanel from '@/components/TelegramPanel';
 import FAQDesktop from '@/components/FAQDesktop';
+import InAppOpenBar from '@/components/InAppOpenBar';
 
 // Telegram Icon Component
 const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -349,6 +350,7 @@ export default function HomeClient() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/" />
+      <InAppOpenBar />
 
       <main className="pt-3 md:pl-72">
         {/* Öne Çıkan Kampanyalar - Kampanyalar Sayfasıyla Birebir */}
