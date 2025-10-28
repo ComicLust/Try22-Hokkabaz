@@ -17,7 +17,8 @@ const buildCsp = (isProd: boolean) => [
 ].join('; ')
 
 const securityHeaders = [
-  { key: "X-Frame-Options", value: "DENY" },
+  // In-app browser uyumluluğu için iframe politika gevşetildi
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=(), payment=()" },
@@ -33,9 +34,10 @@ const securityHeaders = [
         "img-src 'self' data: blob: https: http:",
         "font-src 'self' data:",
         "connect-src 'self' https: http: ws: wss:",
+        // In-app browser uyumluluğu: HTTPS kökenlerden embed'e izin ver
         "frame-src 'self' https: http:",
         "child-src 'self' https: http:",
-        "frame-ancestors 'none'",
+        "frame-ancestors 'self' https:",
         "form-action 'self'",
         "base-uri 'self'",
       ]
