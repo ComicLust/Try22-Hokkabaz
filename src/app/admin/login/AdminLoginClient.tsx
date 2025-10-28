@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -10,17 +10,16 @@ import { useToast } from '@/hooks/use-toast'
 export default function AdminLoginClient() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  // Basit matematik captcha
+  const [captchaA, setCaptchaA] = useState<number>(() => Math.floor(Math.random() * 5) + 2)
+  const [captchaB, setCaptchaB] = useState<number>(() => Math.floor(Math.random() * 5) + 2)
+  const [captchaInput, setCaptchaInput] = useState('')
+  const captchaOk = Number(captchaInput) === (captchaA + captchaB)
+  const regenCaptcha = () => { setCaptchaA(Math.floor(Math.random() * 5) + 2); setCaptchaB(Math.floor(Math.random() * 5) + 2); setCaptchaInput('') }
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
-
-  // Simple math captcha
-  const [captchaA, setCaptchaA] = useState<number>(() => Math.floor(Math.random() * 5) + 2)
-  const [captchaB, setCaptchaB] = useState<number>(() => Math.floor(Math.random() * 5) + 2)
-  const [captchaInput, setCaptchaInput] = useState<string>('')
-  const captchaOk = useMemo(() => Number(captchaInput) === (captchaA + captchaB), [captchaInput, captchaA, captchaB])
-  const regenCaptcha = () => { setCaptchaA(Math.floor(Math.random() * 5) + 2); setCaptchaB(Math.floor(Math.random() * 5) + 2); setCaptchaInput('') }
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,17 +67,17 @@ export default function AdminLoginClient() {
               <Input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="••••••••" />
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-xs text-neutral-400">Doğrulama</label>
-              <span className="font-mono text-xs">{captchaA} + {captchaB} =</span>
+              <span className="text-xs text-neutral-400">Doğrulama</span>
+              <span className="font-mono text-sm">{captchaA} + {captchaB} =</span>
               <Input
-                className="w-16 h-8"
+                className="w-20 h-8"
                 value={captchaInput}
-                onChange={(e)=>setCaptchaInput(e.target.value)}
+                onChange={(e)=>setCaptchaInput(e.target.value.replace(/[^0-9]/g, ''))}
                 placeholder="?"
                 type="tel"
                 inputMode="numeric"
                 pattern="[0-9]*"
-                aria-label="Doğrulama sayısı"
+                autoComplete="one-time-code"
               />
               <Button type="button" size="sm" variant="outline" onClick={regenCaptcha}>Yenile</Button>
             </div>

@@ -195,12 +195,12 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
                   <Input
                     className="w-16 sm:w-20 h-8"
                     value={captchaInput}
-                    onChange={(e)=>setCaptchaInput(e.target.value)}
+                    onChange={(e)=>setCaptchaInput(e.target.value.replace(/[^0-9]/g, ''))}
                     placeholder="?"
                     type="tel"
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    aria-label="Doğrulama sayısı"
+                    autoComplete="one-time-code"
                   />
                   <Button size="sm" variant="outline" type="button" onClick={regenCaptcha}>Yenile</Button>
                 </div>

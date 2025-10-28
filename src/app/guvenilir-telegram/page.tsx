@@ -8,7 +8,6 @@ import ActiveCounter from '@/components/ActiveCounter'
 import ClientOnly from '@/components/ClientOnly'
 import TelegramSuggestionCard from '@/components/TelegramSuggestionCard'
 import SeoArticle from '@/components/SeoArticle'
-import InAppOpenBar from '@/components/InAppOpenBar'
 
 function formatMembers(n: number) {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
@@ -39,7 +38,6 @@ export default async function GuvenilirTelegramPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <InAppOpenBar />
       <main className="container mx-auto px-4 pt-16 md:pt-8 pb-8 w-full flex-1 space-y-8 md:pl-72">
         <header className="space-y-2">
           <h1 className="text-2xl font-semibold text-foreground">{pageTitle}</h1>
@@ -49,7 +47,7 @@ export default async function GuvenilirTelegramPage() {
         {featured.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Önerdiğimiz Telegram Grupları</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               <TelegramSuggestionCard />
               {featured.map((g) => (
                 <div
@@ -106,7 +104,7 @@ export default async function GuvenilirTelegramPage() {
 
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">Tüm Gruplar</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             <TelegramSuggestionCard />
             {regular.map((g) => (
               <div

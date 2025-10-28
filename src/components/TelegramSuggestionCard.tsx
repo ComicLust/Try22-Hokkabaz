@@ -185,15 +185,7 @@ export default function TelegramSuggestionCard({ apiPath = '/api/telegram-sugges
                 </div>
                 <div>
                   <Label>Üye Sayısı</Label>
-                  <Input
-                    value={state.members}
-                    onChange={(e) => onChange('members', e.target.value)}
-                    placeholder="Sayı"
-                    type="tel"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    aria-label="Üye sayısı"
-                  />
+                  <Input value={state.members} onChange={(e) => onChange('members', e.target.value)} placeholder="Sayı" />
                   {errors.members && <p className="text-sm text-red-600 mt-1">{errors.members}</p>}
                 </div>
                 <div>
@@ -228,12 +220,12 @@ export default function TelegramSuggestionCard({ apiPath = '/api/telegram-sugges
                 <Input
                   className="w-16 h-9"
                   value={captchaInput}
-                  onChange={(e) => onCaptchaChange(e.target.value)}
+                  onChange={(e) => onCaptchaChange(e.target.value.replace(/[^0-9]/g, ''))}
                   placeholder="?"
                   type="tel"
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  aria-label="Doğrulama sayısı"
+                  autoComplete="one-time-code"
                 />
                 <Button size="sm" variant="outline" type="button" onClick={regenCaptcha}>Yenile</Button>
               </div>
