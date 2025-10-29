@@ -52,6 +52,7 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
             <h3 className="text-base md:text-lg font-semibold mb-4 text-gold">Bilgi</h3>
             <ul className="space-y-2">
               <li><a href="/hakkimizda" className="text-muted-foreground hover:text-gold transition-colors">Hakkımızda</a></li>
+              <li><a href="/hizmetlerimiz" className="text-muted-foreground hover:text-gold transition-colors">Hizmetlerimiz</a></li>
               <li><a href="/iletisim" className="text-muted-foreground hover:text-gold transition-colors">İletişim</a></li>
               <li><a href="/kullanim-kosullari" className="text-muted-foreground hover:text-gold transition-colors">Kullanım Koşulları</a></li>
               <li><a href="/gizlilik-politikasi" className="text-muted-foreground hover:text-gold transition-colors">Gizlilik Politikası</a></li>

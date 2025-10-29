@@ -1,20 +1,16 @@
-import IletisimClient from '@/components/IletisimClient'
+import HizmetlerimizClient from '@/components/HizmetlerimizClient'
 import type { Metadata } from 'next'
 import { db } from '@/lib/db'
 
 export default function Page() {
-  return <IletisimClient />
+  return <HizmetlerimizClient />
 }
+
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await (db as any).seoSetting.findUnique({ where: { page: '/iletisim' } })
-  const title = s?.title ?? 'İletişim - Hokkabaz'
-  const description = s?.description ?? 'Yalnızca işbirliği ve sponsorluk talepleri için iletişim.'
+  const s = await (db as any).seoSetting.findUnique({ where: { page: '/hizmetlerimiz' } })
+  const title = s?.title ?? 'Hizmetlerimiz - Hokkabaz'
+  const description = s?.description ?? 'Google SEO, Meta Ads, TikTok Ads, Google Ads, Telegram organik büyütme, SMS ve E-mail Marketing hizmetleri.'
   const canonical = s?.canonicalUrl ?? undefined
-  // OG type değeri veritabanından gelebilir; Next metadata yalnızca belirli değerleri kabul eder.
-  // Geçersiz bir değer gelirse, 'website' olarak varsayılanla güvene alıyoruz.
-  const ogTypeFromDb = (s?.ogType ?? '').toString().toLowerCase()
-  const allowedOgTypes = new Set(['website', 'article', 'profile'])
-  const safeOgType = allowedOgTypes.has(ogTypeFromDb) ? ogTypeFromDb : 'website'
   return {
     title,
     description,
@@ -24,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: s?.ogDescription ?? description,
       images: s?.ogImageUrl ? [s.ogImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
       url: canonical,
-      type: safeOgType,
+      type: s?.ogType ?? 'website',
     },
     twitter: {
       title: s?.twitterTitle ?? title,
