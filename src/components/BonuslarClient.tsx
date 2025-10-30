@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -47,6 +47,8 @@ type StorySlide = {
 
 export default function BonuslarClient() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const [searchQuery, setSearchQuery] = useState("");
   const [bonusType, setBonusType] = useState("all");
   const [bonusAmount, setBonusAmount] = useState("all");
@@ -96,10 +98,23 @@ export default function BonuslarClient() {
   // URL parametresinden başlangıç filtresini uygula (ör. /bonuslar?type=Deneme%20Bonusu)
   useEffect(() => {
     const typeParam = searchParams.get("type");
-    if (typeParam) {
-      setBonusType(typeParam);
-    }
+    if (typeParam) setBonusType(typeParam);
+    const qParam = searchParams.get("q");
+    if (qParam) setSearchQuery(qParam);
+    const amountParam = searchParams.get("amount");
+    if (amountParam) setBonusAmount(amountParam);
+    const categoryParam = searchParams.get("category");
+    if (categoryParam) setSiteCategory(categoryParam);
   }, [searchParams]);
+
+  // URL arama parametresini güncelleyen yardımcı
+  function setUrlParam(key: string, value: string | null) {
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    if (!value || value === "" || value === "all") params.delete(key);
+    else params.set(key, value);
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : `${pathname}`, { scroll: false });
+  }
 
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
@@ -144,6 +159,13 @@ export default function BonuslarClient() {
     }
     return list;
   }, [bonuses, searchQuery, bonusType, siteCategory, bonusAmount]);
+
+  // Tür seçeneklerini mevcut veriden dinamik üret
+  const bonusTypeOptions = useMemo(() => {
+    const set = new Set<string>();
+    bonuses.forEach(b => { if (b.bonusType) set.add(b.bonusType); });
+    return Array.from(set).sort();
+  }, [bonuses]);
 
   const featuredBonuses = useMemo(() => filtered.filter(b => b.isFeatured), [filtered]);
   const regularBonuses = useMemo(() => filtered.filter(b => !b.isFeatured), [filtered]);
@@ -300,24 +322,23 @@ export default function BonuslarClient() {
               <Input
                 placeholder="Bonus veya site ara..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => { const v = e.target.value; setSearchQuery(v); setUrlParam('q', v || null); }}
                 className="pl-10 bg-background border-border"
               />
             </div>
-            <Select value={bonusType} onValueChange={setBonusType}>
+            <Select value={bonusType} onValueChange={(val) => { setBonusType(val); setUrlParam('type', val); }}>
               <SelectTrigger className="w-full lg:w-56" aria-label="Bonus türü filtresi">
                 <span className="text-xs text-muted-foreground mr-2">Tür</span>
                 <SelectValue placeholder="Bonus Türü" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tümü</SelectItem>
-                <SelectItem value="Deneme Bonusu">Deneme Bonusu</SelectItem>
-                <SelectItem value="Hoşgeldin Bonusu">Hoşgeldin Bonusu</SelectItem>
-                <SelectItem value="Yatırım Bonusu">Yatırım Bonusu</SelectItem>
-                <SelectItem value="Kayıp Bonusu">Kayıp Bonusu</SelectItem>
+                {bonusTypeOptions.map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
               </SelectContent>
             </Select>
-            <Select value={bonusAmount} onValueChange={setBonusAmount}>
+            <Select value={bonusAmount} onValueChange={(val) => { setBonusAmount(val); setUrlParam('amount', val); }}>
               <SelectTrigger className="w-full lg:w-56" aria-label="Tutar filtresi">
                 <span className="text-xs text-muted-foreground mr-2">Tutar</span>
                 <SelectValue placeholder="Tutar" />
@@ -329,7 +350,7 @@ export default function BonuslarClient() {
                 <SelectItem value="200+">200+ TL</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={siteCategory} onValueChange={setSiteCategory}>
+            <Select value={siteCategory} onValueChange={(val) => { setSiteCategory(val); setUrlParam('category', val); }}>
               <SelectTrigger className="w-full lg:w-56" aria-label="Kategori filtresi">
                 <span className="text-xs text-muted-foreground mr-2">Kategori</span>
                 <SelectValue placeholder="Kategori" />

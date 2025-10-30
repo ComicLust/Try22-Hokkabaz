@@ -199,6 +199,7 @@ model ReviewBrand {
   brandManagers    BrandManager[]
   bonuses          Bonus[]
   telegramSuggestions TelegramSuggestion[]
+  specialOdds      SpecialOdd[]
 }
 
 model TelegramSuggestion {
@@ -357,4 +358,26 @@ model BrandManager {
   name         String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+}
+
+// Özel Oran kartları için yönetilebilir model
+model SpecialOdd {
+  id          String   @id @default(cuid())
+  brandName   String
+  matchTitle  String
+  oddsLabel   String
+  conditions  String?
+  imageUrl    String?
+  ctaUrl      String?
+  expiresAt   DateTime?
+  isActive    Boolean  @default(true)
+  priority    Int      @default(0)
+  // Opsiyonel marka ilişkisi
+  brandId     String?
+  brand       ReviewBrand? @relation(fields: [brandId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, priority])
+  @@index([brandId])
 }

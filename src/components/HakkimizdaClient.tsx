@@ -56,7 +56,7 @@ export default function HakkimizdaClient() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <p className="text-2xl font-semibold">GmanVibes</p>
+                <p className="text-2xl font-semibold">DarlyDixon</p>
                 <p className="text-sm text-neutral-400">Topluluk yöneticisi</p>
               </CardContent>
             </Card>
@@ -107,17 +107,20 @@ export default function HakkimizdaClient() {
               <CardContent>
                 <div className="flex items-center gap-4">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-yellow-500/30">
-                    <Image src="/images/agentgman.jpg" alt="AgentGman" fill className="object-cover" />
+                    <Image src="/images/agentgman.jpg" alt="DarlyDixon" fill className="object-cover" />
                   </div>
                   <div>
-                    <p className="font-semibold">AgentGman</p>
+                    <p className="font-semibold">DarlyDixon</p>
                     <p className="text-sm text-neutral-400">Admin / Topluluk Yöneticisi</p>
                   </div>
                 </div>
                 <p className="mt-4 text-neutral-300 text-sm">
-                    AgentGman, stratejik karar süreçlerini koordine eder ve toplulukla düzenli iletişim
+                  DarlyDixon, stratejik karar süreçlerini koordine eder ve toplulukla düzenli iletişim
                   kurarak operasyonların kurumsal standartlarda ilerlemesini sağlar.
                 </p>
+                <div className="mt-2">
+                  <a href="https://t.me/darlydxn" target="_blank" rel="noopener noreferrer" className="text-yellow-300 text-sm hover:text-yellow-200">@darlydxn</a>
+                </div>
               </CardContent>
             </Card>
           </div>

@@ -7,10 +7,10 @@ export default function MobileBottomNav() {
   const pathname = usePathname()
 
   const items = [
-    { href: '/bonuslar', label: 'Bonuslar', Icon: Gift },
+    { href: '/guvenilir-bahis-siteleri-listesi', label: 'Siteler', Icon: Globe },
     { href: '/kampanyalar', label: 'Kampanyalar', Icon: Megaphone },
     { href: '/yorumlar', label: 'Yorumlar', Icon: MessageSquare },
-    { href: '/guvenilir-bahis-siteleri-listesi', label: 'Siteler', Icon: Globe },
+    { href: '/bonuslar', label: 'Bonuslar', Icon: Gift, animate: true },
   ]
 
   const isActive = (href: string) => {
@@ -29,15 +29,15 @@ export default function MobileBottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/95 shadow-smooth pb-[env(safe-area-inset-bottom)] transform-gpu will-change-transform">
       <div className="mx-auto w-full">
         <div className="grid grid-cols-5 gap-0 min-h-[56px]">
-          {items.map(({ href, label, Icon }) => (
+          {items.map(({ href, label, Icon, animate }) => (
             <a
               key={href}
               href={href}
               className={`flex flex-col items-center justify-center py-2 text-xs transition-colors ${
                 isActive(href) ? 'text-gold' : 'text-foreground/70 hover:text-foreground'
-              }`}
+              } ${animate ? 'animate-pulse' : ''}`}
             >
-              <Icon className={`w-5 h-5 mb-0.5 ${isActive(href) ? 'text-gold' : 'text-foreground/70'}`} />
+              <Icon className={`w-5 h-5 mb-0.5 ${isActive(href) ? 'text-gold' : 'text-foreground/70'} ${animate ? 'animate-pulse' : ''}`} />
               <span className="leading-none">{label}</span>
             </a>
           ))}

@@ -476,6 +476,127 @@ async function main() {
     await db.reviewBrand.upsert({ where: { slug: b.slug }, update: b, create: b })
   }
 
+  // Seed Special Odds: 3 aktif, 3 süresi dolmuş
+  const brandIds = {}
+  for (const rb of reviewBrands) {
+    const found = await db.reviewBrand.findUnique({ where: { slug: rb.slug } })
+    if (found) brandIds[rb.slug] = found.id
+  }
+
+  const specialOdds = [
+    // Aktif örnekler (gelecekte biten)
+    {
+      id: 'so-active-1',
+      brandSlug: 'betewin',
+      brandName: 'Betewin',
+      matchTitle: 'Fenerbahçe vs Galatasaray',
+      oddsLabel: '10.0',
+      conditions: 'Yeni üyelere özel. Minimum 100₺ yatırım. Tek maç kuponu.',
+      imageUrl: '/uploads/1760532229828-d1r5fy9lmim.png',
+      ctaUrl: 'https://example.com/go/betewin-derbi-10x',
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      isActive: true,
+      priority: 100,
+    },
+    {
+      id: 'so-active-2',
+      brandSlug: 'dopingbet',
+      brandName: 'Dopingbet',
+      matchTitle: 'Beşiktaş vs Trabzonspor',
+      oddsLabel: '7.0',
+      conditions: 'Mevcut ve yeni üyelere açık. Kombine kuponlarda geçerli değil.',
+      imageUrl: '/uploads/1760656077922-1izqxopgu4m.png',
+      ctaUrl: 'https://example.com/go/dopingbet-7x',
+      expiresAt: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+      isActive: true,
+      priority: 90,
+    },
+    {
+      id: 'so-active-3',
+      brandSlug: 'restbet',
+      brandName: 'Restbet',
+      matchTitle: 'E-spor Finali',
+      oddsLabel: '5.0',
+      conditions: 'Sadece tekli kuponlarda geçerli. Maksimum kazanç 5.000₺.',
+      imageUrl: '/uploads/1760657878298-1e9xw9zce0j.png',
+      ctaUrl: 'https://example.com/go/restbet-espor-5x',
+      expiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      isActive: true,
+      priority: 80,
+    },
+    // Süresi dolmuş örnekler (geçmişte biten)
+    {
+      id: 'so-expired-1',
+      brandSlug: 'superbahis',
+      brandName: 'Superbahis',
+      matchTitle: 'Derbi Test 1',
+      oddsLabel: '4.0',
+      conditions: 'Geçmiş kampanya, sadece örnek veri.',
+      imageUrl: '/uploads/1760212397380-xoz99gl4hc.png',
+      ctaUrl: 'https://example.com/go/superbahis-4x',
+      expiresAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      isActive: true,
+      priority: 70,
+    },
+    {
+      id: 'so-expired-2',
+      brandSlug: 'casinowin',
+      brandName: 'Casinowin',
+      matchTitle: 'Derbi Test 2',
+      oddsLabel: '3.5',
+      conditions: 'Geçmiş kampanya, sadece örnek veri.',
+      imageUrl: '/uploads/1760210302787-8fa0zlzharm.png',
+      ctaUrl: 'https://example.com/go/casinowin-35',
+      expiresAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+      isActive: true,
+      priority: 60,
+    },
+    {
+      id: 'so-expired-3',
+      brandSlug: 'fortunabet',
+      brandName: 'Fortunabet',
+      matchTitle: 'Derbi Test 3',
+      oddsLabel: '2.5',
+      conditions: 'Geçmiş kampanya, sadece örnek veri.',
+      imageUrl: '/uploads/1760212277297-juwby60iph.png',
+      ctaUrl: 'https://example.com/go/fortunabet-25',
+      expiresAt: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      isActive: true,
+      priority: 50,
+    },
+  ]
+
+  for (const so of specialOdds) {
+    await db.specialOdd.upsert({
+      where: { id: so.id },
+      update: {
+        brandName: so.brandName,
+        matchTitle: so.matchTitle,
+        oddsLabel: so.oddsLabel,
+        conditions: so.conditions,
+        imageUrl: so.imageUrl,
+        ctaUrl: so.ctaUrl,
+        expiresAt: so.expiresAt,
+        isActive: so.isActive,
+        priority: so.priority,
+        brandId: brandIds[so.brandSlug] || null,
+      },
+      create: {
+        id: so.id,
+        brandName: so.brandName,
+        matchTitle: so.matchTitle,
+        oddsLabel: so.oddsLabel,
+        conditions: so.conditions,
+        imageUrl: so.imageUrl,
+        ctaUrl: so.ctaUrl,
+        expiresAt: so.expiresAt,
+        isActive: so.isActive,
+        priority: so.priority,
+        brandId: brandIds[so.brandSlug] || null,
+      },
+    })
+  }
+
   // Seed Site Reviews (her markaya 5-20 yorum)
   const reviewTextsPositive = [
     'Ödemeler hızlı geldi, canlı destek de ilgiliydi.',

@@ -40,7 +40,7 @@ export default async function GuvenilirTelegramPage() {
       <Header />
       <main className="container mx-auto px-4 pt-16 md:pt-8 pb-8 w-full flex-1 space-y-8 md:pl-72">
         <header className="space-y-2">
-          <h1 className="text-2xl font-semibold text-foreground">{pageTitle}</h1>
+          <h1 className="hidden md:block text-2xl font-semibold text-foreground">{pageTitle}</h1>
           <p className="text-sm text-muted-foreground">{pageDescription}</p>
         </header>
 

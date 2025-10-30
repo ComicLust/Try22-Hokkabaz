@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 type LinkItem = { name: string; Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; url: string }
 
 const socialLinks: LinkItem[] = [
-  { name: "Telegram", Icon: Send, url: "https://t.me/+r577e3x2dhIxNjdk" },
+  { name: "Telegram", Icon: Send, url: "https://t.me/+-H20aHx5MyZlZjQ0" },
   { name: "Twitter / X", Icon: Twitter, url: "#" },
   { name: "Instagram", Icon: Instagram, url: "#" },
   { name: "YouTube", Icon: Youtube, url: "#" },

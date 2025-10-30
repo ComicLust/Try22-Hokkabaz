@@ -4,6 +4,23 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import SocialBar from "@/components/SocialBar";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import {
+  Home,
+  Tag,
+  Percent,
+  Gift,
+  MessageSquare,
+  ShieldCheck,
+  Ticket,
+  PlayCircle,
+  Shield,
+  Send,
+  Info,
+  Wrench,
+  Mail,
+  FileText,
+  Copyright,
+} from "lucide-react";
 
 const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none">
@@ -35,15 +52,16 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
           <div>
             <h3 className="text-base md:text-lg font-semibold mb-4 text-gold">Hızlı Linkler</h3>
             <ul className="space-y-2">
-              <li><a href="/" className="text-muted-foreground hover:text-gold transition-colors text-sm md:text-base">Ana Sayfa</a></li>
-              <li><a href="/kampanyalar" className="text-muted-foreground hover:text-gold transition-colors">Kampanyalar</a></li>
-              <li><a href="/bonuslar" className="text-muted-foreground hover:text-gold transition-colors">Bonuslar</a></li>
-              <li><a href="/yorumlar" className="text-muted-foreground hover:text-gold transition-colors">Yorumlar</a></li>
-              <li><a href="/guvenilir-bahis-siteleri-listesi" className="text-muted-foreground hover:text-gold transition-colors">Güvenilir Siteler</a></li>
-              <li><a href="/banko-kuponlar" className="text-muted-foreground hover:text-gold transition-colors">Banko Kuponlar</a></li>
-              <li><a href="/canli-mac-izle" className="text-muted-foreground hover:text-gold transition-colors">Canlı Maç İzle</a></li>
-              <li><a href="/vpn-onerileri" className="text-muted-foreground hover:text-gold transition-colors">VPN Önerileri</a></li>
-              <li><a href="/guvenilir-telegram" className="text-muted-foreground hover:text-gold transition-colors">Telegram Grupları</a></li>
+              <li><a href="/" className="flex items-center text-muted-foreground hover:text-gold transition-colors text-sm md:text-base"><Home className="w-4 h-4 mr-2" />Ana Sayfa</a></li>
+              <li><a href="/kampanyalar" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Tag className="w-4 h-4 mr-2" />Kampanyalar</a></li>
+              <li><a href="/bonuslar" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Gift className="w-4 h-4 mr-2" />Bonuslar</a></li>
+              <li><a href="/yorumlar" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><MessageSquare className="w-4 h-4 mr-2" />Yorumlar</a></li>
+              <li><a href="/guvenilir-bahis-siteleri-listesi" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><ShieldCheck className="w-4 h-4 mr-2" />Güvenilir Siteler</a></li>
+              <li><a href="/ozel-oranlar" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Percent className="w-4 h-4 mr-2" />Özel Oran Kuponlar</a></li>
+              <li><a href="/banko-kuponlar" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Ticket className="w-4 h-4 mr-2" />Banko Kuponlar</a></li>
+              <li><a href="/canli-mac-izle" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><PlayCircle className="w-4 h-4 mr-2" />Canlı Maç İzle</a></li>
+              <li><a href="/vpn-onerileri" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Shield className="w-4 h-4 mr-2" />VPN Önerileri</a></li>
+              <li><a href="/guvenilir-telegram" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Send className="w-4 h-4 mr-2" />Telegram Grupları</a></li>
             </ul>
           </div>
 
@@ -51,12 +69,12 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
           <div>
             <h3 className="text-base md:text-lg font-semibold mb-4 text-gold">Bilgi</h3>
             <ul className="space-y-2">
-              <li><a href="/hakkimizda" className="text-muted-foreground hover:text-gold transition-colors">Hakkımızda</a></li>
-              <li><a href="/hizmetlerimiz" className="text-muted-foreground hover:text-gold transition-colors">Hizmetlerimiz</a></li>
-              <li><a href="/iletisim" className="text-muted-foreground hover:text-gold transition-colors">İletişim</a></li>
-              <li><a href="/kullanim-kosullari" className="text-muted-foreground hover:text-gold transition-colors">Kullanım Koşulları</a></li>
-              <li><a href="/gizlilik-politikasi" className="text-muted-foreground hover:text-gold transition-colors">Gizlilik Politikası</a></li>
-              <li><a href="/dmca" className="text-muted-foreground hover:text-gold transition-colors">DMCA</a></li>
+              <li><a href="/hakkimizda" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Info className="w-4 h-4 mr-2" />Hakkımızda</a></li>
+              <li><a href="/hizmetlerimiz" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Wrench className="w-4 h-4 mr-2" />Hizmetlerimiz</a></li>
+              <li><a href="/iletisim" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Mail className="w-4 h-4 mr-2" />İletişim</a></li>
+              <li><a href="/kullanim-kosullari" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><FileText className="w-4 h-4 mr-2" />Kullanım Koşulları</a></li>
+              <li><a href="/gizlilik-politikasi" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Shield className="w-4 h-4 mr-2" />Gizlilik Politikası</a></li>
+              <li><a href="/dmca" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Copyright className="w-4 h-4 mr-2" />DMCA</a></li>
             </ul>
           </div>
 
@@ -70,7 +88,7 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
                 </svg>
                 info@hokkabaz.net
               </a>
-              <a href="https://t.me/+r577e3x2dhIxNjdk" target="_blank" rel="noopener noreferrer nofollow" className="flex items-center text-muted-foreground hover:text-gold">
+              <a href="https://t.me/+-H20aHx5MyZlZjQ0" target="_blank" rel="noopener noreferrer nofollow" className="flex items-center text-muted-foreground hover:text-gold">
                 <TelegramIcon className="w-4 h-4 mr-2" />
                 Telegram Davet Linki
               </a>
@@ -88,7 +106,7 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
               © 2025 Hokkabaz. Tüm hakları saklıdır.
             </div>
             <div className="text-muted-foreground text-sm text-center">
-              18+ | Sorumlu Bahis | Lütfen bahis yaparken sınırlarınızı bilin
+              <a href="/robots.txt" className="hover:text-gold transition-colors">Robots.txt</a> | <a href="/sitemap.xml" className="hover:text-gold transition-colors">Sitemap</a>
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ const pages: { slug: string; label: string }[] = [
   { slug: 'yorumlar', label: 'Yorumlar' },
   { slug: 'guvenilir-bahis-siteleri-listesi', label: 'Güvenilir Siteler' },
   { slug: 'banko-kuponlar', label: 'Banko Kuponlar' },
+  { slug: 'ozel-oranlar', label: 'Özel Oranlar' },
   { slug: 'canli-mac-izle', label: 'Canlı Maç İzle' },
   { slug: 'vpn-onerileri', label: 'VPN Önerileri' },
   { slug: 'guvenilir-telegram', label: 'Telegram Grupları' },

@@ -30,7 +30,7 @@ type ChatMessage = {
 
 export default function TelegramPanel({
   groupName = "Hokkabaz Telegram",
-  groupLink = "https://t.me/hokkabaz",
+  groupLink = "https://t.me/+-H20aHx5MyZlZjQ0",
   members = 15423,
   onlineBase = 562,
 }: {

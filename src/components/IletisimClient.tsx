@@ -47,14 +47,14 @@ export default function IletisimClient() {
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center justify-between">
                   <span className="text-yellow-300">Telegram’da Yazışma Önizlemesi</span>
-                  <span className="text-xs sm:text-sm text-neutral-400">Admin: @AgentGman</span>
+                  <span className="text-xs sm:text-sm text-neutral-400">Admin: @darlydxn</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <Avatar className="size-8">
-                       <AvatarImage src="/images/agentgman.jpg" alt="AgentGman" />
+                       <AvatarImage src="/images/agentgman.jpg" alt="DarlyDixon" />
                        <AvatarFallback className="bg-yellow-500/20 text-yellow-300">AG</AvatarFallback>
                      </Avatar>
                     <div className="max-w-[80%] rounded-2xl bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 text-sm">
@@ -72,7 +72,7 @@ export default function IletisimClient() {
                   </div>
                   <div className="flex items-start gap-3">
                     <Avatar className="size-8">
-                      <AvatarImage src="" alt="GmanVibes" />
+                      <AvatarImage src="" alt="DarlyDixon" />
                       <AvatarFallback className="bg-yellow-500/20 text-yellow-300">GV</AvatarFallback>
                     </Avatar>
                     <div className="max-w-[80%] rounded-2xl bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 text-sm">
@@ -84,7 +84,7 @@ export default function IletisimClient() {
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button className="telegram-gradient neon-button">
-                        <TelegramIcon className="w-4 h-4 mr-2" /> Telegram’da Admin’e Yaz (@AgentGman)
+                        <TelegramIcon className="w-4 h-4 mr-2" /> Telegram’da Admin’e Yaz (@darlydxn)
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent className="bg-neutral-950 border border-yellow-500/20">
@@ -96,7 +96,7 @@ export default function IletisimClient() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>İptal</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => window.open('https://t.me/AgentGman', '_blank', 'noopener,noreferrer')}>Evet, işbirliği için yazıyorum</AlertDialogAction>
+                        <AlertDialogAction onClick={() => window.open('https://t.me/darlydxn', '_blank', 'noopener,noreferrer')}>Evet, işbirliği için yazıyorum</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
@@ -112,15 +112,15 @@ export default function IletisimClient() {
               <CardContent>
                 <div className="flex items-center gap-3">
                   <Avatar className="size-12">
-                    <AvatarImage src="/images/agentgman.jpg" alt="AgentGman" />
+                    <AvatarImage src="/images/agentgman.jpg" alt="DarlyDixon" />
                     <AvatarFallback className="text-lg bg-yellow-500/20 text-yellow-300">AG</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold">AgentGman</p>
+                    <p className="font-semibold">DarlyDixon</p>
                     <p className="text-sm text-neutral-400">Telegram Admin</p>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <button className="text-yellow-300 text-sm hover:text-yellow-200">@AgentGman</button>
+                        <button className="text-yellow-300 text-sm hover:text-yellow-200">@darlydxn</button>
                       </AlertDialogTrigger>
                       <AlertDialogContent className="bg-neutral-950 border border-yellow-500/20">
                         <AlertDialogHeader>
@@ -131,7 +131,7 @@ export default function IletisimClient() {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>İptal</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => window.open('https://t.me/AgentGman', '_blank', 'noopener,noreferrer')}>Onayla ve devam et</AlertDialogAction>
+                          <AlertDialogAction onClick={() => window.open('https://t.me/darlydxn', '_blank', 'noopener,noreferrer')}>Onayla ve devam et</AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog>
@@ -156,7 +156,7 @@ export default function IletisimClient() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>İptal</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => window.open('https://t.me/AgentGman', '_blank', 'noopener,noreferrer')}>Evet, işbirliği için</AlertDialogAction>
+                  <AlertDialogAction onClick={() => window.open('https://t.me/darlydxn', '_blank', 'noopener,noreferrer')}>Evet, işbirliği için</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

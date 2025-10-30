@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, ArrowRight, ExternalLink, Instagram, Twitter, Youtube, Send, Award, Calendar, Check } from "lucide-react";
+import { Search, Instagram, Twitter, Youtube, Send, Award, Calendar, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,8 +14,6 @@ import SeoArticle from "@/components/SeoArticle";
 
 export default function AnlasmaliSitelerClient() {
   const [searchQuery, setSearchQuery] = useState("");
-  const mobileSliderRef = useRef<HTMLDivElement>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   type MarqueeLogo = { id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean };
   const [marqueeLogos, setMarqueeLogos] = useState<MarqueeLogo[]>([]);
@@ -29,28 +27,7 @@ export default function AnlasmaliSitelerClient() {
     })()
   }, [])
 
-  type Slide = {
-    id: string;
-    title: string;
-    subtitle?: string | null;
-    imageUrl?: string | null;
-    desktopImageUrl?: string | null;
-    mobileImageUrl?: string | null;
-    ctaLabel?: string | null;
-    ctaUrl?: string | null;
-    order: number;
-    isActive: boolean;
-  };
-  const [sliderCards, setSliderCards] = useState<Slide[]>([])
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch('/api/carousel')
-        const data = await res.json()
-        setSliderCards(Array.isArray(data) ? data.filter((d: Slide) => d.isActive) : [])
-      } catch {}
-    })()
-  }, [])
+  // Masaüstü slider kaldırıldı; ilgili veri ve fetch işlemleri temizlendi.
 
   const marqueeItems = useMemo(() => {
     const reps = 12;
@@ -153,45 +130,7 @@ export default function AnlasmaliSitelerClient() {
     return list.map((s, i) => ({ img: s.logoUrl ?? '/logo.svg', href: s.siteUrl ?? '#', badge: badgePool[i % badgePool.length] }))
   }, [partnerSites, searchQuery])
 
-  const scrollMobile = (dir: "left" | "right") => {
-    const el = mobileSliderRef.current;
-    if (!el) return;
-    const amount = el.clientWidth * 0.9;
-    el.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
-  };
-  const scrollToSlide = (idx: number) => {
-    const el = mobileSliderRef.current;
-    if (!el) return;
-    const slides = Array.from(el.querySelectorAll<HTMLDivElement>(".mobile-slide"));
-    const target = slides[idx];
-    if (!target) return;
-    el.scrollTo({ left: target.offsetLeft, behavior: "smooth" });
-    setCurrentSlide(idx);
-  };
 
-  useEffect(() => {
-    const el = mobileSliderRef.current;
-    if (!el) return;
-    const handler = () => {
-      const slides = Array.from(el.querySelectorAll<HTMLDivElement>(".mobile-slide"));
-      if (slides.length === 0) return;
-      const center = el.scrollLeft + el.clientWidth / 2;
-      let nearestIdx = 0;
-      let minDist = Infinity;
-      slides.forEach((s, idx) => {
-        const sCenter = s.offsetLeft + s.offsetWidth / 2;
-        const dist = Math.abs(sCenter - center);
-        if (dist < minDist) {
-          minDist = dist;
-          nearestIdx = idx;
-        }
-      });
-      setCurrentSlide(nearestIdx);
-    };
-    el.addEventListener("scroll", handler, { passive: true });
-    handler();
-    return () => el.removeEventListener("scroll", handler);
-  }, []);
 
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
@@ -218,87 +157,7 @@ export default function AnlasmaliSitelerClient() {
           </div>
         </section>
 
-        <motion.section initial="initial" animate="animate" variants={fadeInUp}>
-          <div className="relative md:hidden">
-            <div
-              ref={mobileSliderRef}
-              className="no-scrollbar overflow-x-auto snap-x snap-mandatory scroll-smooth flex gap-4 py-2"
-            >
-              {sliderCards.map((card, idx) => (
-                <div key={idx} className="mobile-slide snap-center shrink-0 w-[75vw] max-w-[360px]">
-                  <div className="group relative w-full aspect-[9/16] rounded-2xl overflow-hidden border border-border transition-all hover:border-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.2)] hover:scale-[1.01]">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center"
-                      style={{
-                        backgroundImage: `url(${card.mobileImageUrl ?? card.desktopImageUrl ?? card.imageUrl ?? '/logo.svg'})`,
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-60 transition-opacity" />
-                    <div className="absolute inset-x-0 bottom-0 z-10 p-6 bg-gradient-to-t from-black/60 to-black/10">
-                      <div className="text-gold text-2xl font-bold mb-2">{card.title}</div>
-                      <p className="text-muted-foreground mb-4">{card.subtitle}</p>
-                      <div className="flex items-center justify-between">
-                        <Button className="telegram-gradient neon-button" asChild>
-                          <a
-                            href={card.ctaUrl ?? '#'}
-                            target={isExternalUrl(card.ctaUrl) ? "_blank" : undefined}
-                            rel={isExternalUrl(card.ctaUrl) ? "noopener noreferrer" : undefined}
-                            className="flex items-center"
-                          >
-                            {card.ctaLabel ?? 'İncele'}
-                            <ArrowRight className="w-4 h-4 ml-2" />
-                          </a>
-                        </Button>
-                        <ExternalLink className="w-5 h-5 text-muted-foreground" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-3 flex items-center justify-center gap-2">
-              {sliderCards.map((_, i) => (
-                <button
-                  key={`dot-${i}`}
-                  onClick={() => scrollToSlide(i)}
-                  aria-label={`Slayt ${i + 1}`}
-                  className={`h-2 w-2 rounded-full transition-colors ${i === currentSlide ? "bg-gold" : "bg-muted"}`}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="hidden md:block">
-            <div className="overflow-y-auto no-scrollbar max-h-[60vh] md:max-h-[640px]">
-              <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
-                {sliderCards.map((card, idx) => (
-                  <div key={idx} className="group relative h-[280px] md:h-[340px] lg:h-[380px] rounded-2xl overflow-hidden border border-border transition-all hover:border-gold hover:shadow-[0_0_24px_rgba(255,215,0,0.2)] hover:scale-[1.01]">
-                    <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${card.imageUrl ?? '/logo.svg'})` }} />
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-60 transition-opacity" />
-                    <div className="absolute inset-x-0 bottom-0 z-10 p-6 bg-gradient-to-t from-black/60 to-black/10">
-                      <div className="text-gold text-2xl font-bold mb-2">{card.title}</div>
-                      <p className="text-muted-foreground mb-4">{card.subtitle}</p>
-                      <div className="flex items-center justify-between">
-                        <Button className="telegram-gradient neon-button" asChild>
-                          <a
-                            href={card.ctaUrl ?? '#'}
-                            target={isExternalUrl(card.ctaUrl) ? "_blank" : undefined}
-                            rel={isExternalUrl(card.ctaUrl) ? "noopener noreferrer" : undefined}
-                            className="flex items-center"
-                          >
-                            {card.ctaLabel ?? 'İncele'}
-                            <ArrowRight className="w-4 h-4 ml-2" />
-                          </a>
-                        </Button>
-                        <ExternalLink className="w-5 h-5 text-muted-foreground" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.section>
+        {/* Masaüstü slider bölümü kaldırıldı */}
 
         <motion.section initial="initial" animate="animate" variants={fadeInUp}>
           <div className="mb-6 flex items-center gap-3">

@@ -136,7 +136,7 @@ export default function KampanyalarClient() {
       <Header currentPath="/kampanyalar" />
 
       <main className="container mx-auto px-4 py-8 md:pl-72">
-        <h1 className="text-3xl font-bold mb-6">{seoTitle}</h1>
+        <h1 className="hidden md:block text-3xl font-bold mb-6">{seoTitle}</h1>
 
         {featuredKampanyalar.length > 0 && (
           <motion.section 

@@ -667,15 +667,7 @@ export default function HomeClient() {
                     {selectedCampaign.bonusAmount}
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold">Özellikler:</h4>
-                  {Array.isArray(selectedCampaign.highlights) && selectedCampaign.highlights.map((highlight: string, index: number) => (
-                    <div key={index} className="flex items-center text-sm">
-                      <Check className="w-4 h-4 text-gold mr-2" />
-                      {highlight}
-                    </div>
-                  ))}
-                </div>
+                {/* Kampanyalar sayfasıyla hizalama: Özellikler alanı kaldırıldı */}
                 <div className="space-y-2">
                   <h4 className="font-semibold">Etiketler:</h4>
                   <div className="flex flex-wrap gap-2">

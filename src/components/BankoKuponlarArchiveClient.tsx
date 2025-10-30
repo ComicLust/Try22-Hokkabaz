@@ -65,6 +65,7 @@ export default function BankoKuponlarArchiveClient() {
   const dayNow = formatDay(new Date());
   const dayPrev = formatDay(new Date(Date.now() - 86400000));
   const dayPrev2 = formatDay(new Date(Date.now() - 2 * 86400000));
+  const dayNext = formatDay(new Date(Date.now() + 86400000));
 
   useEffect(() => {
     const fetchArchive = async () => {
@@ -167,11 +168,10 @@ export default function BankoKuponlarArchiveClient() {
           </div>
         )}
 
-        {/* Pagination */}
+        {/* Gün bazlı gezinme */}
         <div className="flex items-center justify-center gap-2 mt-8">
-          <Button variant="outline" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>Önceki</Button>
-          <span className="text-sm text-muted-foreground">Sayfa {page}</span>
-          <Button variant="outline" onClick={() => setPage((p) => p + 1)}>Sonraki</Button>
+          <Button asChild variant="outline"><a href={`/banko-kuponlar/arsiv/${dayPrev}`}>Önceki Gün</a></Button>
+          <Button asChild variant="outline"><a href={`/banko-kuponlar/arsiv/${dayNext}`}>Sonraki Gün</a></Button>
         </div>
       </main>
       <SeoArticle slug="banko-kuponlar" />

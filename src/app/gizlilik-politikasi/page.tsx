@@ -62,7 +62,7 @@ export default function Page() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">9. İletişim</h2>
-            <p className="text-foreground/80">Gizlilikle ilgili sorularınız için <a href="mailto:privacy@hokkabaz.net" className="text-gold">privacy@hokkabaz.net</a> veya <a href="mailto:info@hokkabaz.net" className="text-gold">info@hokkabaz.net</a> adreslerine yazabilirsiniz.</p>
+            <p className="text-foreground/80">Gizlilikle ilgili sorularınız için <a href="mailto:info@hokkabaz.net" className="text-gold">info@hokkabaz.net</a> adresine yazabilirsiniz.</p>
           </section>
 
           <section className="space-y-3">

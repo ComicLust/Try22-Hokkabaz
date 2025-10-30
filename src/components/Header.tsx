@@ -33,6 +33,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/guvenilir-bahis-siteleri-listesi', label: 'Güvenilir Siteler', active: currentPath === '/guvenilir-bahis-siteleri-listesi' },
     { href: '/yorumlar', label: 'Yorumlar', active: currentPath === '/yorumlar' },
     { href: '/banko-kuponlar', label: 'Banko Kuponlar', active: currentPath === '/banko-kuponlar' },
+    { href: '/ozel-oranlar', label: 'Özel Oranlar', active: currentPath === '/ozel-oranlar' },
     { href: '/hakkimizda', label: 'Hakkımızda', active: currentPath === '/hakkimizda' },
     { href: '/iletisim', label: 'İletişim', active: currentPath === '/iletisim' },
   ];
@@ -42,15 +43,16 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
     { href: '/guvenilir-bahis-siteleri-listesi', label: 'Güvenilir Siteler', Icon: Award, active: currentPath === '/guvenilir-bahis-siteleri-listesi' },
     { href: '/kampanyalar', label: 'Aktif Kampanyalar', Icon: Star, active: currentPath === '/kampanyalar' },
     { href: '/yorumlar', label: 'Yorumlar', Icon: MessageSquare, active: currentPath === '/yorumlar' },
-    { href: '/banko-kuponlar', label: 'Banko Kuponlar', Icon: Trophy, active: currentPath === '/banko-kuponlar' },
     // Canlı Maç öğesi buradan kaldırıldı; Eğlence/Kazan altında kalacak
-    { href: 'https://t.me/+r577e3x2dhIxNjdk', label: 'Topluluk', Icon: Users, external: true },
+    { href: 'https://t.me/+-H20aHx5MyZlZjQ0', label: 'Topluluk', Icon: Users, external: true },
     { href: '/guvenilir-telegram', label: 'Telegram Grupları', Icon: Send, active: currentPath === '/guvenilir-telegram' },
   ];
 
   const rewardsMenu: { href: string; label: string; Icon: any; active?: boolean; external?: boolean; comingSoon?: boolean }[] = [
     { href: '/bonuslar', label: 'Bonuslar', Icon: Gift, active: currentPath === '/bonuslar' },
     { href: '/bonuslar?type=Deneme%20Bonusu', label: 'Deneme Bonusları', Icon: Ticket },
+    { href: '/ozel-oranlar', label: 'Özel Oranlar', Icon: Star, active: currentPath === '/ozel-oranlar' },
+    { href: '/banko-kuponlar', label: 'Banko Kuponlar', Icon: Trophy, active: currentPath === '/banko-kuponlar' },
   ];
 
   const funMenu: { href: string; label: string; Icon: any; active?: boolean; external?: boolean; comingSoon?: boolean }[] = [
@@ -222,7 +224,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
 
                   {/* Telegram CTA kartı */}
                   <a
-                    href="https://t.me/+r577e3x2dhIxNjdk"
+                    href="https://t.me/+-H20aHx5MyZlZjQ0"
                     target="_blank"
                     rel="noopener noreferrer nofollow"
                   className="flex items-center justify-between rounded-lg px-3 py-3 border border-gold/40 bg-secondary-bg/40 hover:border-gold hover:bg-gold/10 hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-sm hover:shadow-gold/20"
@@ -246,7 +248,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                     {/* Küçük sosyal ikonlar */}
                     <div className="flex items-center gap-2">
                       <a
-                        href="https://t.me/+r577e3x2dhIxNjdk"
+                        href="https://t.me/+-H20aHx5MyZlZjQ0"
                         target="_blank"
                         rel="noopener noreferrer nofollow"
                         aria-label="Telegram"
@@ -418,7 +420,7 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
 
             {/* Telegram CTA kartı */}
             <a
-              href="https://t.me/+r577e3x2dhIxNjdk"
+              href="https://t.me/+-H20aHx5MyZlZjQ0"
               target="_blank"
               rel="noopener noreferrer nofollow"
             className="flex items-center justify-between rounded-lg px-3 py-3 border border-gold/40 bg-secondary-bg/40 hover:border-gold hover:bg-gold/10 hover:scale-[1.02] active:scale-[0.98] transition-transform shadow-sm hover:shadow-gold/20"

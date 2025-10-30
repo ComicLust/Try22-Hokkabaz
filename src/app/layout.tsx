@@ -8,6 +8,7 @@ import ExternalLinkTracker from '@/components/ExternalLinkTracker'
 import Script from "next/script"
 import { db } from '@/lib/db'
 import { unstable_noStore as noStore } from 'next/cache'
+import ScrollTopButton from '@/components/scroll-top-button/ScrollTopButton'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -121,6 +122,7 @@ export default async function RootLayout({
         <ExternalLinkTracker />
         {children}
         <Toaster />
+        <ScrollTopButton offset={400} />
       </body>
     </html>
   );
