@@ -16,10 +16,38 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json()
-    // Tutarlılık: sağlanan page varsa slash başını temizle
-    if (typeof body?.page === 'string') {
-      body.page = String(body.page).trim().replace(/^\/+/, '')
+    // Mevcut kaydı al (sayfa varyantını karşılaştırmak için)
+    const current = await db.seoSetting.findUnique({
+      where: { id: params.id },
+      select: { id: true, page: true },
+    })
+    if (!current) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
+    // page sağlandıysa, slash varyantlarını göz önünde bulundur
+    if (typeof body?.page === 'string') {
+      const incomingRaw = String(body.page).trim()
+      const normalizedIncoming = incomingRaw.replace(/^\/+/, '')
+      const normalizedCurrent = String(current.page ?? '').trim().replace(/^\/+/, '')
+      // Aynı mantıksal sayfa ise, mevcut varyantı koru (unique çakışmayı tetikleme)
+      if (normalizedIncoming === normalizedCurrent) {
+        body.page = current.page
+      } else {
+        const variants = Array.from(new Set([incomingRaw, normalizedIncoming].filter(Boolean)))
+        const existingRecord = await db.seoSetting.findFirst({
+          where: { page: { in: variants } },
+          select: { id: true },
+        })
+        if (existingRecord && existingRecord.id !== params.id) {
+          return NextResponse.json(
+            { error: `Bu sayfa için zaten bir SEO kaydı mevcut: ${incomingRaw}` },
+            { status: 409 }
+          )
+        }
+        body.page = incomingRaw
+      }
+    }
+    
     const updated = await db.seoSetting.update({ where: { id: params.id }, data: body })
     return NextResponse.json(updated)
   } catch (e: any) {

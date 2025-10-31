@@ -7,40 +7,43 @@ import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { toast } from '@/hooks/use-toast'
-
-function Toolbar({ exec }: { exec: (cmd: string, value?: string) => void }) {
-  return (
-    <div className="flex flex-wrap gap-2 mb-3">
-      <Button variant="secondary" size="sm" onClick={() => exec('bold')}>B</Button>
-      <Button variant="secondary" size="sm" onClick={() => exec('italic')}>I</Button>
-      <Button variant="secondary" size="sm" onClick={() => exec('underline')}>U</Button>
-      <Button variant="secondary" size="sm" onClick={() => exec('formatBlock', 'h2')}>H2</Button>
-      <Button variant="secondary" size="sm" onClick={() => exec('formatBlock', 'h3')}>H3</Button>
-      <Button variant="secondary" size="sm" onClick={() => exec('insertUnorderedList')}>• Liste</Button>
-      <Button variant="secondary" size="sm" onClick={() => {
-        const url = prompt('Bağlantı URL')
-        if (url) exec('createLink', url)
-      }}>Link</Button>
-      <Button variant="secondary" size="sm" onClick={() => {
-        const url = prompt('Resim URL')
-        if (url) exec('insertImage', url)
-      }}>Resim</Button>
-      <Button variant="secondary" size="sm" onClick={() => {
-        const rows = Number(prompt('Satır sayısı', '2') || '2')
-        const cols = Number(prompt('Sütun sayısı', '2') || '2')
-        const table = Array.from({ length: rows }).map(() => `<tr>${Array.from({ length: cols }).map(() => '<td> </td>').join('')}</tr>`).join('')
-        exec('insertHTML', `<table class="table-auto border-collapse"><tbody>${table}</tbody></table>`)
-      }}>Tablo</Button>
-    </div>
-  )
-}
+import { 
+  MDXEditor, 
+  headingsPlugin, 
+  listsPlugin, 
+  quotePlugin, 
+  thematicBreakPlugin,
+  markdownShortcutPlugin,
+  linkPlugin,
+  linkDialogPlugin,
+  imagePlugin,
+  tablePlugin,
+  codeBlockPlugin,
+  codeMirrorPlugin,
+  diffSourcePlugin,
+  frontmatterPlugin,
+  directivesPlugin,
+  toolbarPlugin,
+  UndoRedo,
+  BoldItalicUnderlineToggles,
+  CodeToggle,
+  CreateLink,
+  InsertImage,
+  InsertTable,
+  InsertThematicBreak,
+  ListsToggle,
+  BlockTypeSelect,
+  Separator,
+  DiffSourceToggleWrapper
+} from '@mdxeditor/editor'
+import '@mdxeditor/editor/style.css'
 
 export default function EditPageArticle() {
   const params = useParams()
   const slug = String(params?.slug ?? '')
   const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
   const [loading, setLoading] = useState(true)
-  const editorRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,19 +51,14 @@ export default function EditPageArticle() {
         const res = await fetch(`/api/admin/page-articles/${slug}`, { cache: 'no-store' })
         const json = await res.json()
         setTitle(json?.title ?? '')
-        if (editorRef.current) editorRef.current.innerHTML = json?.content ?? ''
+        setContent(json?.content ?? '')
       } catch {}
       setLoading(false)
     }
     fetchData()
   }, [slug])
 
-  const exec = (cmd: string, value?: string) => {
-    document.execCommand(cmd, false, value)
-  }
-
   const handleSave = async () => {
-    const content = editorRef.current?.innerHTML ?? ''
     setLoading(true)
     try {
       const res = await fetch(`/api/admin/page-articles/${slug}`, {
@@ -77,6 +75,16 @@ export default function EditPageArticle() {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="p-6">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-muted-foreground">Yükleniyor...</div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -88,19 +96,85 @@ export default function EditPageArticle() {
           <CardTitle>Başlık ve İçerik</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Başlık (opsiyonel)" />
-            <Toolbar exec={exec} />
-            <div
-              ref={editorRef}
-              className="min-h-[200px] border rounded-md p-3 bg-background"
-              contentEditable
-              suppressContentEditableWarning
-              style={{ lineHeight: 1.6 }}
+          <div className="space-y-4">
+            <Input 
+              value={title} 
+              onChange={(e) => setTitle(e.target.value)} 
+              placeholder="Başlık (opsiyonel)" 
             />
+            <div 
+              className="border rounded-md overflow-hidden cursor-text"
+              onClick={(e) => {
+                // Editör alanına tıklandığında focus'u editöre yönlendir
+                const editor = e.currentTarget.querySelector('.mdxeditor-rich-text-editor');
+                if (editor) {
+                  (editor as HTMLElement).focus();
+                }
+              }}
+            >
+              <MDXEditor
+                markdown={content}
+                onChange={setContent}
+                placeholder="İçeriğinizi buraya yazın... Markdown ve HTML desteklenir."
+                autoFocus={true}
+                plugins={[
+                  headingsPlugin(),
+                  listsPlugin(),
+                  quotePlugin(),
+                  thematicBreakPlugin(),
+                  markdownShortcutPlugin(),
+                  linkPlugin(),
+                  linkDialogPlugin(),
+                  imagePlugin(),
+                  tablePlugin(),
+                  codeBlockPlugin({ defaultCodeBlockLanguage: 'html' }),
+                  codeMirrorPlugin({ 
+                    codeBlockLanguages: { 
+                      html: 'HTML', 
+                      css: 'CSS', 
+                      js: 'JavaScript', 
+                      jsx: 'JSX',
+                      ts: 'TypeScript',
+                      tsx: 'TSX'
+                    } 
+                  }),
+                  diffSourcePlugin({ 
+                    viewMode: 'rich-text', 
+                    diffMarkdown: content 
+                  }),
+                  frontmatterPlugin(),
+                  directivesPlugin(),
+                  toolbarPlugin({
+                    toolbarContents: () => (
+                      <DiffSourceToggleWrapper>
+                        <UndoRedo />
+                        <Separator />
+                        <BoldItalicUnderlineToggles />
+                        <CodeToggle />
+                        <Separator />
+                        <BlockTypeSelect />
+                        <Separator />
+                        <CreateLink />
+                        <InsertImage />
+                        <Separator />
+                        <ListsToggle />
+                        <InsertTable />
+                        <InsertThematicBreak />
+                      </DiffSourceToggleWrapper>
+                    )
+                  })
+                ]}
+                className="min-h-[400px] w-full"
+                contentEditableClassName="mdx-content-area"
+              />
+            </div>
             <div className="flex gap-2">
-              <Button onClick={handleSave} disabled={loading}>Kaydet</Button>
-              <Button variant="secondary" onClick={() => { if (editorRef.current) editorRef.current.innerHTML = '' }}>Temizle</Button>
+              <Button onClick={handleSave} disabled={loading}>
+                {loading ? 'Kaydediliyor...' : 'Kaydet'}
+              </Button>
+              <Button variant="secondary" onClick={() => setContent('')}>
+                Temizle
+              </Button>
             </div>
           </div>
         </CardContent>

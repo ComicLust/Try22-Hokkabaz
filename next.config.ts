@@ -57,6 +57,22 @@ const nextConfig: NextConfig = {
   // Dev ortamında standart izleme/derleme davranışı
   reactStrictMode: false,
   trailingSlash: false,
+  
+  // Görsel optimizasyonu
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 31536000, // 1 yıl cache
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
+  
+  // Performans optimizasyonu
+  experimental: {
+    optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+  },
+  
   webpack: (config) => {
     return config;
   },

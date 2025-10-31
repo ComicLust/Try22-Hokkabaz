@@ -1,7 +1,13 @@
 "use client"
 import { useEffect, useMemo, useState } from 'react'
-import { Award, Calendar, Check, Clock, Star } from 'lucide-react'
+import { Award, Calendar, Check, Clock, Star, Filter, GripVertical, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '@/components/ui/select'
 import { MediaPicker } from '@/components/media/MediaPicker'
 import { slugifyTr } from '@/lib/slugify'
 
@@ -175,78 +181,104 @@ export default function BonusesPage() {
       <h1 className="text-2xl font-semibold">Bonuslar (Admin)</h1>
 
       {/* Filtreleme Alanı */}
-      <div className="border rounded-md p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
-        <input
-          className="border rounded-md px-3 py-2"
-          placeholder="Bonus veya site ara..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <select
-          className="border rounded-md px-3 py-2"
-          value={activeFilter}
-          onChange={(e) => setActiveFilter(e.target.value as any)}
-        >
-          <option value="all">Tümü</option>
-          <option value="active">Aktif</option>
-          <option value="inactive">Pasif</option>
-        </select>
-        <select
-          className="border rounded-md px-3 py-2"
-          value={featuredFilter}
-          onChange={(e) => setFeaturedFilter(e.target.value as any)}
-        >
-          <option value="all">Öne Çıkan (Tümü)</option>
-          <option value="featured">Öne Çıkan</option>
-          <option value="nonfeatured">Normal</option>
-        </select>
-        <select
-          className="border rounded-md px-3 py-2"
-          value={amountFilter}
-          onChange={(e) => setAmountFilter(e.target.value as any)}
-        >
-          <option value="all">Tutar (Tümü)</option>
-          <option value="0-100">0–100</option>
-          <option value="100-200">100–200</option>
-          <option value="200+">200+</option>
-        </select>
-      </div>
-
-      <div className="text-sm text-muted-foreground">{filtered.length} bonus bulundu</div>
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="w-5 h-5" /> Filtreler
+          </CardTitle>
+          <CardDescription className="flex items-center gap-2 text-sm">
+            <span className="inline-flex items-center gap-1"><Search className="w-4 h-4" /> Arama ve filtrelerle listeyi daraltın.</span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <div className="relative">
+            <Input
+              placeholder="Bonus veya site ara..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div>
+            <Select value={activeFilter} onValueChange={(v) => setActiveFilter(v as any)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Durum" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tümü</SelectItem>
+                <SelectItem value="active">Aktif</SelectItem>
+                <SelectItem value="inactive">Pasif</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Select value={featuredFilter} onValueChange={(v) => setFeaturedFilter(v as any)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Öne Çıkan" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Öne Çıkan (Tümü)</SelectItem>
+                <SelectItem value="featured">Öne Çıkan</SelectItem>
+                <SelectItem value="nonfeatured">Normal</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Select value={amountFilter} onValueChange={(v) => setAmountFilter(v as any)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Tutar" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tutar (Tümü)</SelectItem>
+                <SelectItem value="0-100">0–100</SelectItem>
+                <SelectItem value="100-200">100–200</SelectItem>
+                <SelectItem value="200+">200+</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+        <CardFooter className="justify-between">
+          <div className="text-sm text-muted-foreground">{filtered.length} bonus bulundu</div>
+        </CardFooter>
+      </Card>
 
       {/* Öne Çıkan Bonuslar */}
       {featuredItems.length > 0 && (
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold text-gold flex items-center">
-            <Star className="w-5 h-5 mr-2" /> Öne Çıkan Bonuslar
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader className="border-b">
+            <CardTitle className="flex items-center gap-2 text-gold">
+              <Star className="w-5 h-5" /> Öne Çıkan Bonuslar
+            </CardTitle>
+            <CardDescription>Yüksek öncelikli ve öne çıkan bonus kartları.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredItems.map((bonus, index) => (
-              <div 
-                key={bonus.id} 
-                className="relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border-2 border-gold rounded-2xl p-4 cursor-move"
+              <Card
+                key={bonus.id}
+                className="relative cursor-grab active:cursor-grabbing"
                 draggable
                 onDragStart={() => onDragStart(index)}
                 onDragOver={onDragOver}
                 onDrop={() => onDrop(index, true)}
               >
-                <div className="absolute top-4 right-4">
-                  <span className="text-xs px-2 py-1 rounded-full bg-gold text-background">ÖNE ÇIKAN</span>
-                </div>
-                <div className="w-16 h-16 mx-auto mb-4 rounded-md flex items-center justify-center border bg-background">
-                  {bonus.imageUrl ? (
-                    <img src={bonus.imageUrl} alt={bonus.title} className="w-full h-full object-contain p-1" />
-                  ) : (
-                    <Award className="w-8 h-8 text-gold" />
-                  )}
-                </div>
-                <div className="text-center space-y-2">
-                  <div className="text-lg font-medium">{bonus.title}</div>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div className="w-16 h-16 rounded-md flex items-center justify-center border bg-background">
+                      {bonus.imageUrl ? (
+                        <img src={bonus.imageUrl} alt={bonus.title} className="w-full h-full object-contain p-1" />
+                      ) : (
+                        <Award className="w-8 h-8 text-gold" />
+                      )}
+                    </div>
+                    <Badge variant="secondary">ÖNE ÇIKAN</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="text-lg font-medium text-center">{bonus.title}</div>
                   {bonus.brandId && (
-                    <div className="text-xs text-muted-foreground">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug || '—'}</div>
+                    <div className="text-xs text-muted-foreground text-center">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug || '—'}</div>
                   )}
-                  <div className="text-3xl font-bold text-gold">{bonus.amount ?? 0} TL</div>
-                  <div className="text-muted-foreground">{bonus.bonusType ?? 'Bonus'}</div>
+                  <div className="text-3xl font-bold text-gold text-center">{bonus.amount ?? 0} TL</div>
+                  <div className="text-muted-foreground text-center">{bonus.bonusType ?? 'Bonus'}</div>
                   <div className="space-y-1">
                     {(bonus.features ?? []).map((f, i) => (
                       <div key={i} className="flex items-center justify-center text-sm text-muted-foreground">
@@ -254,7 +286,7 @@ export default function BonusesPage() {
                       </div>
                     ))}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-muted-foreground text-center">
                     <Clock className="w-3 h-3 inline mr-1" /> Son 5 gün
                   </div>
                   {(bonus.badges ?? []).length > 0 && (
@@ -264,83 +296,103 @@ export default function BonusesPage() {
                       ))}
                     </div>
                   )}
-                </div>
-                <div className="mt-4 grid grid-cols-4 gap-2">
-                  <button className="px-3 py-2 rounded-md border" onClick={() => updateItem(bonus.id, { isFeatured: false })}>Normal Yap</button>
-                  <button className="px-3 py-2 rounded-md border" onClick={() => updateItem(bonus.id, { isActive: !bonus.isActive })}>{bonus.isActive ? 'Pasifleştir' : 'Aktifleştir'}</button>
-                  <a className="px-3 py-2 rounded-md border text-center" href={`/admin/bonuses/${bonus.id}`}>Düzenle</a>
-                  <button className="px-3 py-2 rounded-md border" onClick={() => deleteItem(bonus.id)}>Sil</button>
-                </div>
-              </div>
+                </CardContent>
+                <CardFooter className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <Button variant="outline" onClick={() => updateItem(bonus.id, { isFeatured: false })}>Normal Yap</Button>
+                  <Button variant="outline" onClick={() => updateItem(bonus.id, { isActive: !bonus.isActive })}>{bonus.isActive ? 'Pasifleştir' : 'Aktifleştir'}</Button>
+                  <Button variant="outline" asChild>
+                    <a href={`/admin/bonuses/${bonus.id}`}>Düzenle</a>
+                  </Button>
+                  <Button variant="outline" onClick={() => deleteItem(bonus.id)}>Sil</Button>
+                </CardFooter>
+              </Card>
             ))}
-          </div>
-        </section>
+          </CardContent>
+        </Card>
       )}
 
       {/* Listelenen Bonuslar */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Listelenen Bonuslar</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle className="flex items-center gap-2">
+            <Award className="w-5 h-5" /> Listelenen Bonuslar
+          </CardTitle>
+          <CardDescription>Drag & drop ile sıralamayı değiştirebilirsiniz.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {listedItems.map((bonus, index) => (
-            <div 
-              key={bonus.id} 
-              className="backdrop-blur-lg bg-opacity-80 bg-card border rounded-2xl p-4 hover:border-gold transition-colors cursor-move"
+            <Card
+              key={bonus.id}
+              className="cursor-grab active:cursor-grabbing hover:border-gold transition-colors"
               draggable
               onDragStart={() => onDragStart(index)}
               onDragOver={onDragOver}
               onDrop={() => onDrop(index, false)}
             >
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-md flex items-center justify-center border bg-background">
-                  {bonus.imageUrl ? (
-                    <img src={bonus.imageUrl} alt={bonus.title} className="w-full h-full object-contain p-1" />
-                  ) : (
-                    <Award className="w-6 h-6 text-gold" />
-                  )}
-                </div>
-                {(bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug) && (
-                  <span className="text-xs border rounded-full px-2 py-1">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug}</span>
-                )}
-              </div>
-              <div className="text-lg font-medium">{bonus.title}</div>
-              {bonus.brandId && (
-                <div className="text-xs text-muted-foreground mb-1">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug || '—'}</div>
-              )}
-              <div className="text-2xl font-bold text-gold">{bonus.amount ?? 0} TL</div>
-              <div className="text-xs text-muted-foreground mb-4">
-                <Calendar className="w-3 h-3 inline mr-1" /> Min. Yatırım: {bonus.minDeposit ?? 0} TL
-              </div>
-              <div className="space-y-2 mb-4">
-                {(bonus.features ?? []).map((f, i) => (
-                  <div key={i} className="flex items-center text-sm text-muted-foreground">
-                    <Check className="w-4 h-4 text-gold mr-2" /> {f}
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-md flex items-center justify-center border bg-background">
+                      {bonus.imageUrl ? (
+                        <img src={bonus.imageUrl} alt={bonus.title} className="w-full h-full object-contain p-1" />
+                      ) : (
+                        <Award className="w-6 h-6 text-gold" />
+                      )}
+                    </div>
+                    <span className="text-sm font-medium">{bonus.title}</span>
                   </div>
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <button className="px-3 py-2 rounded-md border" onClick={() => updateItem(bonus.id, { isFeatured: true })}>Öne Çıkar</button>
-                <button className="px-3 py-2 rounded-md border" onClick={() => updateItem(bonus.id, { isActive: !bonus.isActive })}>{bonus.isActive ? 'Pasifleştir' : 'Aktifleştir'}</button>
-                <button className="px-3 py-2 rounded-md border" onClick={() => deleteItem(bonus.id)}>Sil</button>
-                <button className="px-3 py-2 rounded-md border" onClick={() => updateItem(bonus.id, { priority: (bonus.priority ?? 0) + 1 })}>Öncelik +1</button>
-                <a className="px-3 py-2 rounded-md border text-center" href={`/admin/bonuses/${bonus.id}`}>Düzenle</a>
-              </div>
-            </div>
+                  <GripVertical className="w-4 h-4 opacity-50" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                {bonus.brandId && (
+                  <div className="text-xs text-muted-foreground mb-1">Gönderen: {bonus.createdByName || bonus.createdByLoginId || bonus.brand?.name || bonus.brand?.slug || '—'}</div>
+                )}
+                <div className="text-2xl font-bold text-gold">{bonus.amount ?? 0} TL</div>
+                <div className="text-xs text-muted-foreground mb-4">
+                  <Calendar className="w-3 h-3 inline mr-1" /> Min. Yatırım: {bonus.minDeposit ?? 0} TL
+                </div>
+                <div className="space-y-2 mb-4">
+                  {(bonus.features ?? []).map((f, i) => (
+                    <div key={i} className="flex items-center text-sm text-muted-foreground">
+                      <Check className="w-4 h-4 text-gold mr-2" /> {f}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+              <CardFooter className="grid grid-cols-2 gap-2">
+                <Button variant="outline" onClick={() => updateItem(bonus.id, { isFeatured: true })}>Öne Çıkar</Button>
+                <Button variant="outline" onClick={() => updateItem(bonus.id, { isActive: !bonus.isActive })}>{bonus.isActive ? 'Pasifleştir' : 'Aktifleştir'}</Button>
+                <Button variant="outline" onClick={() => deleteItem(bonus.id)}>Sil</Button>
+                <Button variant="outline" onClick={() => updateItem(bonus.id, { priority: (bonus.priority ?? 0) + 1 })}>Öncelik +1</Button>
+                <Button variant="outline" asChild>
+                  <a href={`/admin/bonuses/${bonus.id}`}>Düzenle</a>
+                </Button>
+              </CardFooter>
+            </Card>
           ))}
-        </div>
+        </CardContent>
         {listedItems.length === 0 && (
-          <div className="text-center text-muted-foreground py-8">Listelenecek bonus bulunamadı.</div>
+          <CardFooter>
+            <div className="text-center text-muted-foreground py-8 w-full">Listelenecek bonus bulunamadı.</div>
+          </CardFooter>
         )}
-      </section>
+      </Card>
 
       {/* Hızlı Ekle Formu */}
-      <form onSubmit={createItem} className="border rounded-md p-4 space-y-4">
-        {/* Görseller */}
+      <Card>
+        <CardHeader className="border-b">
+          <CardTitle>Hızlı Bonus Ekle</CardTitle>
+          <CardDescription>Gerekli alanları doldurarak yeni bonus ekleyin.</CardDescription>
+        </CardHeader>
+        <form onSubmit={createItem}>
+          <CardContent className="space-y-4">
+            {/* Görseller */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="space-y-2">
             <label className="text-sm">Bet Sitesi Logosu</label>
             <div className="flex items-center gap-2">
-              <input
-                className="border rounded-md px-3 py-2 flex-1"
+              <Input
                 placeholder="Görsel URL"
                 value={form.imageUrl ?? ''}
                 onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
@@ -357,8 +409,7 @@ export default function BonusesPage() {
           <div className="space-y-2">
             <label className="text-sm">Bonus Kare Görseli (Instagram post)</label>
             <div className="flex items-center gap-2">
-              <input
-                className="border rounded-md px-3 py-2 flex-1"
+              <Input
                 placeholder="Kare görsel URL"
                 value={form.postImageUrl ?? ''}
                 onChange={(e) => setForm((f) => ({ ...f, postImageUrl: e.target.value }))}
@@ -376,15 +427,13 @@ export default function BonusesPage() {
 
         {/* Başlık ve slug */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input
-            className="border rounded-md px-3 py-2"
+          <Input
             placeholder="Başlık"
             value={form.title ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, title: e.target.value, slug: slugifyTr(e.target.value, { withHyphens: true, maxLen: 64 }) }))}
             required
           />
-          <input
-            className="border rounded-md px-3 py-2"
+          <Input
             type="hidden"
             value={form.slug ?? ''}
             readOnly
@@ -396,87 +445,82 @@ export default function BonusesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Bonus Türü */}
           <div className="space-y-2">
-            <select
-              className="border rounded-md px-3 py-2 w-full"
-              value={form.bonusType ?? ''}
-              onChange={(e) => setForm((f) => ({ ...f, bonusType: e.target.value || null }))}
-            >
-              <option value="">Bonus Türü (seçiniz)</option>
-              {typeOptions.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
+            <Select value={form.bonusType ?? ''} onValueChange={(v) => setForm((f) => ({ ...f, bonusType: v || null }))}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Bonus Türü (seçiniz)" />
+              </SelectTrigger>
+              <SelectContent>
+                {typeOptions.map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <div className="flex items-center gap-2">
-              <input
-                className="border rounded-md px-3 py-2 w-full"
+              <Input
                 placeholder="Yeni tür ekle"
                 value={newType}
                 onChange={(e) => setNewType(e.target.value)}
               />
-              <button
+              <Button
                 type="button"
-                className="px-3 py-2 rounded-md border"
+                variant="outline"
                 onClick={() => {
                   const v = newType.trim(); if (!v) return;
                   setTypeOptions(prev => Array.from(new Set([...prev, v])));
                   setForm(f => ({ ...f, bonusType: v }));
                   setNewType('');
                 }}
-              >Ekle</button>
+              >Ekle</Button>
             </div>
           </div>
           {/* Site Kategorisi */}
           <div className="space-y-2">
-            <select
-              className="border rounded-md px-3 py-2 w-full"
-              value={form.gameCategory ?? ''}
-              onChange={(e) => setForm((f) => ({ ...f, gameCategory: e.target.value || null }))}
-            >
-              <option value="">Site Kategorisi (seçiniz)</option>
-              {categoryOptions.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
-            </select>
+            <Select value={form.gameCategory ?? ''} onValueChange={(v) => setForm((f) => ({ ...f, gameCategory: v || null }))}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Site Kategorisi (seçiniz)" />
+              </SelectTrigger>
+              <SelectContent>
+                {categoryOptions.map((opt) => (
+                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <div className="flex items-center gap-2">
-              <input
-                className="border rounded-md px-3 py-2 w-full"
+              <Input
                 placeholder="Yeni kategori ekle"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
               />
-              <button
+              <Button
                 type="button"
-                className="px-3 py-2 rounded-md border"
+                variant="outline"
                 onClick={() => {
                   const v = newCategory.trim(); if (!v) return;
                   setCategoryOptions(prev => Array.from(new Set([...prev, v])));
                   setForm(f => ({ ...f, gameCategory: v }));
                   setNewCategory('');
                 }}
-              >Ekle</button>
+              >Ekle</Button>
             </div>
           </div>
         </div>
 
         {/* Sayısal alanlar */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input
+          <Input
             type="number"
-            className="border rounded-md px-3 py-2"
             placeholder="Tutar (TL)"
             value={form.amount ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, amount: Number(e.target.value) }))}
           />
-          <input
+          <Input
             type="number"
-            className="border rounded-md px-3 py-2"
             placeholder="Çevirim (wager)"
             value={form.wager ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, wager: Number(e.target.value) }))}
           />
-          <input
+          <Input
             type="number"
-            className="border rounded-md px-3 py-2"
             placeholder="Min. Yatırım (TL)"
             value={form.minDeposit ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, minDeposit: Number(e.target.value) }))}
@@ -485,8 +529,7 @@ export default function BonusesPage() {
 
         {/* CTA */}
         <div>
-          <input
-            className="border rounded-md px-3 py-2 w-full"
+          <Input
             placeholder="CTA URL"
             value={form.ctaUrl ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, ctaUrl: e.target.value }))}
@@ -497,8 +540,7 @@ export default function BonusesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="space-y-2">
             <label className="text-sm">Açıklama</label>
-            <textarea
-              className="border rounded-md px-3 py-2 w-full"
+            <Textarea
               rows={3}
               value={form.description ?? ''}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
@@ -506,8 +548,7 @@ export default function BonusesPage() {
           </div>
           <div className="space-y-2">
             <label className="text-sm">Kısa Açıklama (kart/metin alanı için)</label>
-            <input
-              className="border rounded-md px-3 py-2 w-full"
+            <Input
               placeholder="Örn: Çevrim şartsız deneme bonusu"
               value={form.shortDescription ?? ''}
               onChange={(e) => setForm((f) => ({ ...f, shortDescription: e.target.value }))}
@@ -517,26 +558,23 @@ export default function BonusesPage() {
 
         {/* Geçerlilik ve Tarihler */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input
-            className="border rounded-md px-3 py-2"
+          <Input
             placeholder="Geçerlilik Metni"
             value={form.validityText ?? ''}
             onChange={(e) => setForm((f) => ({ ...f, validityText: e.target.value }))}
           />
           <div className="space-y-2">
             <label className="text-sm">Başlangıç Tarihi</label>
-            <input
+            <Input
               type="date"
-              className="border rounded-md px-3 py-2 w-full"
               value={form.startDate ? String(form.startDate).substring(0, 10) : ''}
               onChange={(e) => setForm((f) => ({ ...f, startDate: e.target.value }))}
             />
           </div>
           <div className="space-y-2">
             <label className="text-sm">Bitiş Tarihi</label>
-            <input
+            <Input
               type="date"
-              className="border rounded-md px-3 py-2 w-full"
               value={form.endDate ? String(form.endDate).substring(0, 10) : ''}
               onChange={(e) => setForm((f) => ({ ...f, endDate: e.target.value }))}
             />
@@ -550,20 +588,19 @@ export default function BonusesPage() {
             {(form.badges ?? []).map((tag, i) => (
               <span key={i} className="inline-flex items-center gap-2 text-xs px-2 py-1 rounded border">
                 {tag}
-                <button type="button" className="text-red-500" onClick={() => setForm(f => ({ ...f, badges: (f.badges ?? []).filter((t) => t !== tag) }))}>x</button>
+                <Button type="button" variant="destructive" size="sm" className="h-5 px-2" onClick={() => setForm(f => ({ ...f, badges: (f.badges ?? []).filter((t) => t !== tag) }))}>Sil</Button>
               </span>
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <input
-              className="border rounded-md px-3 py-2 w-full"
+            <Input
               placeholder="Örn: Lisanslı, SSL, 18+"
               value={newBadge}
               onChange={(e) => setNewBadge(e.target.value)}
             />
-            <button
+            <Button
               type="button"
-              className="px-3 py-2 rounded-md border"
+              variant="outline"
               onClick={() => {
                 const raw = newBadge.trim();
                 if (!raw) return;
@@ -572,12 +609,12 @@ export default function BonusesPage() {
                 setForm(f => ({ ...f, badges: Array.from(new Set([...(f.badges ?? []), ...parts])) }))
                 setNewBadge('')
               }}
-            >Ekle</button>
+            >Ekle</Button>
           </div>
           {availableBadges.length > 0 && (
             <div className="text-xs text-muted-foreground mt-2">
               Önerilen: {availableBadges.map((t) => (
-                <button key={t} type="button" className="mr-2 underline" onClick={() => setForm(f => ({ ...f, badges: Array.from(new Set([...(f.badges ?? []), t])) }))}>{t}</button>
+                <Button key={t} type="button" variant="link" className="mr-2 px-0" onClick={() => setForm(f => ({ ...f, badges: Array.from(new Set([...(f.badges ?? []), t])) }))}>{t}</Button>
               ))}
             </div>
           )}
@@ -589,67 +626,60 @@ export default function BonusesPage() {
           <div className="space-y-2">
             {(form.features ?? []).map((feat, idx) => (
               <div key={idx} className="flex items-center gap-2">
-                <input className="border rounded-md px-3 py-2 w-full" value={feat} onChange={(e) => {
+                <Input className="w-full" value={feat} onChange={(e) => {
                   const arr = [...(form.features ?? [])];
                   arr[idx] = e.target.value;
                   setForm(f => ({ ...f, features: arr }))
                 }} />
-                <button type="button" className="px-3 py-2 rounded-md border" onClick={() => setForm(f => ({ ...f, features: (f.features ?? []).filter((_, i) => i !== idx) }))}>Sil</button>
+                <Button type="button" variant="outline" onClick={() => setForm(f => ({ ...f, features: (f.features ?? []).filter((_, i) => i !== idx) }))}>Sil</Button>
               </div>
             ))}
           </div>
           <div className="flex items-center gap-2">
-            <input
-              className="border rounded-md px-3 py-2 w-full"
+            <Input
               placeholder="Örn: Çevrim Şartsız"
               value={newFeature}
               onChange={(e) => setNewFeature(e.target.value)}
             />
-            <button
+            <Button
               type="button"
-              className="px-3 py-2 rounded-md border"
+              variant="outline"
               onClick={() => {
                 const val = newFeature.trim(); if (!val) return;
                 setForm(f => ({ ...f, features: [...(f.features ?? []), val] }))
                 setNewFeature('')
               }}
-            >Ekle</button>
+            >Ekle</Button>
           </div>
         </div>
 
         {/* Durumlar ve aksiyonlar */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-6">
           <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={!!form.isActive}
-              onChange={(e) => setForm((f) => ({ ...f, isActive: e.target.checked }))}
-            />
+            <Checkbox checked={!!form.isActive} onCheckedChange={(v) => setForm((f) => ({ ...f, isActive: !!v }))} />
             Aktif
           </label>
           <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={!!form.isFeatured}
-              onChange={(e) => setForm((f) => ({ ...f, isFeatured: e.target.checked }))}
-            />
+            <Checkbox checked={!!form.isFeatured} onCheckedChange={(v) => setForm((f) => ({ ...f, isFeatured: !!v }))} />
             Öne Çıkan
           </label>
           <div className="flex items-center gap-2">
             <span>Öncelik</span>
-            <input
+            <Input
               type="number"
-              className="border rounded-md px-3 py-2 w-24"
+              className="w-24"
               value={form.priority ?? 0}
               onChange={(e) => setForm((f) => ({ ...f, priority: Number(e.target.value) }))}
             />
           </div>
         </div>
-        <div className="flex gap-2">
-          <button type="submit" className="px-4 py-2 rounded-md bg-primary text-primary-foreground">Kaydet</button>
-          <button type="submit" className="px-4 py-2 rounded-md border" onClick={() => { setSendForApproval(true); }}>Onaya Gönder</button>
-        </div>
-      </form>
+          </CardContent>
+          <CardFooter className="gap-2">
+            <Button type="submit">Kaydet</Button>
+            <Button type="submit" variant="outline" onClick={() => { setSendForApproval(true); }}>Onaya Gönder</Button>
+          </CardFooter>
+        </form>
+      </Card>
 
       {loading && <div className="p-3">Yükleniyor...</div>}
     </div>

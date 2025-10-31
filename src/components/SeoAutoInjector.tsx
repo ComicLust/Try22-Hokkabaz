@@ -126,11 +126,8 @@ export default function SeoAutoInjector() {
         upsertMeta('name', 'twitter:description', (twitterDescription ?? description) ?? undefined)
         upsertMeta('name', 'twitter:image', toAbsoluteGlobal(twitterImageUrl))
 
-        // Also update the document title for immediate visual feedback
-        const resolvedTitle = title || ogTitle || twitterTitle
-        if (resolvedTitle && typeof document !== 'undefined') {
-          document.title = resolvedTitle
-        }
+        // Başlığı server-rendered metadata belirliyor; client tarafında başlığı değiştirmeyelim
+        // Böylece ilk yüklemede yanlış başlık görünüp sonra değişmesi (flash) engellenir.
       } catch {
         // ignore
       }

@@ -3,6 +3,66 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Critical CSS - Above the fold content */
+.critical-content {
+  font-display: swap;
+  contain: layout style paint;
+}
+
+/* Font loading optimization */
+@font-face {
+  font-family: 'Geist';
+  font-display: swap;
+  font-weight: 100 900;
+}
+
+/* Reduce layout shift */
+.aspect-ratio-container {
+  aspect-ratio: var(--aspect-ratio, 16/9);
+}
+
+/* Mobile-first optimizations */
+@media (max-width: 768px) {
+  /* Reduce animations on mobile */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  /* Marquee istisnası: mobilde sürekli kaydırma aktif kalsın */
+  .marquee-track {
+    animation-name: marquee-scroll !important;
+    animation-duration: 28s !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+  }
+  
+  /* Optimize scrolling */
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Marquee istisnası: erişilebilirlik tercihi açık olsa dahi tasarım gereği kaydırma aktif */
+  .marquee-track {
+    animation-name: marquee-scroll !important;
+    animation-duration: 28s !important;
+    animation-timing-function: linear !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -98,6 +158,215 @@
   --border-divider: rgba(255, 255, 255, 0.1);
   /* Hokkabaz özel renkler */
   --hokkabaz-gold: #FFD700;
+}
+
+/* MDXEditor Dark Mode Styles */
+.mdxeditor {
+  --mdx-background: rgba(12, 12, 12, 0.9) !important;
+  --mdx-foreground: #FFFFFF !important;
+  --mdx-border: rgba(255, 255, 255, 0.1) !important;
+  background-color: var(--mdx-background) !important;
+  color: var(--mdx-foreground) !important;
+  border: 1px solid var(--mdx-border) !important;
+}
+
+.mdxeditor .mdxeditor-toolbar {
+  background-color: rgba(12, 12, 12, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+}
+
+.mdxeditor .mdxeditor-toolbar button {
+  color: #FFFFFF !important;
+  background-color: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.mdxeditor .mdxeditor-toolbar button:hover {
+  background-color: rgba(255, 215, 0, 0.1) !important;
+  border-color: #FFD700 !important;
+}
+
+.mdxeditor .mdxeditor-toolbar button[data-state="on"] {
+  background-color: rgba(255, 215, 0, 0.2) !important;
+  border-color: #FFD700 !important;
+  color: #FFD700 !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor {
+  background-color: rgba(12, 12, 12, 0.8) !important;
+  color: #FFFFFF !important;
+  min-height: 400px !important;
+  padding: 16px !important;
+  cursor: text !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor * {
+  color: #FFFFFF !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor h1,
+.mdxeditor .mdxeditor-rich-text-editor h2,
+.mdxeditor .mdxeditor-rich-text-editor h3,
+.mdxeditor .mdxeditor-rich-text-editor h4,
+.mdxeditor .mdxeditor-rich-text-editor h5,
+.mdxeditor .mdxeditor-rich-text-editor h6 {
+  color: #FFD700 !important;
+  font-weight: bold !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor p {
+  color: #FFFFFF !important;
+  margin: 8px 0 !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor a {
+  color: #00FFAA !important;
+  text-decoration: underline !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor strong {
+  color: #FFD700 !important;
+  font-weight: bold !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor em {
+  color: #FFFFFF !important;
+  font-style: italic !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor ul,
+.mdxeditor .mdxeditor-rich-text-editor ol {
+  color: #FFFFFF !important;
+  padding-left: 20px !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor li {
+  color: #FFFFFF !important;
+  margin: 4px 0 !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor blockquote {
+  border-left: 4px solid #FFD700 !important;
+  padding-left: 16px !important;
+  margin: 16px 0 !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-style: italic !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor code {
+  background-color: rgba(255, 215, 0, 0.1) !important;
+  color: #FFD700 !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  font-family: monospace !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor pre {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: #FFFFFF !important;
+  padding: 16px !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin: 16px 0 !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 16px 0 !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor th,
+.mdxeditor .mdxeditor-rich-text-editor td {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 8px 12px !important;
+  color: #FFFFFF !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor th {
+  background-color: rgba(255, 215, 0, 0.1) !important;
+  color: #FFD700 !important;
+  font-weight: bold !important;
+}
+
+/* Source mode styles */
+.mdxeditor .mdxeditor-source-editor {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+  color: #FFFFFF !important;
+}
+
+.mdxeditor .mdxeditor-source-editor .cm-editor {
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+}
+
+.mdxeditor .mdxeditor-source-editor .cm-content {
+  color: #FFFFFF !important;
+  padding: 16px !important;
+  min-height: 400px !important;
+}
+
+.mdxeditor .mdxeditor-source-editor .cm-focused {
+  outline: none !important;
+}
+
+/* Placeholder text */
+.mdxeditor .mdxeditor-rich-text-editor:empty:before {
+  content: "İçeriğinizi buraya yazın..." !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-style: italic !important;
+  pointer-events: none !important;
+}
+
+/* Make the entire editor area clickable */
+.mdxeditor .mdxeditor-rich-text-editor {
+  cursor: text !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor:focus {
+  outline: 2px solid #FFD700 !important;
+  outline-offset: -2px !important;
+}
+
+/* Ensure the editor container is fully clickable */
+.mdxeditor .mdxeditor-rich-text-editor,
+.mdxeditor .mdx-content-area {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 400px !important;
+  cursor: text !important;
+  position: relative !important;
+}
+
+/* Make empty editor clickable */
+.mdxeditor .mdxeditor-rich-text-editor:empty {
+  min-height: 400px !important;
+  cursor: text !important;
+}
+
+.mdxeditor .mdxeditor-rich-text-editor:empty:after {
+  content: "İçeriğinizi buraya yazın... Markdown ve HTML desteklenir." !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-style: italic !important;
+  position: absolute !important;
+  top: 16px !important;
+  left: 16px !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Ensure all child elements are clickable */
+.mdxeditor .mdxeditor-rich-text-editor > * {
+  pointer-events: auto !important;
+}
+
+/* Focus styles for better UX */
+.mdxeditor:focus-within {
+  border-color: #FFD700 !important;
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2) !important;
   --hokkabaz-gold-dark: #B8860B;
   --hokkabaz-gold-light: #FFED4E;
   --hokkabaz-secondary: #1A1A1A;

@@ -39,9 +39,8 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
           {/* Brand Column */}
           <div>
-            <div className="flex items-center space-x-3 mb-4">
-              <Image src="/logo.svg" alt="Hokkabaz Logo" width={36} height={36} className="rounded-full bg-gold/10 p-1" />
-              <span className="text-xl font-bold text-gold">Hokkabaz</span>
+            <div className="flex items-center mb-4">
+              <Image src="/logo.svg" alt="Hokkabaz Logo" width={250} height={250} className="rounded-full bg-gold/10 p-1" />
             </div>
             <p className="text-muted-foreground mb-4 text-sm md:text-base">
               Hokkabaz, güvenilir ve güncel bahis bonuslarını tek yerde toplar. Tüm kampanyaları tarafsızca inceler, kullanım koşullarını anlaşılır şekilde özetleriz. En iyi fırsatları kaçırmamanız için sürekli güncelleme yaparız.
@@ -50,7 +49,7 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
 
           {/* Hızlı Linkler */}
           <div>
-            <h3 className="text-base md:text-lg font-semibold mb-4 text-gold">Hızlı Linkler</h3>
+            <div className="text-base md:text-lg font-semibold mb-4 text-gold">Hızlı Linkler</div>
             <ul className="space-y-2">
               <li><a href="/" className="flex items-center text-muted-foreground hover:text-gold transition-colors text-sm md:text-base"><Home className="w-4 h-4 mr-2" />Ana Sayfa</a></li>
               <li><a href="/kampanyalar" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Tag className="w-4 h-4 mr-2" />Kampanyalar</a></li>
@@ -67,7 +66,7 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
 
           {/* Bilgi */}
           <div>
-            <h3 className="text-base md:text-lg font-semibold mb-4 text-gold">Bilgi</h3>
+            <div className="text-base md:text-lg font-semibold mb-4 text-gold">Bilgi</div>
             <ul className="space-y-2">
               <li><a href="/hakkimizda" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Info className="w-4 h-4 mr-2" />Hakkımızda</a></li>
               <li><a href="/hizmetlerimiz" className="flex items-center text-muted-foreground hover:text-gold transition-colors"><Wrench className="w-4 h-4 mr-2" />Hizmetlerimiz</a></li>
@@ -80,7 +79,7 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
 
           {/* İletişim */}
           <div>
-            <h3 className="text-base md:text-lg font-semibold mb-4 text-gold">İletişim</h3>
+            <div className="text-base md:text-lg font-semibold mb-4 text-gold">İletişim</div>
             <div className="space-y-2">
         <a href="mailto:info@hokkabaz.bet" className="flex items-center text-muted-foreground hover:text-gold">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

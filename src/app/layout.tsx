@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import AnalyticsInjector from '@/components/AnalyticsInjector'
 import SeoAutoInjector from '@/components/SeoAutoInjector'
 import ExternalLinkTracker from '@/components/ExternalLinkTracker'
+import ServiceWorkerRegistration from '@/components/ServiceWorkerRegistration'
 import Script from "next/script"
 import { db } from '@/lib/db'
 import { unstable_noStore as noStore } from 'next/cache'
@@ -29,6 +30,9 @@ export const metadata: Metadata = {
   description: "Türkiye'nin en güvenilir bahis ve casino sitelerinin güncel bonuslarını, deneme bonuslarını ve kampanyalarını bulun. Çevrimsiz bonuslar, anında çekim ve lisanslı siteler.",
   keywords: ["bahis bonusları", "deneme bonusu", "çevrimsiz bonus", "casino bonusu", "güvenilir bahis siteleri", "hoşgeldin bonusu", "bedava bonus", "bahis kampanyaları"],
   authors: [{ name: "Hokkabaz Team" }],
+  manifest: "/manifest.json",
+  themeColor: "#ffd700",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
   openGraph: {
     title: "Hokkabaz - En Güvenilir Bahis Bonusları",
     description: "Türkiye'nin en güvenilir bahis ve casino sitelerinin güncel bonuslarını, deneme bonuslarını ve kampanyalarını bulun.",
@@ -120,6 +124,7 @@ export default async function RootLayout({
         </Script>
         <SeoAutoInjector />
         <ExternalLinkTracker />
+        <ServiceWorkerRegistration />
         {children}
         <Toaster />
         <ScrollTopButton offset={400} />

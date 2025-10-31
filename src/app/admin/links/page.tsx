@@ -1,6 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from 'react'
 import Link from 'next/link'
+import { Link2, TrendingUp, BarChart2, Star } from 'lucide-react'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table'
 
 import { headers } from 'next/headers'
 
@@ -46,88 +50,104 @@ export default async function LinksDashboardPage() {
 
   return (
     <div className="min-h-screen p-6 space-y-6 bg-background text-foreground">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Links</h1>
-        <div className="flex gap-2">
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl flex items-center gap-2"><Link2 className="w-4 h-4" /> Links</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap items-center gap-2">
           <CreateLinkButton />
           <ResetStatsButton />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <StatCard title="Toplam Link" value={stats.totalLinks} />
-        <StatCard title="Toplam Tıklama" value={stats.totalClicks} />
-        <StatCard title="Bugünkü" value={stats.todayClicks} />
-        <StatCard title="Bu Hafta" value={stats.weekClicks} />
-        <StatCard title="Bu Ay" value={stats.monthClicks} />
-        <StatCard title="Bu Yıl" value={stats.yearClicks} />
+        <StatCard title="Toplam Link" value={stats.totalLinks} icon={<Link2 className="w-4 h-4 text-muted-foreground" />} />
+        <StatCard title="Toplam Tıklama" value={stats.totalClicks} icon={<TrendingUp className="w-4 h-4 text-muted-foreground" />} />
+        <StatCard title="Bugünkü" value={stats.todayClicks} icon={<BarChart2 className="w-4 h-4 text-muted-foreground" />} />
+        <StatCard title="Bu Hafta" value={stats.weekClicks} icon={<BarChart2 className="w-4 h-4 text-muted-foreground" />} />
+        <StatCard title="Bu Ay" value={stats.monthClicks} icon={<BarChart2 className="w-4 h-4 text-muted-foreground" />} />
+        <StatCard title="Bu Yıl" value={stats.yearClicks} icon={<BarChart2 className="w-4 h-4 text-muted-foreground" />} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4 lg:col-span-2">
-          <h2 className="font-semibold mb-2">Zaman Bazlı Grafik (Son 30 Gün)</h2>
-          <ClientChart series={stats.seriesDaily} />
-        </div>
-        <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
-          <h2 className="font-semibold mb-2">En Çok Tıklananlar</h2>
-          <TableList items={stats.topLinks} />
-        </div>
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><BarChart2 className="w-4 h-4" /> Zaman Bazlı Grafik (Son 30 Gün)</CardTitle></CardHeader>
+          <CardContent>
+            <ClientChart series={stats.seriesDaily} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><Star className="w-4 h-4" /> En Çok Tıklananlar</CardTitle></CardHeader>
+          <CardContent>
+            <TableList items={stats.topLinks} />
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
-        <h2 className="font-semibold mb-2">Manuel Linkler</h2>
-        <TableList items={manualLinks} />
-      </div>
+      <Card>
+        <CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><Link2 className="w-4 h-4" /> Manuel Linkler</CardTitle></CardHeader>
+        <CardContent>
+          <TableList items={manualLinks} />
+        </CardContent>
+      </Card>
 
-      <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
-        <h2 className="font-semibold mb-2">Otomatik Linkler</h2>
-        <TableList items={autoLinks} />
-      </div>
+      <Card>
+        <CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><Link2 className="w-4 h-4" /> Otomatik Linkler</CardTitle></CardHeader>
+        <CardContent>
+          <TableList items={autoLinks} />
+        </CardContent>
+      </Card>
     </div>
   )
 }
 
-function StatCard({ title, value }: { title: string; value: number }) {
+function StatCard({ title, value, icon }: { title: string; value: number; icon?: React.ReactNode }) {
   return (
-    <div className="bg-card text-card-foreground border border-border rounded-lg shadow p-4">
-      <div className="text-sm text-muted-foreground">{title}</div>
-      <div className="text-2xl font-bold">{value}</div>
-    </div>
+    <Card>
+      <CardContent className="py-4">
+        <div className="text-sm text-muted-foreground flex items-center gap-2">{icon}{title}</div>
+        <div className="text-2xl font-bold">{value}</div>
+      </CardContent>
+    </Card>
   )
 }
 
 function TableList({ items }: { items: any[] }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-sm">
-        <thead>
-          <tr className="text-left border-b border-neutral-200 dark:border-neutral-800">
-            <th className="py-2 pr-4">Başlık</th>
-            <th className="py-2 pr-4">Kısa Linkler</th>
-            <th className="py-2 pr-4">Tıklama</th>
-            <th className="py-2 pr-4">Oluşturma</th>
-            <th className="py-2 pr-4">İşlemler</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items?.map((l) => (
-            <tr key={l.id} className="border-b border-neutral-200 dark:border-neutral-800">
-              <td className="py-2 pr-4"><Link className="text-primary" href={`/admin/links/${l.id}`}>{l.title}</Link></td>
-              <td className="py-2 pr-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                  <Link prefetch={false} className="text-muted-foreground" href={`/${l.slug}`}>/{l.slug}</Link>
-                  <span className="text-muted-foreground hidden sm:inline">•</span>
-                  <Link prefetch={false} className="text-muted-foreground" href={`/out/${l.slug}`}>/out/{l.slug}</Link>
-                </div>
-              </td>
-              <td className="py-2 pr-4">{l.clicks}</td>
-              <td className="py-2 pr-4">{new Date(l.createdAt).toLocaleString()}</td>
-              <td className="py-2 pr-4"><RowActions id={l.id} slug={l.slug} isManual={l.isManual} /></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Başlık</TableHead>
+          <TableHead>Kısa Linkler</TableHead>
+          <TableHead>Tıklama</TableHead>
+          <TableHead>Durum</TableHead>
+          <TableHead>Oluşturma</TableHead>
+          <TableHead>İşlemler</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {items?.map((l) => (
+          <TableRow key={l.id}>
+            <TableCell>
+              <Link className="text-primary font-medium" href={`/admin/links/${l.id}`}>{l.title}</Link>
+            </TableCell>
+            <TableCell>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <Link prefetch={false} className="text-muted-foreground" href={`/${l.slug}`}>/{l.slug}</Link>
+                <span className="text-muted-foreground hidden sm:inline">•</span>
+                <Link prefetch={false} className="text-muted-foreground" href={`/out/${l.slug}`}>/out/{l.slug}</Link>
+              </div>
+            </TableCell>
+            <TableCell>{l.clicks}</TableCell>
+            <TableCell>
+              <Badge variant={l.isManual ? 'default' : 'outline'}>{l.isManual ? 'Manuel' : 'Otomatik'}</Badge>
+            </TableCell>
+            <TableCell>{new Date(l.createdAt).toLocaleString()}</TableCell>
+            <TableCell><RowActions id={l.id} slug={l.slug} isManual={l.isManual} /></TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   )
 }
 

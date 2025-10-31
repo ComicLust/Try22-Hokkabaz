@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir, readdir, stat, unlink } from 'fs/promises'
 import path from 'path'
+import sharp from 'sharp'
 
 export const runtime = 'nodejs'
 
 const allowedMimeToExt: Record<string, string> = {
-  'image/png': '.png',
-  'image/jpeg': '.jpg',
+  'image/png': '.webp',
+  'image/jpeg': '.webp',
   'image/webp': '.webp',
-  
 }
-const MAX_SIZE = 250 * 1024 // 250 KB
+const MAX_SIZE = 500 * 1024 // 500 KB
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 })
 
     if (file.size > MAX_SIZE) {
-      return NextResponse.json({ error: 'File too large' }, { status: 413 })
+      return NextResponse.json({ error: 'Maksimum dosya boyutu 500KB' }, { status: 413 })
     }
 
     const ext = allowedMimeToExt[file.type]
@@ -27,15 +27,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 })
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    const arrayBuffer = await file.arrayBuffer()
+    // ArrayBuffer → Uint8Array (generik Buffer tip uyuşmazlıklarını önlemek için)
+    let data = new Uint8Array(arrayBuffer)
 
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
     await mkdir(uploadsDir, { recursive: true })
 
     const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`
     const fullPath = path.join(uploadsDir, filename)
-    await writeFile(fullPath, buffer)
+    // Otomatik WebP dönüşümü: PNG/JPEG ise dönüştür, WEBP ise olduğu gibi kaydet
+    if (file.type === 'image/png' || file.type === 'image/jpeg') {
+      const converted = await sharp(data).webp({ quality: 70, effort: 4 }).toBuffer()
+      await writeFile(fullPath, converted)
+    } else {
+      await writeFile(fullPath, data)
+    }
 
     const url = `/uploads/${filename}`
     return NextResponse.json({ url }, { status: 201 })

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getCommentAvatarUrl } from "@/lib/utils";
 
 // Local Telegram icon (simple round paper-plane)
 const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -16,7 +17,6 @@ const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
 type Admin = {
   name: string;
   role: string;
-  avatarUrl: string;
   href: string;
 };
 
@@ -44,19 +44,16 @@ export default function TelegramPanel({
       {
         name: "Yönetici 1",
         role: "Admin",
-        avatarUrl: "/uploads/1760211759502-y8g6mkbzvv.png",
         href: groupLink,
       },
       {
         name: "Yönetici 2",
         role: "Admin",
-        avatarUrl: "/uploads/1760211654940-0xb5dpe5rrd.png",
         href: groupLink,
       },
       {
         name: "Yönetici 3",
         role: "Admin",
-        avatarUrl: "/uploads/1760212175979-dn3km72cte.png",
         href: groupLink,
       },
     ],
@@ -69,35 +66,35 @@ export default function TelegramPanel({
       {
         id: "m1",
         sender: "Ali",
-        avatarUrl: "/uploads/1760212397380-xoz99gl4hc.png",
+        avatarUrl: getCommentAvatarUrl("Ali", { size: 64 }),
         text: "Hoş geldiniz! Bugünkü özel bonus duyurusunu kaçırmayın.",
         side: "left",
       },
       {
         id: "m2",
         sender: "Zeynep",
-        avatarUrl: "/uploads/1760212277297-juwby60iph.png",
+        avatarUrl: getCommentAvatarUrl("Zeynep", { size: 64 }),
         text: "Katıldım, ayrıntıları nereden görebilirim?",
         side: "right",
       },
       {
         id: "m3",
         sender: "Mehmet",
-        avatarUrl: "/uploads/1760212175979-dn3km72cte.png",
+        avatarUrl: getCommentAvatarUrl("Mehmet", { size: 64 }),
         text: "Üstte sabitli mesajda link var, oradan başla.",
         side: "left",
       },
       {
         id: "m4",
         sender: "Elif",
-        avatarUrl: "/uploads/1760211895454-jf77bj6zf4a.png",
+        avatarUrl: getCommentAvatarUrl("Elif", { size: 64 }),
         text: "Yeni katılanlara hoş geldiniz! Sorunuz olursa yazın.",
         side: "right",
       },
       {
         id: "m5",
         sender: "Ali",
-        avatarUrl: "/uploads/1760212397380-xoz99gl4hc.png",
+        avatarUrl: getCommentAvatarUrl("Ali", { size: 64 }),
         text: "Akşam canlı yayın öncesi duyuru yapacağız, takipte kalın.",
         side: "left",
       },
@@ -172,12 +169,11 @@ export default function TelegramPanel({
               className={`flex items-end ${m.side === "right" ? "justify-end" : "justify-start"}`}
             >
               {m.side === "left" && (
-                <Image
+                <img
                   src={m.avatarUrl}
                   alt={m.sender}
-                  width={28}
-                  height={28}
-                  className="rounded-full mr-2"
+                  className="w-7 h-7 rounded-full mr-2"
+                  loading="lazy"
                 />
               )}
               <div
@@ -191,12 +187,11 @@ export default function TelegramPanel({
                 <div className="text-foreground/90">{m.text}</div>
               </div>
               {m.side === "right" && (
-                <Image
+                <img
                   src={m.avatarUrl}
                   alt={m.sender}
-                  width={28}
-                  height={28}
-                  className="rounded-full ml-2"
+                  className="w-7 h-7 rounded-full ml-2"
+                  loading="lazy"
                 />
               )}
             </motion.div>
@@ -214,7 +209,7 @@ export default function TelegramPanel({
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:text-gold transition-colors"
           >
-            <Image src={a.avatarUrl} alt={a.name} width={24} height={24} className="rounded-full" />
+            <img src={getCommentAvatarUrl(a.name, { size: 48 })} alt={a.name} className="w-6 h-6 rounded-full" loading="lazy" />
             <span className="text-sm font-medium">{a.name}</span>
           </a>
         ))}

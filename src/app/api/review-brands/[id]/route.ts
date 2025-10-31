@@ -42,7 +42,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
 export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    await db.reviewBrand.delete({ where: { id: params.id } })
+    // İlişkili zorunlu kayıtları (SiteReview, BrandManager) temizleyip ardından markayı sil
+    await db.$transaction([
+      db.siteReview.deleteMany({ where: { brandId: params.id } }),
+      db.brandManager.deleteMany({ where: { brandId: params.id } }),
+      db.reviewBrand.delete({ where: { id: params.id } }),
+    ])
     return NextResponse.json({ ok: true })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Silme hatası' }, { status: 400 })

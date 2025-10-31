@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { db } from '@/lib/db'
+import { getSeoRecord } from '@/lib/seo'
 import KampanyalarClient from '@/components/KampanyalarClient'
 
 export default async function KampanyalarPage() {
@@ -37,9 +38,7 @@ export default async function KampanyalarPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/kampanyalar' }, select: {
-      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
-    } })
+    const seo = await getSeoRecord('/kampanyalar', ['kampanyalar']) as any
     const title = seo?.title ?? 'Kampanyalar'
     const description = seo?.description ?? 'Güncel kampanyalar, fırsatlar ve promosyonlar.'
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)

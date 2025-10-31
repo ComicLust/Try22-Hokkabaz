@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Users, Shield, Award, CalendarCheck2, UserCircle } from 'lucide-react'
 import Image from 'next/image'
+import { getCommentAvatarUrl } from '@/lib/utils'
 
 export default function HakkimizdaClient() {
   return (
@@ -107,7 +108,7 @@ export default function HakkimizdaClient() {
               <CardContent>
                 <div className="flex items-center gap-4">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden ring-2 ring-yellow-500/30">
-                    <Image src="/images/agentgman.jpg" alt="DarlyDixon" fill className="object-cover" />
+                    <img src={getCommentAvatarUrl('DarlyDixon', { size: 96 })} alt="DarlyDixon" className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <p className="font-semibold">DarlyDixon</p>

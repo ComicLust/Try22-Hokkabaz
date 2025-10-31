@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
+import { getSeoRecord } from "@/lib/seo";
 import { Suspense } from "react";
 import BankoKuponlarArchiveClient from "@/components/BankoKuponlarArchiveClient";
 
@@ -13,9 +14,7 @@ export default function BankoKuponlarArchivePage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: "/banko-kuponlar/arsiv" }, select: {
-      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
-    } });
+    const seo = await getSeoRecord("/banko-kuponlar/arsiv", ["banko-kuponlar/arsiv"]) as any;
     const title = seo?.title ?? "Banko Kuponlar Arşivi";
     const description = seo?.description ?? "Önceki günlerin kuponları ve başarı oranları.";
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean);

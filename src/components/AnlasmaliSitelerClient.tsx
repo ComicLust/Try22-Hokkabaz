@@ -47,10 +47,13 @@ export default function AnlasmaliSitelerClient() {
       } catch {}
     })()
   }, [])
-  const badgePool = ["Önerilen", "Yeni", "Bonuslu"];
   const primaryBrandLogos = useMemo(() => {
     const sorted = [...partnerSites].sort((a, b) => ((a?.features?.order ?? 999) - (b?.features?.order ?? 999)))
-    return sorted.map((s, i) => ({ img: s.logoUrl ?? '/logo.svg', href: s.siteUrl ?? '#', badge: s.features?.badge ?? badgePool[i % badgePool.length] }))
+    return sorted.map((s) => ({
+      img: s.logoUrl ?? '/logo.svg',
+      href: s.siteUrl ?? '#',
+      badge: (typeof s.features?.badge === 'string' && s.features?.badge?.trim()) ? String(s.features.badge).trim() : undefined,
+    }))
   }, [partnerSites])
   const featuredBrandLogos = useMemo(() => {
     const hero = [...partnerSites]
@@ -63,12 +66,20 @@ export default function AnlasmaliSitelerClient() {
           .filter((s) => s.isActive)
           .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
           .slice(0, 3)
-    return list.map((s, i) => ({ img: s.logoUrl ?? '/logo.svg', href: s.siteUrl ?? '#', badge: s.features?.badge ?? badgePool[i % badgePool.length] }))
+    return list.map((s) => ({
+      img: s.logoUrl ?? '/logo.svg',
+      href: s.siteUrl ?? '#',
+      badge: (typeof s.features?.badge === 'string' && s.features?.badge?.trim()) ? String(s.features.badge).trim() : undefined,
+    }))
   }, [partnerSites])
   const secondaryBrandLogos = useMemo(() => {
     const sorted = [...partnerSites].sort((a, b) => ((a?.features?.order ?? 999) - (b?.features?.order ?? 999)))
     const rest = sorted.slice(3)
-    return rest.map((s, i) => ({ img: s.logoUrl ?? '/logo.svg', href: s.siteUrl ?? '#', badge: s.features?.badge ?? badgePool[(i + 1) % badgePool.length] }))
+    return rest.map((s) => ({
+      img: s.logoUrl ?? '/logo.svg',
+      href: s.siteUrl ?? '#',
+      badge: (typeof s.features?.badge === 'string' && s.features?.badge?.trim()) ? String(s.features.badge).trim() : undefined,
+    }))
   }, [partnerSites])
 
   type Bonus = {
@@ -127,7 +138,11 @@ export default function AnlasmaliSitelerClient() {
     const list = q
       ? partnerSites.filter((s) => (s.name?.toLowerCase().includes(q) || s.slug?.toLowerCase().includes(q)))
       : partnerSites
-    return list.map((s, i) => ({ img: s.logoUrl ?? '/logo.svg', href: s.siteUrl ?? '#', badge: badgePool[i % badgePool.length] }))
+    return list.map((s) => ({
+      img: s.logoUrl ?? '/logo.svg',
+      href: s.siteUrl ?? '#',
+      badge: (typeof s.features?.badge === 'string' && s.features?.badge?.trim()) ? String(s.features.badge).trim() : undefined,
+    }))
   }, [partnerSites, searchQuery])
 
 
@@ -169,7 +184,9 @@ export default function AnlasmaliSitelerClient() {
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 w-full justify-items-center">
             {filteredPrimary.map((b, i) => (
               <a key={`p-${i}`} href={b.href} target="_blank" rel="noopener noreferrer" className="relative group rounded-xl border border-border bg-gradient-to-br from-[#111] to-[#1a1a1a] p-5 text-center hover:border-gold hover:shadow-[0_0_22px_rgba(255,215,0,0.25)] transition-all w-full">
-                <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                {b.badge && (
+                  <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                )}
                 <img src={b.img} alt="logo" className="w-full max-w-[220px] h-[73px] mx-auto opacity-90 group-hover:opacity-100 transition-opacity object-contain" />
               </a>
             ))}
@@ -180,7 +197,9 @@ export default function AnlasmaliSitelerClient() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 place-items-center">
             {featuredBrandLogos.map((b, i) => (
               <Card key={`f-${i}`} className="relative w-full md:w-[90%] bg-secondary-bg border-border text-center hover:border-gold transition-colors">
-                <span className="absolute top-3 right-3 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                {b.badge && (
+                  <span className="absolute top-3 right-3 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                )}
                 <CardContent className="py-10">
                   <img src={b.img} alt="featured" className="w-[220px] h-[73px] mx-auto object-contain" />
                 </CardContent>

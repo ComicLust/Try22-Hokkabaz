@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
 const pages: { slug: string; label: string }[] = [
+  { slug: 'home', label: 'Ana Sayfa' },
   { slug: 'kampanyalar', label: 'Kampanyalar' },
   { slug: 'bonuslar', label: 'Bonuslar' },
   { slug: 'yorumlar', label: 'Yorumlar' },

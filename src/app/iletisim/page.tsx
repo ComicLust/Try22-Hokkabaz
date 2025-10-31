@@ -1,41 +1,52 @@
 import IletisimClient from '@/components/IletisimClient'
 import type { Metadata } from 'next'
-import { db } from '@/lib/db'
+import { getSeoRecord } from '@/lib/seo'
 
 export default function Page() {
   return <IletisimClient />
 }
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await (db as any).seoSetting.findUnique({ where: { page: '/iletisim' } })
-  const title = s?.title ?? 'İletişim - Hokkabaz'
-  const description = s?.description ?? 'Yalnızca işbirliği ve sponsorluk talepleri için iletişim.'
-  const canonical = s?.canonicalUrl ?? undefined
-  // OG type değeri veritabanından gelebilir; Next metadata yalnızca belirli değerleri kabul eder.
-  // Geçersiz bir değer gelirse, 'website' olarak varsayılanla güvene alıyoruz.
-  const ogTypeFromDb = (s?.ogType ?? '').toString().toLowerCase()
-  const allowedOgTypes = new Set(['website', 'article', 'profile'])
-  const safeOgType = allowedOgTypes.has(ogTypeFromDb) ? ogTypeFromDb : 'website'
-  return {
-    title,
-    description,
-    alternates: canonical ? { canonical } : undefined,
-    openGraph: {
-      title: s?.ogTitle ?? title,
-      description: s?.ogDescription ?? description,
-      images: s?.ogImageUrl ? [s.ogImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
-      url: canonical,
-      type: safeOgType,
-    },
-    twitter: {
-      title: s?.twitterTitle ?? title,
-      description: s?.twitterDescription ?? description,
-      images: s?.twitterImageUrl ? [s.twitterImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
-      card: 'summary_large_image',
-    },
-    robots: {
-      index: s?.robotsIndex ?? true,
-      follow: s?.robotsFollow ?? true,
-    },
-    other: s?.keywords ? { keywords: s.keywords } : undefined,
+  try {
+    const seo = await getSeoRecord('/iletisim', ['iletisim']) as any
+    const title = seo?.title ?? 'İletişim - Hokkabaz'
+    const description = seo?.description ?? 'Yalnızca işbirliği ve sponsorluk talepleri için iletişim.'
+    const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)
+    const ogTitle = seo?.ogTitle ?? title
+    const ogDescription = seo?.ogDescription ?? description
+    const twitterTitle = seo?.twitterTitle ?? title
+    const twitterDescription = seo?.twitterDescription ?? description
+    const images = seo?.ogImageUrl ? [seo.ogImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg']
+
+    return {
+      title,
+      description,
+      keywords,
+      alternates: seo?.canonicalUrl ? { canonical: seo.canonicalUrl } : undefined,
+      openGraph: {
+        title: ogTitle,
+        description: ogDescription,
+        url: 'https://hokkabaz.bet/iletisim',
+        siteName: 'Hokkabaz',
+        type: 'website',
+        locale: 'tr_TR',
+        images,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: twitterTitle,
+        description: twitterDescription,
+        images: seo?.twitterImageUrl ? [seo.twitterImageUrl] : ['/uploads/1760732951329-fzch33159aq.jpg'],
+      },
+      robots: {
+        index: seo?.robotsIndex ?? true,
+        follow: seo?.robotsFollow ?? true,
+      },
+      other: seo?.structuredData ? { structuredData: JSON.stringify(seo.structuredData) } : undefined,
+    }
+  } catch {
+    return {
+      title: 'İletişim - Hokkabaz',
+      description: 'Yalnızca işbirliği ve sponsorluk talepleri için iletişim.',
+    }
   }
 }

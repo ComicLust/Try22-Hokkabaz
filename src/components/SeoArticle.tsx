@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type Article = {
   id: string
@@ -37,6 +37,7 @@ function sanitizeHtml(input: string) {
 export default function SeoArticle({ slug }: { slug: string }) {
   const [article, setArticle] = useState<Article | null>(null)
   const [expanded, setExpanded] = useState(false)
+  const [renderedHtml, setRenderedHtml] = useState<string>('')
 
   useEffect(() => {
     const load = async () => {
@@ -50,10 +51,35 @@ export default function SeoArticle({ slug }: { slug: string }) {
     load()
   }, [slug])
 
-  const safeHtml = useMemo(() => sanitizeHtml(article?.content ?? ''), [article])
-  if (!article || !safeHtml) return null
+  // İçerik Markdown ise HTML'e çevir, zaten HTML ise direkt kullan
+  useEffect(() => {
+    const convert = async () => {
+      const src = article?.content ?? ''
+      if (!src) {
+        setRenderedHtml('')
+        return
+      }
+      // Basit bir HTML tespiti: tag içeriyor mu?
+      const isHtmlLike = /<\/?[a-z][\s\S]*>/i.test(src)
+      if (isHtmlLike) {
+        setRenderedHtml(sanitizeHtml(src))
+        return
+      }
+      try {
+        const { micromark } = await import('micromark')
+        const html = micromark(src)
+        setRenderedHtml(sanitizeHtml(html))
+      } catch {
+        // micromark bulunamazsa düz metni güvenli şekilde göster
+        setRenderedHtml(sanitizeHtml(src))
+      }
+    }
+    convert()
+  }, [article])
 
-  const previewHtml = expanded ? safeHtml : (safeHtml.length > 600 ? safeHtml.slice(0, 600) + '...' : safeHtml)
+  if (!article || !renderedHtml) return null
+
+  const previewHtml = expanded ? renderedHtml : (renderedHtml.length > 600 ? renderedHtml.slice(0, 600) + '...' : renderedHtml)
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -71,7 +97,7 @@ export default function SeoArticle({ slug }: { slug: string }) {
         <article className="w-full border border-border rounded-lg p-6 md:p-8 bg-card text-foreground shadow-sm">
           {article.title && <h3 className="font-semibold text-xl md:text-2xl mb-4 text-gold">{article.title}</h3>}
           <div className="prose prose-invert prose-lg leading-relaxed max-w-[75ch] mx-auto prose-headings:text-gold prose-a:text-primary prose-strong:text-foreground prose-p:text-gray-200" dangerouslySetInnerHTML={{ __html: previewHtml }} />
-          {safeHtml.length > 600 && (
+          {renderedHtml.length > 600 && (
             <button className="mt-4 text-sm font-medium text-primary hover:underline" onClick={() => setExpanded(!expanded)}>
               {expanded ? 'Gizle' : 'Daha Fazlasını Gör'}
             </button>

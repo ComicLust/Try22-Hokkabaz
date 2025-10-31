@@ -1,14 +1,13 @@
 import HakkimizdaClient from '@/components/HakkimizdaClient'
 import type { Metadata } from 'next'
 import { db } from '@/lib/db'
+import { getSeoRecord } from '@/lib/seo'
 
 export default function Page() {
   return <HakkimizdaClient />
 }
 export async function generateMetadata(): Promise<Metadata> {
-  const s = await (db as any).seoSetting.findUnique({ where: { page: '/hakkimizda' }, select: {
-    title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true,
-  } })
+  const s = await getSeoRecord('/hakkimizda', ['hakkimizda']) as any
   const title = s?.title ?? 'Hakkımızda - Hokkabaz'
   const description = s?.description ?? 'Ekibimiz ve yaklaşımımız hakkında bilgiler.'
   const canonical = s?.canonicalUrl ?? undefined

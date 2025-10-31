@@ -1,7 +1,14 @@
 "use client"
 import { useEffect, useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { MediaPicker } from "@/components/media/MediaPicker"
+import { Send, Users, Hash, Image, Trash2, Plus, Search } from "lucide-react"
 
 type TelegramGroup = {
   id: string
@@ -127,70 +134,113 @@ export default function AdminTelegramPage() {
   }
 
   return (
-    <div className="p-6 space-y-6 bg-background text-foreground">
-      <h1 className="text-2xl font-semibold">Telegram Grupları (Admin)</h1>
-      <p className="text-muted-foreground text-sm">Güvenilir Telegram kanal/grup yönetimi (listele, ekle, düzenle, sil).</p>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          <Send className="h-6 w-6 text-primary" />
+          <h1 className="text-2xl font-semibold">Telegram Grupları</h1>
+        </div>
+        <p className="text-muted-foreground text-sm">Güvenilir Telegram kanal/grup yönetimi (listele, ekle, düzenle, sil).</p>
+      </div>
 
+      {/* Error Display */}
       {error && (
-        <div className="rounded border border-destructive/30 bg-destructive/15 text-destructive px-3 py-2">{error}</div>
+        <Card className="border-destructive/30 bg-destructive/5">
+          <CardContent className="pt-6">
+            <p className="text-destructive text-sm">{error}</p>
+          </CardContent>
+        </Card>
       )}
 
-      <div className="border border-border rounded-md p-4 space-y-3 bg-card text-foreground">
-        <div className="font-medium">Yeni Grup Ekle</div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input
-            className="border border-border rounded-md px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground"
-            placeholder="Grup adı"
-            value={form.name ?? ""}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-          />
-          <input
-            className="border border-border rounded-md px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground"
-            placeholder="Telegram linki (ctaUrl)"
-            value={form.ctaUrl ?? ""}
-            onChange={(e) => setForm((f) => ({ ...f, ctaUrl: e.target.value }))}
-          />
-          <input
-            className="border border-border rounded-md px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground"
-            placeholder="Üye sayısı"
-            type="number"
-            value={typeof form.members === "number" ? form.members : ""}
-            onChange={(e) => setForm((f) => ({ ...f, members: e.target.value ? Number(e.target.value) : undefined }))}
-          />
-          <input
-            className="border border-border rounded-md px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground"
-            placeholder="Üye (metin) örn: 15K+ üye"
-            value={form.membersText ?? ""}
-            onChange={(e) => setForm((f) => ({ ...f, membersText: e.target.value }))}
-          />
-          <div className="flex items-center gap-3">
-            <select
-              className="border border-border rounded-md px-3 py-2 bg-background text-foreground"
-              value={form.type ?? "GROUP"}
-              onChange={(e) => setForm((f) => ({ ...f, type: e.target.value as "CHANNEL" | "GROUP" }))}
-            >
-              <option value="GROUP">Grup</option>
-              <option value="CHANNEL">Kanal</option>
-            </select>
-            <label className="inline-flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={!!form.isFeatured}
-                onChange={(e) => setForm((f) => ({ ...f, isFeatured: e.target.checked }))}
+      {/* Add New Group Form */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Plus className="h-5 w-5" />
+            Yeni Grup Ekle
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Grup Adı</label>
+              <Input
+                placeholder="Grup adı"
+                value={form.name ?? ""}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               />
-              Önerilen
-            </label>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Telegram Linki</label>
+              <Input
+                placeholder="Telegram linki (ctaUrl)"
+                value={form.ctaUrl ?? ""}
+                onChange={(e) => setForm((f) => ({ ...f, ctaUrl: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Üye Sayısı</label>
+              <Input
+                placeholder="Üye sayısı"
+                type="number"
+                value={typeof form.members === "number" ? form.members : ""}
+                onChange={(e) => setForm((f) => ({ ...f, members: e.target.value ? Number(e.target.value) : undefined }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Üye Metni</label>
+              <Input
+                placeholder="Üye (metin) örn: 15K+ üye"
+                value={form.membersText ?? ""}
+                onChange={(e) => setForm((f) => ({ ...f, membersText: e.target.value }))}
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <input
-              className="border border-border rounded-md px-3 py-2 flex-1 bg-background text-foreground placeholder:text-muted-foreground"
-              placeholder="Profil resmi URL (imageUrl)"
-              value={form.imageUrl ?? ""}
-              onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
-            />
-            <Button type="button" variant="outline" onClick={() => setMediaOpenForm(true)}>
-              Görsel Seç / Yükle
-            </Button>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Tip</label>
+              <Select
+                value={form.type ?? "GROUP"}
+                onValueChange={(value) => setForm((f) => ({ ...f, type: value as "CHANNEL" | "GROUP" }))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="GROUP">Grup</SelectItem>
+                  <SelectItem value="CHANNEL">Kanal</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Durum</label>
+              <div className="flex items-center space-x-2 pt-2">
+                <Checkbox
+                  id="featured"
+                  checked={!!form.isFeatured}
+                  onCheckedChange={(checked) => setForm((f) => ({ ...f, isFeatured: !!checked }))}
+                />
+                <label htmlFor="featured" className="text-sm">Önerilen</label>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Profil Resmi</label>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Profil resmi URL (imageUrl)"
+                value={form.imageUrl ?? ""}
+                onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
+                className="flex-1"
+              />
+              <Button type="button" variant="outline" onClick={() => setMediaOpenForm(true)}>
+                <Image className="h-4 w-4 mr-2" />
+                Görsel Seç
+              </Button>
+            </div>
             <MediaPicker
               open={mediaOpenForm}
               onOpenChange={setMediaOpenForm}
@@ -198,24 +248,23 @@ export default function AdminTelegramPage() {
               title="Telegram Görseli Seç / Yükle"
             />
           </div>
-        </div>
-        <div className="space-y-2">
-          <div className="text-sm text-muted-foreground">Rozetler</div>
-          <div className="flex flex-wrap items-center gap-2">
-            {(form.badges ?? []).map((b, idx) => (
-              <button
-                key={`${b}-${idx}`}
-                type="button"
-                className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs border border-border bg-background hover:bg-accent"
-                onClick={() => setForm((f) => ({ ...f, badges: (f.badges ?? []).filter((x) => x !== b) }))}
-                title="Rozeti kaldır"
-              >
-                <span>{b}</span>
-                <span className="text-muted-foreground">×</span>
-              </button>
-            ))}
-            <input
-              className="border border-border rounded-md px-3 py-2 bg-background text-foreground placeholder:text-muted-foreground min-w-[180px]"
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Rozetler</label>
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              {(form.badges ?? []).map((b, idx) => (
+                <Badge
+                  key={`${b}-${idx}`}
+                  variant="secondary"
+                  className="cursor-pointer hover:bg-destructive/10 hover:text-destructive"
+                  onClick={() => setForm((f) => ({ ...f, badges: (f.badges ?? []).filter((x) => x !== b) }))}
+                >
+                  {b}
+                  <span className="ml-1">×</span>
+                </Badge>
+              ))}
+            </div>
+            <Input
               placeholder="Rozet ekle ve Enter/virgül"
               value={badgeInput}
               onChange={(e) => setBadgeInput(e.target.value)}
@@ -234,96 +283,126 @@ export default function AdminTelegramPage() {
                 setBadgeInput("")
               }}
             />
+            <p className="text-xs text-muted-foreground">Örnek: Güvenilir, Aktif, 7/24</p>
           </div>
-          <div className="text-xs text-muted-foreground">Örnek: Güvenilir, Aktif, 7/24</div>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            className="px-4 py-2 rounded-md bg-primary text-primary-foreground disabled:opacity-50"
-            disabled={saving || !form.name || !form.ctaUrl}
-            onClick={createItem}
-          >Kaydet</button>
-          <input
-            className="border border-border rounded-md px-3 py-2 flex-1 bg-background text-foreground placeholder:text-muted-foreground"
-            placeholder="Gruplarda ara…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
 
-      <div className="space-y-6">
-        {loading && <div className="text-sm text-muted-foreground">Yükleniyor…</div>}
+          <div className="flex items-center gap-3 pt-4">
+            <Button
+              disabled={saving || !form.name || !form.ctaUrl}
+              onClick={createItem}
+            >
+              {saving ? "Kaydediliyor..." : "Kaydet"}
+            </Button>
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Gruplarda ara…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-        {featured.length > 0 && (
-          <section className="space-y-3">
-            <div className="font-medium">Önerilen Gruplar</div>
-            <div className="overflow-auto border border-border rounded">
-              <table className="min-w-full text-sm">
-                <thead className="bg-muted">
-                  <tr>
-                    <th className="text-left px-3 py-2">Ad</th>
-                    <th className="text-left px-3 py-2">Tip</th>
-                    <th className="text-left px-3 py-2">Üye (sayı)</th>
-                    <th className="text-left px-3 py-2">Üye (metin)</th>
-                    <th className="text-left px-3 py-2">Link</th>
-                    <th className="text-left px-3 py-2">Resim</th>
-                    <th className="text-left px-3 py-2">Rozetler</th>
-                    <th className="text-left px-3 py-2">İşlemler</th>
-                  </tr>
-                </thead>
-                <tbody>
+      {/* Loading State */}
+      {loading && (
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-sm text-muted-foreground">Yükleniyor…</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Featured Groups */}
+      {featured.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              Önerilen Gruplar
+              <Badge variant="secondary">{featured.length}</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Ad</TableHead>
+                    <TableHead>Tip</TableHead>
+                    <TableHead>Üye (sayı)</TableHead>
+                    <TableHead>Üye (metin)</TableHead>
+                    <TableHead>Link</TableHead>
+                    <TableHead>Resim</TableHead>
+                    <TableHead>Rozetler</TableHead>
+                    <TableHead>İşlemler</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {featured.map((g) => (
-                    <tr key={g.id} className="border-t border-border hover:bg-accent">
-                      <td className="px-3 py-2">
-                        <input
-                          className="border border-border rounded-md px-2 py-1 w-full bg-background text-foreground placeholder:text-muted-foreground"
+                    <TableRow key={g.id}>
+                      <TableCell>
+                        <Input
                           value={g.name}
                           onChange={(e) => updateItem(g.id, { name: e.target.value })}
+                          className="min-w-[150px]"
                         />
-                      </td>
-                      <td className="px-3 py-2">
-                        <select
-                          className="border border-border rounded-md px-2 py-1 bg-background text-foreground"
+                      </TableCell>
+                      <TableCell>
+                        <Select
                           value={g.type}
-                          onChange={(e) => updateItem(g.id, { type: e.target.value as any })}
+                          onValueChange={(value) => updateItem(g.id, { type: value as any })}
                         >
-                          <option value="GROUP">Grup</option>
-                          <option value="CHANNEL">Kanal</option>
-                        </select>
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          className="border border-border rounded-md px-2 py-1 w-24 bg-background text-foreground placeholder:text-muted-foreground"
+                          <SelectTrigger className="w-[100px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="GROUP">Grup</SelectItem>
+                            <SelectItem value="CHANNEL">Kanal</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <Input
                           type="number"
                           value={g.members ?? ""}
                           onChange={(e) => updateItem(g.id, { members: e.target.value ? Number(e.target.value) : null })}
+                          className="w-24"
                         />
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          className="border border-border rounded-md px-2 py-1 w-full bg-background text-foreground placeholder:text-muted-foreground"
+                      </TableCell>
+                      <TableCell>
+                        <Input
                           placeholder="Üye (metin)"
                           value={g.membersText ?? ""}
                           onChange={(e) => updateItem(g.id, { membersText: e.target.value })}
+                          className="min-w-[120px]"
                         />
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          className="border border-border rounded-md px-2 py-1 w-full bg-background text-foreground placeholder:text-muted-foreground"
+                      </TableCell>
+                      <TableCell>
+                        <Input
                           value={g.ctaUrl}
                           onChange={(e) => updateItem(g.id, { ctaUrl: e.target.value })}
+                          className="min-w-[200px]"
                         />
-                      </td>
-                      <td className="px-3 py-2">
+                      </TableCell>
+                      <TableCell>
                         <div className="flex items-center gap-2">
-                          <input
-                            className="border border-border rounded-md px-2 py-1 flex-1 bg-background text-foreground placeholder:text-muted-foreground"
+                          <Input
                             value={g.imageUrl ?? ""}
                             onChange={(e) => updateItem(g.id, { imageUrl: e.target.value || null })}
+                            className="min-w-[150px]"
                           />
-                          <Button type="button" variant="outline" onClick={() => setMediaOpenRowId(g.id)}>
-                            Görsel Seç / Yükle
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setMediaOpenRowId(g.id)}
+                          >
+                            <Image className="h-4 w-4" />
                           </Button>
                           <MediaPicker
                             open={mediaOpenRowId === g.id}
@@ -338,24 +417,23 @@ export default function AdminTelegramPage() {
                             title="Telegram Görseli Seç / Yükle"
                           />
                         </div>
-                      </td>
-                      <td className="px-3 py-2">
-                        <div className="flex flex-wrap items-center gap-2">
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap items-center gap-1 min-w-[200px]">
                           {(g.badges ?? []).map((b, idx) => (
-                            <button
+                            <Badge
                               key={`${g.id}-b-${idx}`}
-                              type="button"
-                              className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs border border-border bg-background hover:bg-accent"
+                              variant="outline"
+                              className="cursor-pointer hover:bg-destructive/10 hover:text-destructive"
                               onClick={() => updateItem(g.id, { badges: (g.badges ?? []).filter((x) => x !== b) as any })}
-                              title="Rozeti kaldır"
                             >
-                              <span>{b}</span>
-                              <span className="text-muted-foreground">×</span>
-                            </button>
+                              {b}
+                              <span className="ml-1">×</span>
+                            </Badge>
                           ))}
-                          <input
-                            className="border border-border rounded-md px-2 py-1 bg-background text-foreground placeholder:text-muted-foreground min-w-[120px]"
+                          <Input
                             placeholder="Rozet ekle"
+                            className="min-w-[120px]"
                             onKeyDown={(e) => {
                               const el = e.currentTarget as HTMLInputElement
                               const isCommit = e.key === "Enter" || e.key === ","
@@ -373,182 +451,201 @@ export default function AdminTelegramPage() {
                             }}
                           />
                         </div>
-                      </td>
-                      <td className="px-3 py-2">
+                      </TableCell>
+                      <TableCell>
                         <div className="flex items-center gap-2">
-                          <label className="inline-flex items-center gap-2 text-xs">
-                            <input
-                              type="checkbox"
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`featured-${g.id}`}
                               checked={g.isFeatured}
-                              onChange={(e) => updateItem(g.id, { isFeatured: e.target.checked })}
+                              onCheckedChange={(checked) => updateItem(g.id, { isFeatured: !!checked })}
                             />
-                            Önerilen
-                          </label>
-                          <button
-                            className="px-2 py-1 rounded-md border border-destructive/30 hover:bg-destructive/15 text-destructive text-xs"
+                            <label htmlFor={`featured-${g.id}`} className="text-xs">Önerilen</label>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => deleteItem(g.id)}
-                          >Sil</button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {featured.length === 0 && (
-                    <tr>
-                      <td colSpan={8} className="px-3 py-4 text-muted-foreground">Önerilen grup bulunamadı.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </section>
-        )}
-
-        <section className="space-y-3">
-          <div className="font-medium">Tüm Gruplar</div>
-          <div className="overflow-auto border border-border rounded">
-            <table className="min-w-full text-sm">
-              <thead className="bg-muted">
-                <tr>
-                  <th className="text-left px-3 py-2">Ad</th>
-                  <th className="text-left px-3 py-2">Tip</th>
-                  <th className="text-left px-3 py-2">Üye (sayı)</th>
-                  <th className="text-left px-3 py-2">Üye (metin)</th>
-                  <th className="text-left px-3 py-2">Link</th>
-                  <th className="text-left px-3 py-2">Resim</th>
-                  <th className="text-left px-3 py-2">Rozetler</th>
-                  <th className="text-left px-3 py-2">İşlemler</th>
-                </tr>
-              </thead>
-              <tbody>
-                {listed.map((g) => (
-                  <tr key={g.id} className="border-t border-border hover:bg-accent">
-                    <td className="px-3 py-2">
-                      <input
-                        className="border border-border rounded-md px-2 py-1 w-full bg-background text-foreground placeholder:text-muted-foreground"
-                        value={g.name}
-                        onChange={(e) => updateItem(g.id, { name: e.target.value })}
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <select
-                        className="border border-border rounded-md px-2 py-1 bg-background text-foreground"
-                        value={g.type}
-                        onChange={(e) => updateItem(g.id, { type: e.target.value as any })}
-                      >
-                        <option value="GROUP">Grup</option>
-                        <option value="CHANNEL">Kanal</option>
-                      </select>
-                    </td>
-                    <td className="px-3 py-2">
-                      <input
-                        className="border border-border rounded-md px-2 py-1 w-24 bg-background text-foreground placeholder:text-muted-foreground"
-                        type="number"
-                        value={g.members ?? ""}
-                        onChange={(e) => updateItem(g.id, { members: e.target.value ? Number(e.target.value) : null })}
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <input
-                        className="border border-border rounded-md px-2 py-1 w-full bg-background text-foreground placeholder:text-muted-foreground"
-                        placeholder="Üye (metin)"
-                        value={g.membersText ?? ""}
-                        onChange={(e) => updateItem(g.id, { membersText: e.target.value })}
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <input
-                        className="border border-border rounded-md px-2 py-1 w-full bg-background text-foreground placeholder:text-muted-foreground"
-                        value={g.ctaUrl}
-                        onChange={(e) => updateItem(g.id, { ctaUrl: e.target.value })}
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <div className="flex items-center gap-2">
-                        <input
-                          className="border border-border rounded-md px-2 py-1 flex-1 bg-background text-foreground placeholder:text-muted-foreground"
-                          value={g.imageUrl ?? ""}
-                          onChange={(e) => updateItem(g.id, { imageUrl: e.target.value || null })}
-                        />
-                        <Button type="button" variant="outline" onClick={() => setMediaOpenRowId(g.id)}>
-                          Görsel Seç / Yükle
-                        </Button>
-                        <MediaPicker
-                          open={mediaOpenRowId === g.id}
-                          onOpenChange={(v) => setMediaOpenRowId(v ? g.id : null)}
-                          onSelect={async (url) => {
-                            try {
-                              await updateItem(g.id, { imageUrl: url })
-                            } catch (e: any) {
-                              setError(e?.message ?? "Güncelleme hatası")
-                            }
-                          }}
-                          title="Telegram Görseli Seç / Yükle"
-                        />
-                      </div>
-                    </td>
-                    <td className="px-3 py-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        {(g.badges ?? []).map((b, idx) => (
-                          <button
-                            key={`${g.id}-lb-${idx}`}
-                            type="button"
-                            className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs border border-border bg-background hover:bg-accent"
-                            onClick={() => updateItem(g.id, { badges: (g.badges ?? []).filter((x) => x !== b) as any })}
-                            title="Rozeti kaldır"
+                            className="text-destructive hover:bg-destructive/10"
                           >
-                            <span>{b}</span>
-                            <span className="text-muted-foreground">×</span>
-                          </button>
-                        ))}
-                        <input
-                          className="border border-border rounded-md px-2 py-1 bg-background text-foreground placeholder:text-muted-foreground min-w-[120px]"
-                          placeholder="Rozet ekle"
-                          onKeyDown={(e) => {
-                            const el = e.currentTarget as HTMLInputElement
-                            const isCommit = e.key === "Enter" || e.key === ","
-                            if (isCommit) {
-                              e.preventDefault()
-                              const token = el.value.trim()
-                              if (token) updateItem(g.id, { badges: [ ...(g.badges ?? []), token ] as any })
-                              el.value = ""
-                            }
-                          }}
-                          onBlur={(e) => {
-                            const token = e.currentTarget.value.trim()
-                            if (token) updateItem(g.id, { badges: [ ...(g.badges ?? []), token ] as any })
-                            e.currentTarget.value = ""
-                          }}
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* All Groups */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Hash className="h-5 w-5 text-primary" />
+            Tüm Gruplar
+            <Badge variant="secondary">{listed.length}</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {listed.length === 0 ? (
+            <p className="text-muted-foreground text-center py-8">Listede grup yok.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Ad</TableHead>
+                    <TableHead>Tip</TableHead>
+                    <TableHead>Üye (sayı)</TableHead>
+                    <TableHead>Üye (metin)</TableHead>
+                    <TableHead>Link</TableHead>
+                    <TableHead>Resim</TableHead>
+                    <TableHead>Rozetler</TableHead>
+                    <TableHead>İşlemler</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {listed.map((g) => (
+                    <TableRow key={g.id}>
+                      <TableCell>
+                        <Input
+                          value={g.name}
+                          onChange={(e) => updateItem(g.id, { name: e.target.value })}
+                          className="min-w-[150px]"
                         />
-                      </div>
-                    </td>
-                    <td className="px-3 py-2">
-                      <div className="flex items-center gap-2">
-                        <label className="inline-flex items-center gap-2 text-xs">
-                          <input
-                            type="checkbox"
-                            checked={g.isFeatured}
-                            onChange={(e) => updateItem(g.id, { isFeatured: e.target.checked })}
+                      </TableCell>
+                      <TableCell>
+                        <Select
+                          value={g.type}
+                          onValueChange={(value) => updateItem(g.id, { type: value as any })}
+                        >
+                          <SelectTrigger className="w-[100px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="GROUP">Grup</SelectItem>
+                            <SelectItem value="CHANNEL">Kanal</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          type="number"
+                          value={g.members ?? ""}
+                          onChange={(e) => updateItem(g.id, { members: e.target.value ? Number(e.target.value) : null })}
+                          className="w-24"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          placeholder="Üye (metin)"
+                          value={g.membersText ?? ""}
+                          onChange={(e) => updateItem(g.id, { membersText: e.target.value })}
+                          className="min-w-[120px]"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          value={g.ctaUrl}
+                          onChange={(e) => updateItem(g.id, { ctaUrl: e.target.value })}
+                          className="min-w-[200px]"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Input
+                            value={g.imageUrl ?? ""}
+                            onChange={(e) => updateItem(g.id, { imageUrl: e.target.value || null })}
+                            className="min-w-[150px]"
                           />
-                          Önerilen
-                        </label>
-                        <button
-                          className="px-2 py-1 rounded-md border border-destructive/30 hover:bg-destructive/15 text-destructive text-xs"
-                          onClick={() => deleteItem(g.id)}
-                        >Sil</button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-                {listed.length === 0 && (
-                  <tr>
-                    <td colSpan={8} className="px-3 py-4 text-muted-foreground">Listede grup yok.</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => setMediaOpenRowId(g.id)}
+                          >
+                            <Image className="h-4 w-4" />
+                          </Button>
+                          <MediaPicker
+                            open={mediaOpenRowId === g.id}
+                            onOpenChange={(v) => setMediaOpenRowId(v ? g.id : null)}
+                            onSelect={async (url) => {
+                              try {
+                                await updateItem(g.id, { imageUrl: url })
+                              } catch (e: any) {
+                                setError(e?.message ?? "Güncelleme hatası")
+                              }
+                            }}
+                            title="Telegram Görseli Seç / Yükle"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap items-center gap-1 min-w-[200px]">
+                          {(g.badges ?? []).map((b, idx) => (
+                            <Badge
+                              key={`${g.id}-lb-${idx}`}
+                              variant="outline"
+                              className="cursor-pointer hover:bg-destructive/10 hover:text-destructive"
+                              onClick={() => updateItem(g.id, { badges: (g.badges ?? []).filter((x) => x !== b) as any })}
+                            >
+                              {b}
+                              <span className="ml-1">×</span>
+                            </Badge>
+                          ))}
+                          <Input
+                            placeholder="Rozet ekle"
+                            className="min-w-[120px]"
+                            onKeyDown={(e) => {
+                              const el = e.currentTarget as HTMLInputElement
+                              const isCommit = e.key === "Enter" || e.key === ","
+                              if (isCommit) {
+                                e.preventDefault()
+                                const token = el.value.trim()
+                                if (token) updateItem(g.id, { badges: [ ...(g.badges ?? []), token ] as any })
+                                el.value = ""
+                              }
+                            }}
+                            onBlur={(e) => {
+                              const token = e.currentTarget.value.trim()
+                              if (token) updateItem(g.id, { badges: [ ...(g.badges ?? []), token ] as any })
+                              e.currentTarget.value = ""
+                            }}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`listed-${g.id}`}
+                              checked={g.isFeatured}
+                              onCheckedChange={(checked) => updateItem(g.id, { isFeatured: !!checked })}
+                            />
+                            <label htmlFor={`listed-${g.id}`} className="text-xs">Önerilen</label>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => deleteItem(g.id)}
+                            className="text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

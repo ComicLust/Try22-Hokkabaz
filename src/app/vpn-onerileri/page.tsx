@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { db } from '@/lib/db'
+import { getSeoRecord } from '@/lib/seo'
 import { Shield, ExternalLink } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { readFile } from 'fs/promises'
@@ -114,9 +115,7 @@ export default async function VpnOnerileriPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/vpn-onerileri' }, select: {
-      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
-    } })
+    const seo = await getSeoRecord('/vpn-onerileri', ['vpn-onerileri']) as any
     const title = seo?.title ?? 'VPN Önerileri'
     const description = seo?.description ?? 'Türkiye’de engellenmiş sitelere erişim için ücretsiz ve güvenilir seçenekler.'
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)

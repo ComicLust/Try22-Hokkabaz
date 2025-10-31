@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
+import { getSeoRecord } from "@/lib/seo";
 import BonuslarClient from "@/components/BonuslarClient";
 import { Suspense } from "react";
 
@@ -39,9 +40,7 @@ const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.bet'
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: "/bonuslar" }, select: {
-      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
-    } });
+    const seo = await getSeoRecord("/bonuslar", ["bonuslar"]) as any
     const title = seo?.title ?? "Bonuslar";
     const description = seo?.description ?? "Güncel bonuslar, fırsatlar ve promosyonlar.";
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean);

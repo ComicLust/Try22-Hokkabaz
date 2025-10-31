@@ -1,5 +1,6 @@
 import HomeClient from '@/components/HomeClient'
 import { db } from '@/lib/db'
+import { getSeoRecord } from '@/lib/seo'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 
@@ -123,23 +124,7 @@ export default function Page() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const s = await db.seoSetting.findUnique({
-      where: { page: '/' },
-      select: {
-        title: true,
-        description: true,
-        keywords: true,
-        canonicalUrl: true,
-        ogTitle: true,
-        ogDescription: true,
-        ogImageUrl: true,
-        twitterTitle: true,
-        twitterDescription: true,
-        twitterImageUrl: true,
-        robotsIndex: true,
-        robotsFollow: true,
-      },
-    })
+    const s = await getSeoRecord('/', ['']) as any
 
     const title = s?.title ?? 'Hokkabaz'
     const description = s?.description ?? 'Güvenilir bahis ve casino içerikleri'

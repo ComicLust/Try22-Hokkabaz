@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import path from 'path'
-import { readFile, stat } from 'fs/promises'
+import { readFile, stat, access } from 'fs/promises'
 
 function getContentType(ext: string) {
   const e = ext.toLowerCase()
@@ -12,23 +12,36 @@ function getContentType(ext: string) {
   return 'application/octet-stream'
 }
 
-export async function GET(_req: NextRequest, { params }: { params: { file: string[] } }) {
+export async function GET(
+  _req: NextRequest,
+  ctx: { params: Promise<{ file?: string[] }> }
+) {
   try {
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
-    const rel = params.file?.join('/') || ''
+    const { file = [] } = await ctx.params
+    const rel = Array.isArray(file) ? file.join('/') : ''
     const resolved = path.resolve(uploadsDir, rel)
     if (!resolved.startsWith(uploadsDir)) {
       return NextResponse.json({ error: 'Invalid path' }, { status: 400 })
     }
+    let target = resolved
+    const ext = path.extname(resolved).toLowerCase()
+    // If jpg/png requested and a .webp sibling exists, serve webp
+    if (ext === '.png' || ext === '.jpg' || ext === '.jpeg') {
+      const base = resolved.slice(0, resolved.length - ext.length)
+      const webp = `${base}.webp`
+      const exists = await access(webp).then(() => true).catch(() => false)
+      if (exists) target = webp
+    }
 
-    const s = await stat(resolved).catch(() => null)
+    const s = await stat(target).catch(() => null)
     if (!s || !s.isFile()) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 })
     }
 
-    const buf = await readFile(resolved)
-    const ext = path.extname(resolved)
-    const ct = getContentType(ext)
+    const buf = await readFile(target)
+    const outExt = path.extname(target)
+    const ct = getContentType(outExt)
     const u8 = new Uint8Array(buf)
     return new Response(u8, {
       status: 200,
@@ -42,22 +55,34 @@ export async function GET(_req: NextRequest, { params }: { params: { file: strin
   }
 }
 
-export async function HEAD(_req: NextRequest, { params }: { params: { file: string[] } }) {
+export async function HEAD(
+  _req: NextRequest,
+  ctx: { params: Promise<{ file?: string[] }> }
+) {
   try {
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
-    const rel = params.file?.join('/') || ''
+    const { file = [] } = await ctx.params
+    const rel = Array.isArray(file) ? file.join('/') : ''
     const resolved = path.resolve(uploadsDir, rel)
     if (!resolved.startsWith(uploadsDir)) {
       return new Response(null, { status: 400 })
     }
+    let target = resolved
+    const ext = path.extname(resolved).toLowerCase()
+    if (ext === '.png' || ext === '.jpg' || ext === '.jpeg') {
+      const base = resolved.slice(0, resolved.length - ext.length)
+      const webp = `${base}.webp`
+      const exists = await access(webp).then(() => true).catch(() => false)
+      if (exists) target = webp
+    }
 
-    const s = await stat(resolved).catch(() => null)
+    const s = await stat(target).catch(() => null)
     if (!s || !s.isFile()) {
       return new Response(null, { status: 404 })
     }
 
-    const ext = path.extname(resolved)
-    const ct = getContentType(ext)
+    const outExt = path.extname(target)
+    const ct = getContentType(outExt)
     return new Response(null, {
       status: 200,
       headers: {

@@ -84,7 +84,16 @@ export default function AdminReviewBrandsPage() {
   const remove = async (id: string) => {
     if (!confirm('Silmek istediğinize emin misiniz?')) return
     const res = await fetch(`/api/review-brands/${id}`, { method: 'DELETE' })
-    if (res.ok) await load()
+    if (res.ok) {
+      await load()
+    } else {
+      let msg = 'Silme hatası'
+      try {
+        const data = await res.json()
+        msg = data?.error ?? msg
+      } catch {}
+      alert(msg)
+    }
   }
 
   // Upload helpers (inside component to access state setters)

@@ -3,6 +3,15 @@ import { useEffect, useMemo, useState } from 'react'
 import { useToast } from '@/hooks/use-toast'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
 import { MediaPicker } from '@/components/media/MediaPicker'
 
 type SeoSetting = {
@@ -57,6 +66,7 @@ export default function AdminSeoPage() {
   const { toast } = useToast()
   const [items, setItems] = useState<SeoSetting[]>([])
   const [routes, setRoutes] = useState<string[]>([])
+  const [routeQuery, setRouteQuery] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -65,6 +75,26 @@ export default function AdminSeoPage() {
   const [mediaOpenOg, setMediaOpenOg] = useState(false)
   const [mediaOpenOgLogo, setMediaOpenOgLogo] = useState(false)
   const [mediaOpenTwitter, setMediaOpenTwitter] = useState(false)
+  // Sol listeyi zenginleştirmek için statik sayfalar
+  const staticRoutes = useMemo(() => ([
+    '/',
+    '/hizmetlerimiz',
+    '/hakkimizda',
+    '/iletisim',
+    '/gizlilik-politikasi',
+    '/kullanim-kosullari',
+    '/kampanyalar',
+    '/bonuslar',
+    '/yorumlar',
+    '/banko-kuponlar',
+    '/banko-kuponlar/arsiv',
+    '/anlasmali-siteler',
+    '/guvenilir-bahis-siteleri-listesi',
+    '/vpn-onerileri',
+    '/canli-mac-izle',
+    '/ozel-oranlar',
+    '/guvenilir-telegram',
+  ]), [])
   
   // Organization schema state
   const [orgSchema, setOrgSchema] = useState<OrganizationSchema>({
@@ -160,6 +190,29 @@ export default function AdminSeoPage() {
   const [twAudit, setTwAudit] = useState<ImageAudit | null>(null)
 
   const editingItem = useMemo(() => items.find(i => i.id === editingId) ?? null, [items, editingId])
+
+  const filteredRoutes = useMemo(() => {
+    const q = routeQuery.trim().toLowerCase()
+    const all = Array.from(new Set([...(staticRoutes || []), ...routes])).sort()
+    if (!q) return all
+    return all.filter(r => r.toLowerCase().includes(q))
+  }, [routes, routeQuery, staticRoutes])
+
+  const allRoutes = useMemo(() => Array.from(new Set([...(staticRoutes || []), ...routes])).sort(), [routes, staticRoutes])
+
+  const normalizedFormPage = useMemo(() => normalizePageKey(form.page), [form.page])
+  const conflictItem = useMemo(() => {
+    // Sadece yeni kayıt oluştururken çakışma kontrolü yap
+    if (editingId) return null
+    const key = normalizedFormPage === '' && form.page.trim() === '/' ? '' : normalizedFormPage
+    const found = items.find(i => i.page === key)
+    return found || null
+  }, [items, normalizedFormPage, form.page, editingId])
+
+  function normalizePageKey(page: string): string {
+    const p = (page || '').trim()
+    return p.startsWith('/') ? p.slice(1) : p
+  }
 
   // Preview values computed from selected `form.page`
   const canonicalPreview = useMemo(() => {
@@ -312,6 +365,10 @@ export default function AdminSeoPage() {
     await loadPageSeo(value)
   }
 
+  const handlePageSelectValue = async (value: string) => {
+    await loadPageSeo(value)
+  }
+
   const handleBooleanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target
     setForm(prev => ({ ...prev, [name]: checked }))
@@ -332,6 +389,22 @@ export default function AdminSeoPage() {
     setLoading(true)
     setError(null)
     try {
+      // Çakışan page kontrolü (unique constraint öncesi) - sadece yeni kayıt oluştururken
+      if (!editingId) {
+        const normalized = normalizePageKey(form.page)
+        const conflict = items.find(i => {
+          // anasayfa özel durumu: '/' inputu DB'de '' olarak tutulabilir
+          const key = normalized === '' && form.page.trim() === '/' ? '' : normalized
+          return i.page === key
+        })
+        if (conflict) {
+          setLoading(false)
+          const msg = `Bu sayfa için zaten SEO kaydı var (id: ${conflict.id}). Sol listeden mevcut kaydı seçebilir veya 'Slug Taşıma' sekmesinden birleştirebilirsin.`
+          setError(msg)
+          toast({ title: 'Çakışan sayfa', description: msg, variant: 'destructive' as any })
+          return
+        }
+      }
       const payload = { ...form }
       const res = await fetch(editingId ? `/api/seo/${editingId}` : '/api/seo', {
         method: editingId ? 'PATCH' : 'POST',
@@ -447,129 +520,179 @@ export default function AdminSeoPage() {
   // hydration uyarısını engellemek için clientOrigin + suppressHydrationWarning kullanılır
 
   return (
-    <div className="p-6 space-y-8">
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Genel SEO Ayarları</h1>
-        <div className="text-sm text-gray-500">Ana sayfa dahil tüm sayfalar</div>
-      </header>
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold">SEO Yönetimi</h1>
+          <p className="text-sm text-muted-foreground">Sayfa bazlı meta ve yapılandırılmış verileri düzenle</p>
+        </div>
+        <div className="text-xs text-muted-foreground">Origin: <span suppressHydrationWarning>{clientOrigin}</span></div>
+      </div>
 
       {error && (
         <div className="rounded bg-red-50 text-red-700 px-3 py-2">{error}</div>
       )}
 
-      {/* Organization Schema Editing — moved to bottom */}
-
-      {/* Otomatik ayarlar bilgilendirme */}
-      <section className="border rounded p-4 bg-muted/30 text-sm space-y-2">
-        <div className="font-medium">Otomatik SEO Yardımcıları</div>
-        <ul className="list-disc pl-5 space-y-1">
-          <li>Canonical: URL'den otomatik üretilir (<span suppressHydrationWarning>{clientOrigin}</span>)</li>
-          <li>Breadcrumb Schema: URL segmentlerinden JSON-LD olarak &lt;head&gt; içine eklenir</li>
-          <li>OG/Twitter: Canonical ve aşağıdaki sayfa özel alanlarıyla güncellenir</li>
-        </ul>
-        <div className="text-xs text-gray-500">İstersen sayfa bazlı canonical/OG/Twitter alanlarını aşağıdan manuel olarak override edebilirsin.</div>
-      </section>
-
-      {/* Otomatik Canonical / Breadcrumb Önizleme */}
-      <section className="border rounded p-4 bg-muted/30 text-sm space-y-3">
-        <div className="font-medium">Otomatik Canonical &amp; Breadcrumb Önizleme</div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <div className="text-xs text-gray-500">Seçili Sayfa</div>
-            <div className="rounded border p-2 bg-white/5">
-              <div className="text-xs text-gray-500">Canonical (otomatik):</div>
-              <div className="text-sm font-mono break-all"><span suppressHydrationWarning>{canonicalPreview || '(tarayıcıda hesaplanır)'}</span></div>
-              {editingItem?.canonicalUrl && (
-                <div className="mt-2 text-xs text-yellow-600">Override: {editingItem.canonicalUrl}</div>
-              )}
+      <Card>
+        <CardHeader>
+          <CardTitle>Otomatik SEO Yardımcıları</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm">
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Canonical otomatik: <span className="font-mono" suppressHydrationWarning>{clientOrigin}</span></li>
+            <li>Breadcrumb JSON-LD: URL segmentlerinden üretilir</li>
+            <li>OG/Twitter: Canonical + sayfa özel alanlarıyla güncellenir</li>
+          </ul>
+          <Separator />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label>Canonical (önizleme)</Label>
+              <div className="mt-1 rounded border p-2 bg-muted">
+                <div className="text-xs">Etkin değer:</div>
+                <div className="text-sm font-mono break-all"><span suppressHydrationWarning>{canonicalPreview || '(tarayıcıda hesaplanır)'}</span></div>
+                {editingItem?.canonicalUrl && (
+                  <div className="mt-2 text-xs text-yellow-700">Override: {editingItem.canonicalUrl}</div>
+                )}
+              </div>
+            </div>
+            <div>
+              <Label>Breadcrumb JSON-LD</Label>
+              <pre className="mt-1 rounded border p-2 bg-muted text-xs overflow-auto max-h-48"><code>{breadcrumbPreviewJSON || '// tarayıcıda hesaplanır'}</code></pre>
             </div>
           </div>
-          <div className="space-y-2">
-            <div className="text-xs text-gray-500">Breadcrumb JSON-LD</div>
-            <pre className="rounded border p-2 bg-white/5 text-xs overflow-auto max-h-48"><code>{breadcrumbPreviewJSON || '// tarayıcıda hesaplanır'}</code></pre>
-          </div>
-        </div>
-        <div className="text-xs text-gray-500">Etkin değerler sayfa yüklenince SeoAutoInjector tarafından &lt;head&gt; içine eklenir.</div>
-      </section>
+        </CardContent>
+      </Card>
 
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          {/* WordPress benzeri: Tüm sayfaları listele ve düzenle */}
-          <div className="overflow-auto border rounded">
-            <table className="min-w-full text-sm">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="text-left px-3 py-2">Sayfa (Route)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {routes.map((r) => (
-                  <tr key={r} className="border-t hover:bg-gray-50">
-                    <td className="px-3 py-2 font-medium">{r}</td>
-                  </tr>
-                ))}
-                {routes.length === 0 && (
-                  <tr>
-                    <td className="px-3 py-4 text-gray-500" colSpan={1}>Sayfa listesi yüklenemedi veya henüz yok.</td>
-                  </tr>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-1">
+          <CardHeader>
+            <CardTitle>Sayfalar</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 mb-3">
+              <Input placeholder="Route ara" value={routeQuery} onChange={(e) => setRouteQuery(e.target.value)} />
+              <Button variant="outline" onClick={() => setRouteQuery('')}>Temizle</Button>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Route</TableHead>
+                  <TableHead className="w-20">Durum</TableHead>
+                  <TableHead className="w-24">İşlem</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredRoutes.map((r) => {
+                  const hasSeo = items.some(i => i.page === r || i.page === normalizePageKey(r))
+                  return (
+                    <TableRow key={r} className="cursor-pointer" onClick={() => loadPageSeo(r)}>
+                      <TableCell className="font-mono">{r}</TableCell>
+                      <TableCell>
+                        <span className={hasSeo ? 'text-green-600' : 'text-muted-foreground'}>{hasSeo ? 'Var' : 'Yok'}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); loadPageSeo(r) }}>Seç</Button>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+                {filteredRoutes.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-muted-foreground">Eşleşen rota yok</TableCell>
+                  </TableRow>
                 )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
 
-        <div className="lg:col-span-1">
-          <div className="border rounded p-4 space-y-4">
-            <h2 className="font-medium">{editingId ? 'SEO Kaydını Düzenle' : 'Yeni SEO Kaydı Ekle'}</h2>
-            <div className="space-y-3">
-              <label className="block text-sm">Sayfa Seç
-                <select name="page" value={form.page} onChange={handlePageSelect} className="mt-1 w-full border rounded px-3 py-2">
-                  <option value="">Bir sayfa seçiniz</option>
-                  {routes.map((r) => (
-                    <option key={r} value={r}>{r}</option>
-                  ))}
-                </select>
-              </label>
-              <div className="text-xs text-gray-500">Listede olmayan özel bir rota kullanıyorsan, aşağıdan el ile girerek kaydedebilirsin.</div>
-              <label className="block text-sm">Özel Sayfa
-                <input name="page" value={form.page} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" placeholder="/ozel-sayfa" />
-              </label>
-              <label className="block text-sm">Title
-                <input name="title" value={form.title ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" />
-              </label>
-              <label className="block text-sm">Description
-                <textarea name="description" value={form.description ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2 h-24" />
-              </label>
-              <label className="block text-sm">Keywords (virgülle)
-                <input name="keywords" value={form.keywords ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" placeholder="casino, bonus, bahis" />
-              </label>
-              <label className="block text-sm">Canonical URL
-                <input name="canonicalUrl" value={form.canonicalUrl ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" placeholder="https://site.com/" />
-              </label>
-              <div className="grid grid-cols-1 gap-3">
-                <label className="block text-sm">OG Type
-                  <input name="ogType" value={form.ogType ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" placeholder="website, article" />
-                </label>
-                <label className="block text-sm">OG Title
-                  <input name="ogTitle" value={form.ogTitle ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" />
-                </label>
-                <label className="block text-sm">OG Description
-                  <textarea name="ogDescription" value={form.ogDescription ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2 h-20" />
-                </label>
-                <label className="block text-sm">OG Image URL
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>{editingId ? 'SEO Kaydını Düzenle' : 'Yeni SEO Kaydı'}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+              <div>
+                <Label>Sayfa Seç</Label>
+                <Select value={form.page} onValueChange={handlePageSelectValue}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Bir sayfa seçiniz" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {allRoutes.map((r) => (
+                      <SelectItem key={r} value={r}>{r}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Özel Sayfa</Label>
+                <Input name="page" value={form.page} onChange={handleChange} className="mt-1" placeholder="/ozel-sayfa" />
+                <p className="mt-1 text-xs text-muted-foreground">Başındaki slash otomatik normalize edilir. Ana sayfa için `/` girebilirsin.</p>
+                {conflictItem && (
+                  <div className="mt-2 text-xs text-red-600 flex items-center gap-2">
+                    <span>Bu sayfa için zaten kayıt var.</span>
+                    <Button size="sm" variant="outline" onClick={() => { setEditingId(conflictItem.id); setForm(prev => ({ ...prev, page: conflictItem.page })); }}>Mevcut Kaydı Aç</Button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <Tabs defaultValue="general" className="w-full">
+              <TabsList className="flex flex-wrap">
+                <TabsTrigger value="general">Genel</TabsTrigger>
+                <TabsTrigger value="og">Open Graph</TabsTrigger>
+                <TabsTrigger value="twitter">Twitter</TabsTrigger>
+                <TabsTrigger value="robots">Robots</TabsTrigger>
+                <TabsTrigger value="schema">Schema</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="general" className="space-y-3 pt-4">
+                <div>
+                  <Label>Title</Label>
+                  <Input name="title" value={form.title ?? ''} onChange={handleChange} className="mt-1" />
+                </div>
+                <div>
+                  <Label>Description</Label>
+                  <Textarea name="description" value={form.description ?? ''} onChange={handleChange} className="mt-1" rows={4} />
+                </div>
+                <div>
+                  <Label>Keywords (virgülle)</Label>
+                  <Input name="keywords" value={form.keywords ?? ''} onChange={handleChange} className="mt-1" placeholder="casino, bonus, bahis" />
+                </div>
+                <div>
+                  <Label>Canonical URL</Label>
+                  <Input name="canonicalUrl" value={form.canonicalUrl ?? ''} onChange={handleChange} className="mt-1" placeholder="https://site.com/" />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="og" className="space-y-3 pt-4">
+                <div>
+                  <Label>OG Type</Label>
+                  <Input name="ogType" value={form.ogType ?? ''} onChange={handleChange} className="mt-1" placeholder="website, article" />
+                </div>
+                <div>
+                  <Label>OG Title</Label>
+                  <Input name="ogTitle" value={form.ogTitle ?? ''} onChange={handleChange} className="mt-1" />
+                </div>
+                <div>
+                  <Label>OG Description</Label>
+                  <Textarea name="ogDescription" value={form.ogDescription ?? ''} onChange={handleChange} className="mt-1" rows={4} />
+                </div>
+                <div>
+                  <Label>OG Image URL</Label>
                   <div className="mt-1 flex items-center gap-2">
-                    <input name="ogImageUrl" value={form.ogImageUrl ?? ''} onChange={handleChange} className="flex-1 border rounded px-3 py-2" />
-                    <Button type="button" variant="outline" onClick={() => setMediaOpenOg(true)}>Görsel Seç / Yükle</Button>
+                    <Input name="ogImageUrl" value={form.ogImageUrl ?? ''} onChange={handleChange} />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenOg(true)}>Görsel Seç</Button>
                   </div>
                   {form.ogImageUrl && (
                     <div className="mt-2">
                       <img src={form.ogImageUrl as string} alt="OG preview" className="w-40 h-24 object-cover rounded border" />
                     </div>
                   )}
-                  {/* Uyarılar */}
                   {ogAudit && (
                     <div className="mt-2 text-xs">
-                      <div className="text-gray-600">Boyut: {ogAudit.width ?? '?'}x{ogAudit.height ?? '?'} | Oran: {ogAudit.ratio ? ogAudit.ratio.toFixed(2) : '?'}:1 | Tür: {(ogAudit.ext || '?').toUpperCase()}</div>
+                      <div className="text-muted-foreground">Boyut: {ogAudit.width ?? '?'}x{ogAudit.height ?? '?'} | Oran: {ogAudit.ratio ? ogAudit.ratio.toFixed(2) : '?'}:1 | Tür: {(ogAudit.ext || '?').toUpperCase()}</div>
                       {ogAudit.warnings.length > 0 ? (
                         <ul className="mt-1 list-disc pl-5 text-yellow-700">
                           {ogAudit.warnings.map((w) => (<li key={w}>{w}</li>))}
@@ -579,52 +702,44 @@ export default function AdminSeoPage() {
                       )}
                     </div>
                   )}
-                  <MediaPicker
-                    open={mediaOpenOg}
-                    onOpenChange={setMediaOpenOg}
-                    onSelect={(url) => setForm(prev => ({ ...prev, ogImageUrl: url }))}
-                    title="OG Görsel Seç / Yükle"
-                  />
-                </label>
-                <label className="block text-sm">OG Logo URL
+                </div>
+                <div>
+                  <Label>OG Logo URL</Label>
                   <div className="mt-1 flex items-center gap-2">
-                    <input name="ogLogoUrl" value={form.ogLogoUrl ?? ''} onChange={handleChange} className="flex-1 border rounded px-3 py-2" />
-                    <Button type="button" variant="outline" onClick={() => setMediaOpenOgLogo(true)}>Logo Seç / Yükle</Button>
+                    <Input name="ogLogoUrl" value={form.ogLogoUrl ?? ''} onChange={handleChange} />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenOgLogo(true)}>Logo Seç</Button>
                   </div>
                   {form.ogLogoUrl && (
                     <div className="mt-2">
                       <img src={form.ogLogoUrl as string} alt="OG logo preview" className="w-32 h-20 object-contain rounded border" />
                     </div>
                   )}
-                  <MediaPicker
-                    open={mediaOpenOgLogo}
-                    onOpenChange={setMediaOpenOgLogo}
-                    onSelect={(url) => setForm(prev => ({ ...prev, ogLogoUrl: url }))}
-                    title="OG Logo Seç / Yükle"
-                  />
-                </label>
-              </div>
-              <div className="grid grid-cols-1 gap-3">
-                <label className="block text-sm">Twitter Title
-                  <input name="twitterTitle" value={form.twitterTitle ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2" />
-                </label>
-                <label className="block text-sm">Twitter Description
-                  <textarea name="twitterDescription" value={form.twitterDescription ?? ''} onChange={handleChange} className="mt-1 w-full border rounded px-3 py-2 h-20" />
-                </label>
-                <label className="block text-sm">Twitter Image URL
+                </div>
+              </TabsContent>
+
+              <TabsContent value="twitter" className="space-y-3 pt-4">
+                <div>
+                  <Label>Twitter Title</Label>
+                  <Input name="twitterTitle" value={form.twitterTitle ?? ''} onChange={handleChange} className="mt-1" />
+                </div>
+                <div>
+                  <Label>Twitter Description</Label>
+                  <Textarea name="twitterDescription" value={form.twitterDescription ?? ''} onChange={handleChange} className="mt-1" rows={4} />
+                </div>
+                <div>
+                  <Label>Twitter Image URL</Label>
                   <div className="mt-1 flex items-center gap-2">
-                    <input name="twitterImageUrl" value={form.twitterImageUrl ?? ''} onChange={handleChange} className="flex-1 border rounded px-3 py-2" />
-                    <Button type="button" variant="outline" onClick={() => setMediaOpenTwitter(true)}>Görsel Seç / Yükle</Button>
+                    <Input name="twitterImageUrl" value={form.twitterImageUrl ?? ''} onChange={handleChange} />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenTwitter(true)}>Görsel Seç</Button>
                   </div>
                   {form.twitterImageUrl && (
                     <div className="mt-2">
                       <img src={form.twitterImageUrl as string} alt="Twitter preview" className="w-40 h-24 object-cover rounded border" />
                     </div>
                   )}
-                  {/* Uyarılar */}
                   {twAudit && (
                     <div className="mt-2 text-xs">
-                      <div className="text-gray-600">Boyut: {twAudit.width ?? '?'}x{twAudit.height ?? '?'} | Oran: {twAudit.ratio ? twAudit.ratio.toFixed(2) : '?'}:1 | Tür: {(twAudit.ext || '?').toUpperCase()}</div>
+                      <div className="text-muted-foreground">Boyut: {twAudit.width ?? '?'}x{twAudit.height ?? '?'} | Oran: {twAudit.ratio ? twAudit.ratio.toFixed(2) : '?'}:1 | Tür: {(twAudit.ext || '?').toUpperCase()}</div>
                       {twAudit.warnings.length > 0 ? (
                         <ul className="mt-1 list-disc pl-5 text-yellow-700">
                           {twAudit.warnings.map((w) => (<li key={w}>{w}</li>))}
@@ -634,166 +749,124 @@ export default function AdminSeoPage() {
                       )}
                     </div>
                   )}
-                  <MediaPicker
-                    open={mediaOpenTwitter}
-                    onOpenChange={setMediaOpenTwitter}
-                    onSelect={(url) => setForm(prev => ({ ...prev, twitterImageUrl: url }))}
-                    title="Twitter Görsel Seç / Yükle"
-                  />
-                </label>
-              </div>
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" name="robotsIndex" checked={form.robotsIndex} onChange={handleBooleanChange} />
-                  Robots Index
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" name="robotsFollow" checked={form.robotsFollow} onChange={handleBooleanChange} />
-                  Robots Follow
-                </label>
-              </div>
-              <label className="block text-sm">Structured Data (JSON-LD)
-                <textarea defaultValue={form.structuredData ? JSON.stringify(form.structuredData, null, 2) : ''} onChange={handleStructuredDataChange} className="mt-1 w-full border rounded px-3 py-2 h-28" placeholder='{"@context":"https://schema.org","@type":"WebSite"}' />
-              </label>
-            </div>
-            <div className="flex gap-2 pt-2">
-              <button disabled={loading} onClick={submit} className="px-3 py-2 rounded bg-green-600 text-white disabled:opacity-50 flex items-center gap-2">
+                </div>
+              </TabsContent>
+
+              <TabsContent value="robots" className="space-y-3 pt-4">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <Switch checked={form.robotsIndex} onCheckedChange={(v) => setForm(prev => ({ ...prev, robotsIndex: v }))} />
+                    <Label>Robots Index</Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch checked={form.robotsFollow} onCheckedChange={(v) => setForm(prev => ({ ...prev, robotsFollow: v }))} />
+                    <Label>Robots Follow</Label>
+                  </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="schema" className="space-y-3 pt-4">
+                <div>
+                  <Label>Structured Data (JSON-LD)</Label>
+                  <Textarea defaultValue={form.structuredData ? JSON.stringify(form.structuredData, null, 2) : ''} onChange={handleStructuredDataChange} className="mt-1" rows={8} placeholder='{"@context":"https://schema.org","@type":"WebSite"}' />
+                </div>
+              </TabsContent>
+            </Tabs>
+
+            <div className="flex gap-2 pt-4">
+              <Button disabled={loading} onClick={submit} className="gap-2">
                 {loading && <span className="inline-block w-4 h-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />}
                 {editingId ? 'Güncelle' : 'Kaydet'}
-              </button>
+              </Button>
               {editingId && (
-                <button disabled={loading} onClick={() => { setEditingId(null); setForm(emptyForm); }} className="px-3 py-2 rounded bg-gray-200">İptal</button>
+                <Button variant="outline" disabled={loading} onClick={() => { setEditingId(null); setForm(emptyForm); }}>İptal</Button>
               )}
             </div>
-          </div>
-        </div>
-      </section>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Organization Schema Editing — dark themed at bottom */}
-      <section className="mt-10 border border-gray-800 rounded p-6 bg-gray-900 text-gray-100 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Organization Schema (Global)</h2>
-          <div className="text-sm text-gray-300">Tüm sayfalarda görünür</div>
-        </div>
-        <div className="text-sm text-gray-300 mb-4">
-          Bu bilgiler sitenin Organization JSON-LD şemasını oluşturur ve arama motorlarına kimliğini tanıtır.
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <label className="block text-sm font-medium">
-              Organizasyon Adı
-              <input
-                name="name"
-                value={orgSchema.name}
-                onChange={handleOrgChange}
-                className="mt-1 w-full border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
-                placeholder="Hokkabaz"
-              />
-            </label>
-            <label className="block text-sm font-medium">
-              Site URL
-              <input
-                name="url"
-                value={orgSchema.url}
-                onChange={handleOrgChange}
-                className="mt-1 w-full border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
-  placeholder="https://hokkabaz.bet"
-              />
-            </label>
-          </div>
-          <div className="space-y-3">
-            <label className="block text-sm font-medium">
-              Logo URL
-              <div className="mt-1 flex items-center gap-2">
-                <input
-                  name="logo"
-                  value={orgSchema.logo}
-                  onChange={handleOrgChange}
-                  className="flex-1 border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
-  placeholder="https://hokkabaz.bet/logo.svg"
-                />
-                <Button type="button" variant="outline" onClick={() => setMediaOpenOrgLogo(true)}>
-                  Logo Seç
-                </Button>
-              </div>
-              {orgSchema.logo && (
-                <div className="mt-2">
-                  <img src={orgSchema.logo} alt="Organization logo" className="w-32 h-20 object-contain rounded border border-gray-700 bg-gray-900" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Organization Schema (Global)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div>
+                  <Label>Organizasyon Adı</Label>
+                  <Input name="name" value={orgSchema.name} onChange={handleOrgChange} className="mt-1" placeholder="Hokkabaz" />
                 </div>
-              )}
-            </label>
-            <label className="block text-sm font-medium">
-              Temsili Görsel URL
-              <div className="mt-1 flex items-center gap-2">
-                <input
-                  name="image"
-                  value={orgSchema.image}
-                  onChange={handleOrgChange}
-                  className="flex-1 border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
-  placeholder="https://hokkabaz.bet/uploads/..."
-                />
-                <Button type="button" variant="outline" onClick={() => setMediaOpenOrgImage(true)}>
-                  Görsel Seç
-                </Button>
-              </div>
-              {orgSchema.image && (
-                <div className="mt-2">
-                  <img src={orgSchema.image} alt="Organization image" className="w-40 h-24 object-cover rounded border border-gray-700 bg-gray-900" />
+                <div>
+                  <Label>Site URL</Label>
+                  <Input name="url" value={orgSchema.url} onChange={handleOrgChange} className="mt-1" placeholder="https://hokkabaz.bet" />
                 </div>
-              )}
-            </label>
-          </div>
-        </div>
-        <div className="flex gap-2 pt-2">
-          <button
-            disabled={orgLoading}
-            onClick={saveOrganizationSchema}
-            className="px-4 py-2 rounded bg-blue-600 text-white disabled:opacity-50 flex items-center gap-2"
-          >
-            {orgLoading && <span className="inline-block w-4 h-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />}
-            Organization Schema Kaydet
-          </button>
-        </div>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <Label>Logo URL</Label>
+                  <div className="mt-1 flex items-center gap-2">
+                    <Input name="logo" value={orgSchema.logo} onChange={handleOrgChange} />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenOrgLogo(true)}>Logo Seç</Button>
+                  </div>
+                  {orgSchema.logo && (
+                    <div className="mt-2">
+                      <img src={orgSchema.logo} alt="Organization logo" className="w-32 h-20 object-contain rounded border" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <Label>Temsili Görsel URL</Label>
+                  <div className="mt-1 flex items-center gap-2">
+                    <Input name="image" value={orgSchema.image} onChange={handleOrgChange} />
+                    <Button type="button" variant="outline" onClick={() => setMediaOpenOrgImage(true)}>Görsel Seç</Button>
+                  </div>
+                  {orgSchema.image && (
+                    <div className="mt-2">
+                      <img src={orgSchema.image} alt="Organization image" className="w-40 h-24 object-cover rounded border" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 pt-4">
+              <Button disabled={orgLoading} onClick={saveOrganizationSchema} className="gap-2">
+                {orgLoading && <span className="inline-block w-4 h-4 border-2 border-white/60 border-t-transparent rounded-full animate-spin" />}
+                Organization Schema Kaydet
+              </Button>
+            </div>
+            <MediaPicker open={mediaOpenOrgLogo} onOpenChange={setMediaOpenOrgLogo} onSelect={(url) => setOrgSchema(prev => ({ ...prev, logo: url }))} title="Organization Logo Seç / Yükle" />
+            <MediaPicker open={mediaOpenOrgImage} onOpenChange={setMediaOpenOrgImage} onSelect={(url) => setOrgSchema(prev => ({ ...prev, image: url }))} title="Organization Görsel Seç / Yükle" />
+          </CardContent>
+        </Card>
 
-        {/* Media Pickers for Organization */}
-        <MediaPicker
-          open={mediaOpenOrgLogo}
-          onOpenChange={setMediaOpenOrgLogo}
-          onSelect={(url) => setOrgSchema(prev => ({ ...prev, logo: url }))}
-          title="Organization Logo Seç / Yükle"
-        />
-        <MediaPicker
-          open={mediaOpenOrgImage}
-          onOpenChange={setMediaOpenOrgImage}
-          onSelect={(url) => setOrgSchema(prev => ({ ...prev, image: url }))}
-          title="Organization Görsel Seç / Yükle"
-        />
-      </section>
+        <Card>
+          <CardHeader>
+            <CardTitle>Slug Taşıma</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label>Eski Slug</Label>
+                <Input value={fromSlug} onChange={(e) => setFromSlug(e.target.value)} className="mt-1" placeholder="anlasmali-siteler" />
+              </div>
+              <div>
+                <Label>Yeni Slug</Label>
+                <Input value={toSlug} onChange={(e) => setToSlug(e.target.value)} className="mt-1" placeholder="guvenilir-bahis-siteleri-listesi" />
+              </div>
+            </div>
+            <div className="flex items-center gap-4 pt-4">
+              <Button disabled={migrating} onClick={migrateSlug}>
+                {migrating ? 'Taşınıyor...' : 'Taşı'}
+              </Button>
+              <div className="text-xs text-muted-foreground">Not: SEO kayıtlarını taşır/birleştirir.</div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Slug Taşıma */}
-      <section className="mt-8">
-        <h2 className="text-lg font-semibold">Slug Taşıma</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <label className="block text-sm">Eski Slug
-            <input value={fromSlug} onChange={(e) => setFromSlug(e.target.value)} className="mt-1 w-full border rounded px-3 py-2" placeholder="anlasmali-siteler" />
-          </label>
-          <label className="block text-sm">Yeni Slug
-            <input value={toSlug} onChange={(e) => setToSlug(e.target.value)} className="mt-1 w-full border rounded px-3 py-2" placeholder="guvenilir-bahis-siteleri-listesi" />
-          </label>
-        </div>
-        <div className="flex items-center gap-4 pt-2">
-          <Button disabled={migrating} onClick={migrateSlug} className="px-3 py-2 rounded bg-blue-600 text-white disabled:opacity-50">
-            {migrating ? 'Taşınıyor...' : 'Taşı'}
-          </Button>
-          <div className="text-xs text-gray-600">
-            Not: SEO kayıtlarını taşır/birleştirir; rota listeleri ve harici linkler ayrı yönetilir.
-          </div>
-        </div>
-      </section>
-
-      <section className="text-sm text-gray-500">
-        Öneri: Ana sayfa için `page` alanını `/` olarak gir.
-      </section>
+      <p className="text-xs text-muted-foreground">Öneri: Ana sayfa için `page` alanını `/` olarak gir.</p>
     </div>
   )
 

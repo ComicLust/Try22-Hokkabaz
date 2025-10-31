@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import SeoArticle from '@/components/SeoArticle';
 import TelegramPanel from '@/components/TelegramPanel';
 import FAQDesktop from '@/components/FAQDesktop';
 
@@ -142,10 +143,13 @@ export default function HomeClient() {
       } catch {}
     })();
   }, []);
-  const badgePool = ["Önerilen", "Yeni", "Bonuslu"];
   const primaryBrandLogos = useMemo(() => {
     const sorted = [...partnerSites].sort((a, b) => ((a?.features?.order ?? 999) - (b?.features?.order ?? 999)));
-    return sorted.map((s, i) => ({ img: s.logoUrl ?? '/logo.svg', href: s.siteUrl ?? '#', badge: s?.features?.badge ?? badgePool[i % badgePool.length] }));
+    return sorted.map((s) => ({
+      img: s.logoUrl ?? '/logo.svg',
+      href: s.siteUrl ?? '#',
+      badge: typeof s?.features?.badge === 'string' && s.features.badge.trim() ? s.features.badge.trim() : undefined,
+    }));
   }, [partnerSites]);
   const homeBrandGrid = useMemo(() => {
     // Ana sayfada sadece 2 sıra göstereceğiz (ör: 4 sütun x 2 sıra = 8 öğe)
@@ -542,7 +546,9 @@ export default function HomeClient() {
             >
               {homeBrandGrid.map((b, i) => (
                 <a key={`home-brand-${i}`} href={b.href} target="_blank" rel="noopener noreferrer" className="relative group rounded-xl border border-border bg-gradient-to-br from-[#111] to-[#1a1a1a] p-5 text-center hover:border-gold shadow-smooth transition-colors w-full">
-                  <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                  {b.badge ? (
+                    <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                  ) : null}
                   <img src={b.img} alt="logo" className="w-[220px] h-[73px] mx-auto opacity-90 group-hover:opacity-100 transition-opacity object-contain" />
                 </a>
               ))}
@@ -748,6 +754,7 @@ export default function HomeClient() {
           )}
         </DialogContent>
       </Dialog>
+      <SeoArticle slug="home" />
       <Footer />
     </div>
   );

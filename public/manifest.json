@@ -1,0 +1,23 @@
+{
+  "name": "Hokkabaz - Güvenilir Bahis Siteleri",
+  "short_name": "Hokkabaz",
+  "description": "Güvenilir bahis siteleri, bonuslar ve kampanyalar",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e27",
+  "theme_color": "#ffd700",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "entertainment"],
+  "lang": "tr",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}

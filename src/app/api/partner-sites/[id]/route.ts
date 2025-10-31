@@ -16,7 +16,13 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json()
-    const updated = await db.partnerSite.update({ where: { id: params.id }, data: body })
+    // features için merge değil replace: client tam nesne gönderiyor
+    const nextData: any = { ...body }
+    if (body && typeof body === 'object' && 'features' in body) {
+      nextData.features = body.features ?? null
+    }
+
+    const updated = await db.partnerSite.update({ where: { id: params.id }, data: nextData })
     return NextResponse.json(updated)
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })

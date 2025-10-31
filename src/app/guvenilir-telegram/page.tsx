@@ -4,6 +4,7 @@ import { unstable_noStore as noStore } from 'next/cache'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { db } from '@/lib/db'
+import { getSeoRecord } from '@/lib/seo'
 import ActiveCounter from '@/components/ActiveCounter'
 import ClientOnly from '@/components/ClientOnly'
 import TelegramSuggestionCard from '@/components/TelegramSuggestionCard'
@@ -25,9 +26,7 @@ function badgeClass(b: string) {
 
 export default async function GuvenilirTelegramPage() {
   noStore()
-  const seo = await (db as any).seoSetting.findUnique({ where: { page: '/guvenilir-telegram' }, select: {
-    title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
-  } })
+  const seo = await getSeoRecord('/guvenilir-telegram', ['guvenilir-telegram']) as any
   const pageTitle = seo?.title ?? 'Güvenilir Telegram Grupları'
   const pageDescription = seo?.description ?? 'Seçtiğimiz güvenilir kanal ve grupları aşağıda bulabilirsiniz.'
   const items = await (db as any).telegramGroup.findMany({
@@ -159,9 +158,7 @@ export default async function GuvenilirTelegramPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const seo = await (db as any).seoSetting.findUnique({ where: { page: '/guvenilir-telegram' }, select: {
-      title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
-    } })
+    const seo = await getSeoRecord('/guvenilir-telegram', ['guvenilir-telegram']) as any
     const title = seo?.title ?? 'Güvenilir Telegram Grupları'
     const description = seo?.description ?? 'Seçtiğimiz güvenilir kanal ve grupları aşağıda bulabilirsiniz.'
     const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)

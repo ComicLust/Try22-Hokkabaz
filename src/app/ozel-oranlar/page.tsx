@@ -3,6 +3,7 @@ import OzelOranlarClient from '@/components/OzelOranlarClient'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import SeoArticle from '@/components/SeoArticle'
+import { getSeoRecord } from '@/lib/seo'
 
 export default async function OzelOranlarPage() {
   const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.bet'
@@ -55,26 +56,41 @@ export default async function OzelOranlarPage() {
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const title = 'Özel Oranlar'
-    const description = 'Derbi ve özel maçlara özel artırılmış oranlı kuponlar.'
+    const seo = await getSeoRecord('/ozel-oranlar', ['ozel-oranlar']) as any
+    const title = seo?.title ?? 'Özel Oranlar'
+    const description = seo?.description ?? 'Derbi ve özel maçlara özel artırılmış oranlı kuponlar.'
+    const keywords = seo?.keywords?.split(',').map((k: string) => k.trim()).filter(Boolean)
+    const ogTitle = seo?.ogTitle ?? title
+    const ogDescription = seo?.ogDescription ?? description
+    const twitterTitle = seo?.twitterTitle ?? title
+    const twitterDescription = seo?.twitterDescription ?? description
+    const images = seo?.ogImageUrl ? [seo.ogImageUrl] : ['/uploads/1760532229828-d1r5fy9lmim.png']
+
     return {
       title,
       description,
+      keywords,
+      alternates: seo?.canonicalUrl ? { canonical: seo.canonicalUrl } : undefined,
       openGraph: {
-        title,
-        description,
-        url: '/ozel-oranlar',
-        images: ['/uploads/1760532229828-d1r5fy9lmim.png'],
+        title: ogTitle,
+        description: ogDescription,
+        url: 'https://hokkabaz.bet/ozel-oranlar',
+        siteName: 'Hokkabaz',
+        type: 'website',
+        locale: 'tr_TR',
+        images,
       },
       twitter: {
-        title,
-        description,
-        images: ['/uploads/1760532229828-d1r5fy9lmim.png'],
+        card: 'summary_large_image',
+        title: twitterTitle,
+        description: twitterDescription,
+        images: seo?.twitterImageUrl ? [seo.twitterImageUrl] : ['/uploads/1760532229828-d1r5fy9lmim.png'],
       },
       robots: {
-        index: true,
-        follow: true,
+        index: seo?.robotsIndex ?? true,
+        follow: seo?.robotsFollow ?? true,
       },
+      other: seo?.structuredData ? { structuredData: JSON.stringify(seo.structuredData) } : undefined,
     }
   } catch {
     return {

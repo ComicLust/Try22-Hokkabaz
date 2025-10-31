@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { getCommentAvatarUrl } from '@/lib/utils'
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -54,7 +55,7 @@ export default function IletisimClient() {
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
                     <Avatar className="size-8">
-                       <AvatarImage src="/images/agentgman.jpg" alt="DarlyDixon" />
+                       <AvatarImage src={getCommentAvatarUrl('DarlyDixon', { size: 64 })} alt="DarlyDixon" />
                        <AvatarFallback className="bg-yellow-500/20 text-yellow-300">AG</AvatarFallback>
                      </Avatar>
                     <div className="max-w-[80%] rounded-2xl bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 text-sm">
@@ -66,13 +67,13 @@ export default function IletisimClient() {
                       Selam! X markasıyız, kampanya için içerik partnerliği planlıyoruz. Kapsam ve bütçe konuşabilir miyiz?
                     </div>
                     <Avatar className="size-8">
-                      <AvatarImage src="" alt="Kullanıcı" />
+                      <AvatarImage src={getCommentAvatarUrl('Kullanıcı', { size: 64 })} alt="Kullanıcı" />
                       <AvatarFallback>U</AvatarFallback>
                     </Avatar>
                   </div>
                   <div className="flex items-start gap-3">
                     <Avatar className="size-8">
-                      <AvatarImage src="" alt="DarlyDixon" />
+                      <AvatarImage src={getCommentAvatarUrl('DarlyDixon', { size: 64 })} alt="DarlyDixon" />
                       <AvatarFallback className="bg-yellow-500/20 text-yellow-300">GV</AvatarFallback>
                     </Avatar>
                     <div className="max-w-[80%] rounded-2xl bg-yellow-500/10 border border-yellow-500/30 px-3 py-2 text-sm">
@@ -112,7 +113,7 @@ export default function IletisimClient() {
               <CardContent>
                 <div className="flex items-center gap-3">
                   <Avatar className="size-12">
-                    <AvatarImage src="/images/agentgman.jpg" alt="DarlyDixon" />
+                    <AvatarImage src={getCommentAvatarUrl('DarlyDixon', { size: 96 })} alt="DarlyDixon" />
                     <AvatarFallback className="text-lg bg-yellow-500/20 text-yellow-300">AG</AvatarFallback>
                   </Avatar>
                   <div>

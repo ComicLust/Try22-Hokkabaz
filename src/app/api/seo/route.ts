@@ -32,6 +32,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'page alanı zorunlu' }, { status: 400 })
     }
     body.page = normalizedPage
+    
+    // Unique constraint kontrolü - aynı page değerine sahip kayıt var mı?
+    const existingRecord = await (db as any).seoSetting.findUnique({ 
+      where: { page: normalizedPage },
+      select: { id: true }
+    })
+    
+    if (existingRecord) {
+      return NextResponse.json({ 
+        error: `Bu sayfa için zaten bir SEO kaydı mevcut: ${normalizedPage}` 
+      }, { status: 409 })
+    }
+    
     const created = await (db as any).seoSetting.create({ data: body })
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {
