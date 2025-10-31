@@ -18,4 +18,4 @@ Allow: /api/campaigns
 Allow: /api/partner-sites
 Allow: /api/health
 
-Sitemap: https://hokkabaz.net/sitemap.xml
+Sitemap: https://hokkabaz.bet/sitemap.xml

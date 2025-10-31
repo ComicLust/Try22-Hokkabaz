@@ -33,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        url: "https://hokkabaz.net/banko-kuponlar/arsiv",
+  url: "https://hokkabaz.bet/banko-kuponlar/arsiv",
         siteName: "Hokkabaz",
         type: "website",
         locale: "tr_TR",

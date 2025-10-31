@@ -69,9 +69,9 @@ export default function AdminSeoPage() {
   // Organization schema state
   const [orgSchema, setOrgSchema] = useState<OrganizationSchema>({
     name: 'Hokkabaz',
-    url: 'https://hokkabaz.net',
-    logo: 'https://hokkabaz.net/logo.svg',
-    image: 'https://hokkabaz.net/uploads/1760732951329-fzch33159aq.jpg'
+  url: 'https://hokkabaz.bet',
+  logo: 'https://hokkabaz.bet/logo.svg',
+  image: 'https://hokkabaz.bet/uploads/1760732951329-fzch33159aq.jpg'
   })
   const [orgLoading, setOrgLoading] = useState(false)
   const [mediaOpenOrgLogo, setMediaOpenOrgLogo] = useState(false)
@@ -384,9 +384,9 @@ export default function AdminSeoPage() {
         const org = data.structuredData
         setOrgSchema({
           name: org.name || 'Hokkabaz',
-          url: org.url || 'https://hokkabaz.net',
-          logo: org.logo || 'https://hokkabaz.net/logo.svg',
-          image: org.image || 'https://hokkabaz.net/uploads/1760732951329-fzch33159aq.jpg'
+  url: org.url || 'https://hokkabaz.bet',
+  logo: org.logo || 'https://hokkabaz.bet/logo.svg',
+  image: org.image || 'https://hokkabaz.bet/uploads/1760732951329-fzch33159aq.jpg'
         })
       }
     } catch (err) {
@@ -697,7 +697,7 @@ export default function AdminSeoPage() {
                 value={orgSchema.url}
                 onChange={handleOrgChange}
                 className="mt-1 w-full border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
-                placeholder="https://hokkabaz.net"
+  placeholder="https://hokkabaz.bet"
               />
             </label>
           </div>
@@ -710,7 +710,7 @@ export default function AdminSeoPage() {
                   value={orgSchema.logo}
                   onChange={handleOrgChange}
                   className="flex-1 border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
-                  placeholder="https://hokkabaz.net/logo.svg"
+  placeholder="https://hokkabaz.bet/logo.svg"
                 />
                 <Button type="button" variant="outline" onClick={() => setMediaOpenOrgLogo(true)}>
                   Logo Seç
@@ -730,7 +730,7 @@ export default function AdminSeoPage() {
                   value={orgSchema.image}
                   onChange={handleOrgChange}
                   className="flex-1 border border-gray-700 rounded px-3 py-2 bg-gray-800 text-gray-100 placeholder-gray-400"
-                  placeholder="https://hokkabaz.net/uploads/..."
+  placeholder="https://hokkabaz.bet/uploads/..."
                 />
                 <Button type="button" variant="outline" onClick={() => setMediaOpenOrgImage(true)}>
                   Görsel Seç

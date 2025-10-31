@@ -3,7 +3,7 @@ import { db } from '@/lib/db'
 import KampanyalarClient from '@/components/KampanyalarClient'
 
 export default async function KampanyalarPage() {
-  const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.net'
+  const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.bet'
   let campaigns: any[] = []
   try {
     campaigns = await (db as any).campaign.findMany({
@@ -57,7 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        url: 'https://hokkabaz.net/kampanyalar',
+  url: 'https://hokkabaz.bet/kampanyalar',
         siteName: 'Hokkabaz',
         type: 'website',
         locale: 'tr_TR',

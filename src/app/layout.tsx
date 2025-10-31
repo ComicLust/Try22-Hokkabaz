@@ -20,7 +20,7 @@ const GeistMonoInit = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.net'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.bet'
 export const revalidate = 0
 
 export const metadata: Metadata = {

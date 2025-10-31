@@ -134,7 +134,7 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        url: 'https://hokkabaz.net/vpn-onerileri',
+  url: 'https://hokkabaz.bet/vpn-onerileri',
         siteName: 'Hokkabaz',
         type: 'website',
         locale: 'tr_TR',

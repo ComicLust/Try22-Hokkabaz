@@ -82,11 +82,11 @@ export default function Footer({ noSidebarOffset = false }: FooterProps) {
           <div>
             <h3 className="text-base md:text-lg font-semibold mb-4 text-gold">İletişim</h3>
             <div className="space-y-2">
-              <a href="mailto:info@hokkabaz.net" className="flex items-center text-muted-foreground hover:text-gold">
+        <a href="mailto:info@hokkabaz.bet" className="flex items-center text-muted-foreground hover:text-gold">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                info@hokkabaz.net
+        info@hokkabaz.bet
               </a>
               <a href="https://t.me/+-H20aHx5MyZlZjQ0" target="_blank" rel="noopener noreferrer nofollow" className="flex items-center text-muted-foreground hover:text-gold">
                 <TelegramIcon className="w-4 h-4 mr-2" />

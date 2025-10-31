@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 import SeoArticle from '@/components/SeoArticle'
 
 export default async function OzelOranlarPage() {
-  const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.net'
+  const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.bet'
   const specials = [
     {
       title: 'Örnek Marka A – Galatasaray vs Fenerbahçe',

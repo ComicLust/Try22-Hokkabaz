@@ -5,9 +5,16 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const page = searchParams.get('page') ?? undefined
   if (page) {
-    const item = await (db as any).seoSetting.findUnique({ where: { page }, select: {
-      id: true, page: true, title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
-    } })
+    // Sayfa anahtarı hem "/path" hem de "path" biçiminde gelebilir.
+    // DB'de geçmiş kayıtlar çoğunlukla slash'sız tutulduğu için iki varyantı da dene.
+    const variants = Array.from(new Set([page, page.replace(/^\/+/,'')].filter(Boolean)))
+    let item: any = null
+    for (const key of variants) {
+      const found = await (db as any).seoSetting.findUnique({ where: { page: key }, select: {
+        id: true, page: true, title: true, description: true, keywords: true, canonicalUrl: true, ogTitle: true, ogDescription: true, ogImageUrl: true, ogLogoUrl: true, twitterTitle: true, twitterDescription: true, twitterImageUrl: true, robotsIndex: true, robotsFollow: true, structuredData: true,
+      } })
+      if (found) { item = found; break }
+    }
     return NextResponse.json(item ?? null)
   }
   const items = await (db as any).seoSetting.findMany({ orderBy: { page: 'asc' }, select: {
@@ -19,6 +26,12 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
+    // Tutarlılık: DB'de slug'ı slash'sız sakla
+    const normalizedPage = String(body?.page ?? '').trim().replace(/^\/+/,'')
+    if (!normalizedPage) {
+      return NextResponse.json({ error: 'page alanı zorunlu' }, { status: 400 })
+    }
+    body.page = normalizedPage
     const created = await (db as any).seoSetting.create({ data: body })
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {

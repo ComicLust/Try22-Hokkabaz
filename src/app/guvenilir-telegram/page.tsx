@@ -179,7 +179,7 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        url: 'https://hokkabaz.net/guvenilir-telegram',
+  url: 'https://hokkabaz.bet/guvenilir-telegram',
         siteName: 'Hokkabaz',
         type: 'website',
         locale: 'tr_TR',

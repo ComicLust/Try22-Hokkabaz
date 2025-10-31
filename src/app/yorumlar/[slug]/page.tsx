@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const brand = await prisma.reviewBrand.findUnique({ where: { slug } })
     if (!brand) return { title: 'Site Yorumları' }
 
-    const canonical = `https://hokkabaz.net/yorumlar/${slug}`
+const canonical = `https://hokkabaz.bet/yorumlar/${slug}`
     const title = `${brand.name} Yorumları`
     const description = `${brand.name} için kullanıcı yorumları ve değerlendirmeler`
     const images = brand.logoUrl ? [brand.logoUrl] : ['/uploads/1760732951329-fzch33159aq.jpg']

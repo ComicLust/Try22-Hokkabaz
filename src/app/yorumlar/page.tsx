@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        url: 'https://hokkabaz.net/yorumlar',
+        url: 'https://hokkabaz.bet/yorumlar',
         siteName: 'Hokkabaz',
         type: 'website',
         locale: 'tr_TR',

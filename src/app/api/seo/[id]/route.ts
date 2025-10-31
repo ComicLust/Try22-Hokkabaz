@@ -16,6 +16,10 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json()
+    // Tutarlılık: sağlanan page varsa slash başını temizle
+    if (typeof body?.page === 'string') {
+      body.page = String(body.page).trim().replace(/^\/+/, '')
+    }
     const updated = await db.seoSetting.update({ where: { id: params.id }, data: body })
     return NextResponse.json(updated)
   } catch (e: any) {

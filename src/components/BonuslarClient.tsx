@@ -14,6 +14,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Search, Award, Calendar, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import SeoArticle from "@/components/SeoArticle";
+import { slugifyTr } from "@/lib/slugify";
 
 type Bonus = {
   id: string;
@@ -95,23 +96,27 @@ export default function BonuslarClient() {
     fetchStories();
   }, []);
 
-  // URL parametresinden başlangıç filtresini uygula (ör. /bonuslar?type=Deneme%20Bonusu)
+  // URL parametresinden başlangıç filtresini uygula ve slug'ı etikete çevir
+  // URL parametresinden başlangıç filtresini uygula ve slug'ı etikete çevir
+  // bonusTypeOptions üretildikten sonra çalışmalı
   useEffect(() => {
-    const typeParam = searchParams.get("type");
-    if (typeParam) setBonusType(typeParam);
     const qParam = searchParams.get("q");
     if (qParam) setSearchQuery(qParam);
     const amountParam = searchParams.get("amount");
     if (amountParam) setBonusAmount(amountParam);
-    const categoryParam = searchParams.get("category");
-    if (categoryParam) setSiteCategory(categoryParam);
   }, [searchParams]);
 
-  // URL arama parametresini güncelleyen yardımcı
+  // URL arama parametresini güncelleyen yardımcı (Türkçe için slugify)
   function setUrlParam(key: string, value: string | null) {
     const params = new URLSearchParams(Array.from(searchParams.entries()));
-    if (!value || value === "" || value === "all") params.delete(key);
-    else params.set(key, value);
+    if (!value || value === "" || value === "all") {
+      params.delete(key);
+    } else {
+      const v = (key === "type" || key === "category")
+        ? slugifyTr(value, { withHyphens: true })
+        : value;
+      params.set(key, v);
+    }
     const qs = params.toString();
     router.replace(qs ? `${pathname}?${qs}` : `${pathname}`, { scroll: false });
   }
@@ -166,6 +171,26 @@ export default function BonuslarClient() {
     bonuses.forEach(b => { if (b.bonusType) set.add(b.bonusType); });
     return Array.from(set).sort();
   }, [bonuses]);
+
+  useEffect(() => {
+    function resolveFromSlug(slug: string | null, options: string[]): string | null {
+      if (!slug) return null;
+      const s = slug.toLowerCase();
+      for (const opt of options) {
+        if (slugifyTr(opt, { withHyphens: true }) === s) return opt;
+      }
+      return null;
+    }
+
+    const typeParam = searchParams.get("type");
+    const resolvedType = resolveFromSlug(typeParam, bonusTypeOptions);
+    if (resolvedType) setBonusType(resolvedType);
+
+    const categoryParam = searchParams.get("category");
+    const categoryOptions = ["Spor", "Casino", "Slot", "Poker"];
+    const resolvedCategory = resolveFromSlug(categoryParam, categoryOptions);
+    if (resolvedCategory) setSiteCategory(resolvedCategory);
+  }, [searchParams, bonusTypeOptions]);
 
   const featuredBonuses = useMemo(() => filtered.filter(b => b.isFeatured), [filtered]);
   const regularBonuses = useMemo(() => filtered.filter(b => !b.isFeatured), [filtered]);
@@ -316,22 +341,25 @@ export default function BonuslarClient() {
           animate="animate"
           variants={fadeInUp}
         >
-          <div className="flex flex-col lg:flex-row gap-4 items-center">
+          <div className="flex flex-col lg:flex-row gap-3 items-stretch">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
               <Input
                 placeholder="Bonus veya site ara..."
                 value={searchQuery}
                 onChange={(e) => { const v = e.target.value; setSearchQuery(v); setUrlParam('q', v || null); }}
-                className="pl-10 bg-background border-border"
+                className="pl-10 bg-background border-border h-11"
               />
             </div>
             <Select value={bonusType} onValueChange={(val) => { setBonusType(val); setUrlParam('type', val); }}>
-              <SelectTrigger className="w-full lg:w-56" aria-label="Bonus türü filtresi">
-                <span className="text-xs text-muted-foreground mr-2">Tür</span>
-                <SelectValue placeholder="Bonus Türü" />
+              <SelectTrigger className="w-full lg:w-56 h-11" aria-label="Bonus türü filtresi">
+                <div className="flex items-center gap-2 w-full">
+                  <Award className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Tür</span>
+                  <span className="ml-auto text-right truncate"><SelectValue placeholder="Bonus Türü" /></span>
+                </div>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-60 overflow-auto">
                 <SelectItem value="all">Tümü</SelectItem>
                 {bonusTypeOptions.map((opt) => (
                   <SelectItem key={opt} value={opt}>{opt}</SelectItem>
@@ -339,11 +367,14 @@ export default function BonuslarClient() {
               </SelectContent>
             </Select>
             <Select value={bonusAmount} onValueChange={(val) => { setBonusAmount(val); setUrlParam('amount', val); }}>
-              <SelectTrigger className="w-full lg:w-56" aria-label="Tutar filtresi">
-                <span className="text-xs text-muted-foreground mr-2">Tutar</span>
-                <SelectValue placeholder="Tutar" />
+              <SelectTrigger className="w-full lg:w-56 h-11" aria-label="Tutar filtresi">
+                <div className="flex items-center gap-2 w-full">
+                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Tutar</span>
+                  <span className="ml-auto text-right truncate"><SelectValue placeholder="Tutar" /></span>
+                </div>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-60 overflow-auto">
                 <SelectItem value="all">Tümü</SelectItem>
                 <SelectItem value="0-100">0-100 TL</SelectItem>
                 <SelectItem value="100-200">100-200 TL</SelectItem>
@@ -351,11 +382,14 @@ export default function BonuslarClient() {
               </SelectContent>
             </Select>
             <Select value={siteCategory} onValueChange={(val) => { setSiteCategory(val); setUrlParam('category', val); }}>
-              <SelectTrigger className="w-full lg:w-56" aria-label="Kategori filtresi">
-                <span className="text-xs text-muted-foreground mr-2">Kategori</span>
-                <SelectValue placeholder="Kategori" />
+              <SelectTrigger className="w-full lg:w-56 h-11" aria-label="Kategori filtresi">
+                <div className="flex items-center gap-2 w-full">
+                  <Star className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Kategori</span>
+                  <span className="ml-auto text-right truncate"><SelectValue placeholder="Kategori" /></span>
+                </div>
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-60 overflow-auto">
                 <SelectItem value="all">Tümü</SelectItem>
                 <SelectItem value="Spor">Spor</SelectItem>
                 <SelectItem value="Casino">Casino</SelectItem>
@@ -363,6 +397,18 @@ export default function BonuslarClient() {
                 <SelectItem value="Poker">Poker</SelectItem>
               </SelectContent>
             </Select>
+            <Button variant="outline" className="w-full lg:w-auto h-11" onClick={() => {
+              setSearchQuery("");
+              setBonusType("all");
+              setBonusAmount("all");
+              setSiteCategory("all");
+              const params = new URLSearchParams(Array.from(searchParams.entries()));
+              ["q", "type", "amount", "category"].forEach((k) => params.delete(k));
+              const qs = params.toString();
+              router.replace(qs ? `${pathname}?${qs}` : `${pathname}`, { scroll: false });
+            }}>
+              Filtreleri Temizle
+            </Button>
           </div>
         </motion.section>
 

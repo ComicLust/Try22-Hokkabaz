@@ -153,7 +153,7 @@ export default function HomeClient() {
   }, [primaryBrandLogos]);
 
   // Telegram grup linki (davet URL’si)
-  const telegramUrl = 'https://t.me/+r577e3x2dhIxNjdk';
+  const telegramUrl = 'https://t.me/+-H20aHx5MyZlZjQ0';
 
   // Campaign detail handler
   const handleCampaignDetails = (campaign: any) => {

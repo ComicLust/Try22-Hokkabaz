@@ -26,7 +26,7 @@ export default function Page() {
               <li>İçeriğin telif hakkını ihlal ettiğine iyi niyetli inanç beyanı,</li>
               <li>Bildirimdeki bilgilerin doğru olduğuna ve telif hakkı sahibi olduğuna veya onun adına yetkili olduğuna dair beyan.</li>
             </ul>
-            <p className="text-foreground/80">Bildiriminizi <a href="mailto:info@hokkabaz.net" className="text-gold">info@hokkabaz.net</a> adresine gönderebilirsiniz.</p>
+            <p className="text-foreground/80">Bildiriminizi <a href="mailto:info@hokkabaz.bet" className="text-gold">info@hokkabaz.bet</a> adresine gönderebilirsiniz.</p>
           </section>
 
           <section className="space-y-3">
@@ -41,7 +41,7 @@ export default function Page() {
 
           <section className="space-y-3">
             <h2 className="text-xl font-semibold">5. İletişim</h2>
-            <p className="text-foreground/80">DMCA ve telif hakları ile ilgili tüm talepler için: <a href="mailto:info@hokkabaz.net" className="text-gold">info@hokkabaz.net</a></p>
+            <p className="text-foreground/80">DMCA ve telif hakları ile ilgili tüm talepler için: <a href="mailto:info@hokkabaz.bet" className="text-gold">info@hokkabaz.bet</a></p>
           </section>
         </div>
       </main>

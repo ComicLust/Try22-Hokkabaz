@@ -39,7 +39,7 @@ export default function BrandDashboardPage() {
           <p className="text-sm text-muted-foreground">Eklediğiniz bonuslar Hokkabaz yöneticisinin onayına sunulur.</p>
         </div>
         <div>
-          <Link href="mailto:destek@hokkabaz.net" className="text-sm text-primary">Yöneticiyle İletişime Geç</Link>
+        <Link href="mailto:destek@hokkabaz.bet" className="text-sm text-primary">Yöneticiyle İletişime Geç</Link>
         </div>
       </div>
 

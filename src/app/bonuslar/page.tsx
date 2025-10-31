@@ -4,7 +4,7 @@ import BonuslarClient from "@/components/BonuslarClient";
 import { Suspense } from "react";
 
 export default async function BonuslarPage() {
-  const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.net'
+const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.bet'
   let items: any[] = []
   try {
     items = await (db as any).bonus.findMany({
@@ -59,7 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: ogTitle,
         description: ogDescription,
-        url: "https://hokkabaz.net/bonuslar",
+    url: "https://hokkabaz.bet/bonuslar",
         siteName: "Hokkabaz",
         type: "website",
         locale: "tr_TR",
