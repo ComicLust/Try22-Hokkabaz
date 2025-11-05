@@ -52,8 +52,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Docker dağıtımları için daha küçük runtime paketi
-  output: 'standalone',
+  // Standalone modu kapalı: custom server (server.ts) ile uyumlu
   // Dev ortamında standart izleme/derleme davranışı
   reactStrictMode: false,
   trailingSlash: false,
