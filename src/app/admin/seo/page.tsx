@@ -782,6 +782,25 @@ export default function AdminSeoPage() {
                 <Button variant="outline" disabled={loading} onClick={() => { setEditingId(null); setForm(emptyForm); }}>İptal</Button>
               )}
             </div>
+            {/* OG ve Twitter için MediaPicker diyalogları */}
+            <MediaPicker
+              open={mediaOpenOg}
+              onOpenChange={setMediaOpenOg}
+              onSelect={(url) => setForm(prev => ({ ...prev, ogImageUrl: url }))}
+              title="OG Görsel Seç / Yükle"
+            />
+            <MediaPicker
+              open={mediaOpenOgLogo}
+              onOpenChange={setMediaOpenOgLogo}
+              onSelect={(url) => setForm(prev => ({ ...prev, ogLogoUrl: url }))}
+              title="OG Logo Seç / Yükle"
+            />
+            <MediaPicker
+              open={mediaOpenTwitter}
+              onOpenChange={setMediaOpenTwitter}
+              onSelect={(url) => setForm(prev => ({ ...prev, twitterImageUrl: url }))}
+              title="Twitter Görsel Seç / Yükle"
+            />
           </CardContent>
         </Card>
       </div>
