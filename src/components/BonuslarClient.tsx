@@ -254,22 +254,29 @@ export default function BonuslarClient() {
   const draggingRef = useRef(false);
   const pointerDownRef = useRef(false);
   const [dragStartX, setDragStartX] = useState(0);
+  const [dragStartY, setDragStartY] = useState(0);
   const [scrollStart, setScrollStart] = useState(0);
 
   const onPointerDown = (e: any) => {
     pointerDownRef.current = true;
     draggingRef.current = false;
     setDragStartX(e.clientX);
+    setDragStartY(e.clientY);
     setScrollStart(storyRef.current?.scrollLeft ?? 0);
   };
   const onPointerMove = (e: any) => {
     if (!pointerDownRef.current) return;
     const dx = e.clientX - dragStartX;
-    if (!draggingRef.current && Math.abs(dx) > 5) {
+    const dy = e.clientY - dragStartY;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    // Yatay sürüklemeyi, dikey hareketten belirgin olduğunda etkinleştir
+    if (!draggingRef.current && absDx > 6 && absDx > absDy) {
       draggingRef.current = true;
     }
     if (draggingRef.current && storyRef.current) {
       storyRef.current.scrollLeft = scrollStart - dx;
+      // Sadece yatay sürüklemede varsayılanı engelle; dikey hareket sayfa scroll’una bırakılır
       e.preventDefault();
     }
   };
@@ -461,7 +468,7 @@ export default function BonuslarClient() {
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onPointerLeave={onPointerLeave}
-              className="overflow-x-auto overflow-y-visible scroll-smooth pl-4 sm:pl-10 pr-4 sm:pr-10 py-2 touch-pan-x select-none cursor-grab active:cursor-grabbing snap-x snap-mandatory"
+              className="overflow-x-auto overflow-y-visible scroll-smooth pl-4 sm:pl-10 pr-4 sm:pr-10 py-2 touch-auto select-none cursor-grab active:cursor-grabbing snap-x snap-mandatory"
             >
               <div className="flex items-center gap-5">
                 {storyItems.map((item) => (
