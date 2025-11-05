@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+/* tw-animate-css kaldırıldı: prod’da devDependency eksikliği CSS derlemesini kırıyordu */
 
 @custom-variant dark (&:is(.dark *));
 
