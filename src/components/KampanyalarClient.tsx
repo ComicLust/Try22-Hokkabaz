@@ -93,8 +93,9 @@ export default function KampanyalarClient() {
         const mapped: UiCampaign[] = data.map((c) => {
           const start = c.startDate ? Date.parse(c.startDate) : undefined;
           const end = c.endDate ? Date.parse(c.endDate) : undefined;
-          const activeRange = (!start || start <= now) && (!end || end >= now);
-          const status = c.isActive && activeRange ? 'active' : (start && start > now ? 'upcoming' : 'ended');
+          // İstek: Admin'de aktif olanların tamamı kamu listesinde görünsün.
+          // Bu nedenle aktiflik durumunu yalnızca `isActive` alanına göre belirliyoruz.
+          const status = c.isActive ? 'active' : (start && start > now ? 'upcoming' : 'ended');
           const featured = !!c.isFeatured;
           const bonusDisplay = (c.bonusText && c.bonusText.trim().length > 0)
             ? c.bonusText
@@ -291,7 +292,7 @@ export default function KampanyalarClient() {
             animate="animate"
           >
             {kampanyalar
-              .filter(k => !k.featured && k.status === 'active')
+              .filter(k => k.status === 'active')
               .sort((a, b) => a.title.localeCompare(b.title))
               .map((kampanya) => (
               <motion.div key={kampanya.id} variants={fadeInUp}>
