@@ -71,9 +71,14 @@ export default async function LinksDashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2">
-          <CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><BarChart2 className="w-4 h-4" /> Zaman Bazlı Grafik (Son 30 Gün)</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-base flex items-center gap-2"><BarChart2 className="w-4 h-4" /> Zaman Bazlı Grafik</CardTitle></CardHeader>
           <CardContent>
-            <ClientChart series={stats.seriesDaily} />
+            <LinksChartClient
+              links={links}
+              initialDaily={stats.seriesDaily}
+              initialMonthly={data?.seriesMonthly60 ?? []}
+              initialYearly={data?.seriesYearly5 ?? []}
+            />
           </CardContent>
         </Card>
         <Card>
@@ -152,6 +157,8 @@ function TableList({ items }: { items: any[] }) {
 }
 
 import ClientChart from './components/ClientChart'
+import ChartSwitcher from './components/ChartSwitcher'
+import LinksChartClient from './components/LinksChartClient'
 import CreateLinkButton from './components/CreateLinkButton'
 import ResetStatsButton from './components/ResetStatsButton'
 import RowActions from './components/RowActions'

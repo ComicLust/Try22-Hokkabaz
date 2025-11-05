@@ -2,8 +2,11 @@
 import React, { useMemo } from 'react'
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 
-export default function DailyLineChart({ data }: { data: { date: string; count: number }[] }) {
-  const formatted = useMemo(() => (data || []).map((d) => ({ ...d, dateLabel: d.date.slice(5) })), [data])
+export default function DailyLineChart({ data }: { data: { date: string; label?: string; count: number }[] }) {
+  const formatted = useMemo(
+    () => (data || []).map((d) => ({ ...d, dateLabel: d.label ?? (d.date.length >= 10 ? d.date.slice(5) : d.date) })),
+    [data]
+  )
   const maxY = useMemo(() => {
     const m = Math.max(0, ...formatted.map((d) => d.count))
     return m === 0 ? 1 : m

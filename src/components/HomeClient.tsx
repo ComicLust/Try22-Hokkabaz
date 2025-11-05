@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, useScroll, useMotionValue, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import { Search, Filter, Star, Shield, Clock, Calendar, TrendingUp, Check, ExternalLink, CreditCard, Zap, Users, Award, X, BadgeCheck } from 'lucide-react';
+import { Search, Filter, Star, Shield, ShieldCheck, Clock, Calendar, TrendingUp, Check, ExternalLink, CreditCard, Zap, Users, Award, X, BadgeCheck, Info, ArrowRight, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Header from '@/components/Header';
+import { TopBrandTicker } from '@/components/top-brand-ticker/TopBrandTicker';
 import Footer from '@/components/Footer';
 import SeoArticle from '@/components/SeoArticle';
 import TelegramPanel from '@/components/TelegramPanel';
@@ -353,8 +354,11 @@ export default function HomeClient() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/" />
+      {/* Üstte tam genişlikte kayan logolar */}
+      <TopBrandTicker items={marqueeItems.map((m)=>({ imageUrl: m.imageUrl, href: m.href ?? undefined }))} />
 
       <main className="pt-3 md:pl-72">
+        {/* Hero kaldırıldı: diğer sayfalarla uyumlu sade giriş */}
         {/* Öne Çıkan Kampanyalar - Kampanyalar Sayfasıyla Birebir */}
         <motion.section 
           className="mb-8"
@@ -365,10 +369,10 @@ export default function HomeClient() {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
               <motion.h2 
-                className="text-3xl font-bold text-gold"
+                className="flex items-center gap-2 text-3xl font-bold text-gold"
                 variants={fadeInUp}
               >
-                Önerilen Kampanyalar
+                <Star className="w-6 h-6 text-gold" /> Önerilen Kampanyalar
               </motion.h2>
               <Button variant="outline" className="hover:border-gold hover:text-gold transition-colors" asChild>
                 <a href="/kampanyalar">
@@ -432,10 +436,10 @@ export default function HomeClient() {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-6">
               <motion.h2 
-                className="text-3xl font-bold text-gold"
+                className="flex items-center gap-2 text-3xl font-bold text-gold"
                 variants={fadeInUp}
               >
-                Deneme Bonusları
+                <Award className="w-6 h-6 text-gold" /> Deneme Bonusları
               </motion.h2>
               <Button variant="outline" className="hover:border-gold hover:text-gold transition-colors" asChild>
                 <a href="/bonuslar">
@@ -443,6 +447,7 @@ export default function HomeClient() {
                 </a>
               </Button>
             </div>
+            <p className="text-center text-muted-foreground mb-6">En popüler çevrimsiz ve yüksek oranlı deneme bonuslarını keşfedin</p>
 
             <motion.div 
               className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
@@ -450,7 +455,18 @@ export default function HomeClient() {
             >
               {bonuses.map((bonus) => (
                 <motion.div key={bonus.id} variants={fadeInUp}>
-                  <Card className={`md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth ${isExpired(bonus) ? 'opacity-60' : ''}`}>
+                  <Card className={`relative md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth ${isExpired(bonus) ? 'opacity-60' : ''}`}>
+                    <div className="absolute top-4 right-4">
+                      {isExpired(bonus) && (
+                        <Badge variant="destructive" className="bg-red-600 text-white flex items-center gap-1.5">
+                          <AlertTriangle className="w-3 h-3" aria-hidden />
+                          Süresi Doldu
+                        </Badge>
+                      )}
+                      {!isExpired(bonus) && 'isFavourite' in (bonus as any) && (bonus as any)['isFavourite'] && (
+                        <Badge variant="outline" className="border-yellow-400 text-yellow-400">Favori</Badge>
+                      )}
+                    </div>
                     <CardHeader>
                       <div className="mx-auto mb-4 w-full max-w-[240px] h-[72px] sm:h-[80px] bg-muted flex items-center justify-center border rounded-md p-2">
                         {(bonus as any).imageUrl ? (
@@ -493,8 +509,10 @@ export default function HomeClient() {
                           {formatValidity(bonus)}
                         </div>
                       )}
-                      <Button variant="outline" className="w-full" onClick={() => handleBonusDetails(bonus)}>
-                        Detayları Gör
+                      <Button variant="outline" className="w-full flex items-center justify-center gap-1.5" onClick={() => handleBonusDetails(bonus)}>
+                        <Info className="w-4 h-4" aria-hidden />
+                        <span>Detayları Gör</span>
+                        <ArrowRight className="w-4 h-4" aria-hidden />
                       </Button>
                     </CardContent>
                   </Card>
@@ -514,10 +532,10 @@ export default function HomeClient() {
           <div className="container mx-auto px-4">
             <div className="flex itemscenter justify-between mb-6">
               <motion.h2 
-                className="text-3xl font-bold text-gold"
+                className="flex items-center gap-2 text-3xl font-bold text-gold"
                 variants={fadeInUp}
               >
-                Güvenilir Bahis Siteleri
+                <Shield className="w-6 h-6 text-gold" /> Güvenilir Bahis Siteleri
               </motion.h2>
               <Button variant="outline" className="hover:border-gold hover:text-gold transition-colors" asChild>
                 <a href="/guvenilir-bahis-siteleri-listesi">
@@ -532,7 +550,13 @@ export default function HomeClient() {
                 <div className="marquee-track">
                   {marqueeItems.map((l, i) => (
                     <a key={`home-marquee-${i}`} href={l.href ?? '#'} target="_blank" rel="noopener noreferrer" className="block shrink-0">
-                      <img src={l.imageUrl} alt="logo" className="w-[220px] h-[73px] opacity-90 hover:opacity-100 transition-opacity object-contain" />
+                      <img
+                        src={l.imageUrl}
+                        alt="logo"
+                        className="w-[220px] h-[73px] opacity-90 hover:opacity-100 transition-opacity object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </a>
                   ))}
                 </div>
@@ -547,9 +571,15 @@ export default function HomeClient() {
               {homeBrandGrid.map((b, i) => (
                 <a key={`home-brand-${i}`} href={b.href} target="_blank" rel="noopener noreferrer" className="relative group rounded-xl border border-border bg-gradient-to-br from-[#111] to-[#1a1a1a] p-5 text-center hover:border-gold shadow-smooth transition-colors w-full">
                   {b.badge ? (
-                    <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                    <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold flex items-center gap-1.5"><ShieldCheck className="w-3 h-3" aria-hidden /> {b.badge}</span>
                   ) : null}
-                  <img src={b.img} alt="logo" className="w-[220px] h-[73px] mx-auto opacity-90 group-hover:opacity-100 transition-opacity object-contain" />
+                  <img
+                    src={b.img}
+                    alt="logo"
+                    className="w-[220px] h-[73px] mx-auto opacity-90 group-hover:opacity-100 transition-opacity object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </a>
               ))}
             </motion.div>
@@ -560,7 +590,9 @@ export default function HomeClient() {
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between mb-12">
-              <h2 className="text-3xl font-bold text-gold">Aktif Kampanyalar</h2>
+              <h2 className="flex items-center gap-2 text-3xl font-bold text-gold">
+                <Zap className="w-6 h-6 text-gold" /> Aktif Kampanyalar
+              </h2>
               <Button variant="outline" className="hover:border-gold hover:text-gold transition-colors" asChild>
                 <a href="/kampanyalar">
                   Tümünü Gör
@@ -606,8 +638,10 @@ export default function HomeClient() {
                           </Badge>
                         ))}
                       </div>
-                      <Button className="w-full gold-gradient neon-button hover:scale-105 transition-transform" onClick={() => handleCampaignDetails(kampanya)}>
-                        Detayları Gör
+                      <Button className="w-full gold-gradient neon-button hover:scale-105 transition-transform flex items-center justify-center gap-1.5" onClick={() => handleCampaignDetails(kampanya)}>
+                        <Info className="w-4 h-4" aria-hidden />
+                        <span>Detayları Gör</span>
+                        <ArrowRight className="w-4 h-4" aria-hidden />
                       </Button>
                     </CardContent>
                   </Card>
@@ -711,7 +745,7 @@ export default function HomeClient() {
               <div className="overflow-y-auto p-4 space-y-4">
                 {!!(selectedBonus as any)?.postImageUrl && (
                   <div className="relative w-full aspect-square overflow-hidden rounded-md border bg-muted">
-                    <img src={(selectedBonus as any).postImageUrl} alt="Bonus Post Görseli" className="w-full h-full object-cover" />
+                    <img src={(selectedBonus as any).postImageUrl} alt="Bonus Post Görseli" className="w-full h-full object-cover" loading="lazy" decoding="async" />
                   </div>
                 )}
                 <div className="space-y-2">

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Star } from 'lucide-react';
+import { Star, ArrowRight, Info, Gift, Tag, Zap, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SeoArticle from '@/components/SeoArticle';
+import { TopBrandTicker } from '@/components/top-brand-ticker/TopBrandTicker';
 
 type ApiCampaign = {
   id: string;
@@ -49,6 +50,24 @@ export default function KampanyalarClient() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [kampanyalar, setKampanyalar] = useState<UiCampaign[]>([]);
   const [seoTitle, setSeoTitle] = useState<string>('Kampanyalar');
+
+  // Marquee (kayan logolar)
+  type MarqueeLogo = { id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean };
+  const [marqueeLogos, setMarqueeLogos] = useState<MarqueeLogo[]>([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/marquee-logos');
+        const data = await res.json();
+        setMarqueeLogos(Array.isArray(data) ? data.filter((d: MarqueeLogo) => d.isActive) : []);
+      } catch {}
+    })();
+  }, []);
+  const marqueeItems = useMemo(() => {
+    const reps = 12;
+    if (!marqueeLogos.length) return [] as MarqueeLogo[];
+    return Array.from({ length: reps }, (_, i) => marqueeLogos[i % marqueeLogos.length]);
+  }, [marqueeLogos]);
 
   // SEO başlığını çek
   useEffect(() => {
@@ -131,15 +150,78 @@ export default function KampanyalarClient() {
     }
   };
 
+  // Hero istatistikleri
+  const totalCount = useMemo(() => kampanyalar.length, [kampanyalar])
+  const activeCount = useMemo(() => kampanyalar.filter(k => k.status === 'active').length, [kampanyalar])
+  // Yaklaşan yerine öne çıkan sayısını göstereceğiz
+  const featuredCount = useMemo(() => kampanyalar.filter(k => k.featured).length, [kampanyalar])
+  const endedCount = useMemo(() => kampanyalar.filter(k => k.status === 'ended').length, [kampanyalar])
+
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/kampanyalar" />
 
+      {marqueeItems.length > 0 && (
+        <TopBrandTicker
+          items={marqueeItems.map((m) => ({ imageUrl: m.imageUrl, href: m.href }))}
+          className="md:pl-72"
+        />
+      )}
+
       <main className="container mx-auto px-4 py-8 md:pl-72">
-        <h1 className="hidden md:block text-3xl font-bold mb-6">{seoTitle}</h1>
+        {/* Hero */}
+        <motion.section className="mb-6" initial="initial" animate="animate" variants={fadeInUp}>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-2xl">
+              <h1 className="text-2xl font-bold text-gold flex items-center gap-2">
+                <Star className="w-6 h-6" /> Kampanyalar
+              </h1>
+              <p className="mt-1 text-sm md:text-base text-muted-foreground">
+                Güncel kampanya fırsatlarını keşfet, şartlarını karşılaştır ve hızlıca detaylara ulaş.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button asChild className="gap-1.5">
+                  <a href="#aktif-kampanyalar">Kampanyaları Keşfet <ArrowRight className="w-4 h-4" /></a>
+                </Button>
+                <Button variant="outline" className="gap-1.5" asChild>
+                  <a href="#one-cikan-kampanyalar">Öne Çıkanlar <ArrowRight className="w-4 h-4" aria-hidden /></a>
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Star className="w-4 h-4 text-gold" aria-hidden /> Toplam
+                </div>
+                <div className="mt-1 text-xl font-semibold">{totalCount}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Zap className="w-4 h-4 text-gold" aria-hidden /> Aktif
+                </div>
+                <div className="mt-1 text-xl font-semibold">{activeCount}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Star className="w-4 h-4 text-gold" aria-hidden /> Öne Çıkan
+                </div>
+                <div className="mt-1 text-xl font-semibold">{featuredCount}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <CalendarDays className="w-4 h-4 text-gold" aria-hidden /> Biten
+                </div>
+                <div className="mt-1 text-xl font-semibold">{endedCount}</div>
+              </div>
+            </div>
+          </div>
+        </motion.section>
+        {/* SEO başlığı ekran tekrarı olmasın diye gizli */}
+        <h1 className="sr-only">{seoTitle}</h1>
 
         {featuredKampanyalar.length > 0 && (
           <motion.section 
+            id="one-cikan-kampanyalar"
             className="mb-12"
             initial="initial"
             animate="animate"
@@ -154,7 +236,7 @@ export default function KampanyalarClient() {
                 <motion.div key={kampanya.id} variants={fadeInUp}>
                   <Card className="relative overflow-hidden md:backdrop-blur-sm bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-lg transition-colors duration-200 shadow-smooth">
                     <div className="absolute top-4 right-4 z-10">
-                      <Badge className="bg-gold text-background">{kampanya.badgeLabel ?? 'ÖNE ÇIKAN'}</Badge>
+                      <Badge className="bg-gold text-background flex items-center gap-1.5"><Star className="w-3 h-3" aria-hidden /> {kampanya.badgeLabel ?? 'ÖNE ÇIKAN'}</Badge>
                     </div>
                     <CardHeader>
                       <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
@@ -178,13 +260,13 @@ export default function KampanyalarClient() {
                       </div>
                       <div className="flex flex-wrap gap-2 mt-4">
                         {kampanya.tags.map((tag, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
-                            {tag}
+                          <Badge key={index} variant="secondary" className="text-xs flex items-center gap-1.5">
+                            <Tag className="w-3 h-3" aria-hidden /> {tag}
                           </Badge>
                         ))}
                       </div>
-                      <Button className="w-full mt-4 gold-gradient neon-button hover:scale-105 transition-transform" onClick={() => handleCampaignDetails(kampanya)}>
-                        Detayları Gör
+                      <Button className="w-full mt-4 gold-gradient neon-button hover:scale-105 transition-transform flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight" onClick={() => handleCampaignDetails(kampanya)}>
+                        <Info className="w-4 h-4" aria-hidden /> Detayları Gör <ArrowRight className="w-4 h-4" aria-hidden />
                       </Button>
                     </CardContent>
                   </Card>
@@ -195,6 +277,7 @@ export default function KampanyalarClient() {
         )}
 
         <motion.section 
+          id="aktif-kampanyalar"
           className="mb-12"
           initial="initial"
           animate="animate"
@@ -242,14 +325,14 @@ export default function KampanyalarClient() {
                     
                     <div className="flex flex-wrap gap-2 mb-4">
                       {kampanya.tags.map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tag}
+                        <Badge key={index} variant="secondary" className="text-xs flex items-center gap-1.5">
+                          <Tag className="w-3 h-3" aria-hidden /> {tag}
                         </Badge>
                       ))}
                     </div>
                     
-                    <Button className="w-full gold-gradient neon-button hover:scale-105 transition-transform" onClick={() => handleCampaignDetails(kampanya)}>
-                      Detayları Gör
+                    <Button className="w-full gold-gradient neon-button hover:scale-105 transition-transform flex items-center justify-center gap-1.5" onClick={() => handleCampaignDetails(kampanya)}>
+                      <Info className="w-4 h-4" aria-hidden /> Detayları Gör <ArrowRight className="w-4 h-4" aria-hidden />
                     </Button>
                   </CardContent>
                 </Card>
@@ -294,7 +377,7 @@ export default function KampanyalarClient() {
                   <h4 className="font-semibold">Etiketler:</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedCampaign.tags.map((tag: string, index: number) => (
-                      <Badge key={index} variant="outline" className="text-xs border-gold text-gold">{tag}</Badge>
+                      <Badge key={index} variant="outline" className="text-xs border-gold text-gold flex items-center gap-1.5"><Tag className="w-3 h-3" aria-hidden /> {tag}</Badge>
                     ))}
                   </div>
                 </div>
@@ -305,8 +388,8 @@ export default function KampanyalarClient() {
             )}
             {selectedCampaign?.ctaUrl ? (
               <div className="p-4 border-t bg-background">
-                <Button className="w-full" asChild>
-                  <a href={selectedCampaign.ctaUrl} target="_blank" rel="noopener noreferrer">Kampanyaya Katıl</a>
+                <Button className="w-full flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight" asChild>
+                  <a href={selectedCampaign.ctaUrl} target="_blank" rel="noopener noreferrer"><Gift className="w-4 h-4" aria-hidden /> Kampanyaya Katıl <ArrowRight className="w-4 h-4" aria-hidden /></a>
                 </Button>
               </div>
             ) : null}

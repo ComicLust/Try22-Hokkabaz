@@ -11,10 +11,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Search, Award, Calendar, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Award, Calendar, Check, Star, ChevronLeft, ChevronRight, XCircle, ArrowRight, Info, Gift, AlertTriangle } from "lucide-react";
 import Image from "next/image";
 import SeoArticle from "@/components/SeoArticle";
 import { slugifyTr } from "@/lib/slugify";
+import { TopBrandTicker } from "@/components/top-brand-ticker/TopBrandTicker";
 
 type Bonus = {
   id: string;
@@ -63,6 +64,24 @@ export default function BonuslarClient() {
   const [stories, setStories] = useState<StorySlide[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Marquee (kayan logolar)
+  type MarqueeLogo = { id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean };
+  const [marqueeLogos, setMarqueeLogos] = useState<MarqueeLogo[]>([]);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/marquee-logos');
+        const data = await res.json();
+        setMarqueeLogos(Array.isArray(data) ? data.filter((d: MarqueeLogo) => d.isActive) : []);
+      } catch {}
+    })();
+  }, []);
+  const marqueeItems = useMemo(() => {
+    const reps = 12;
+    if (!marqueeLogos.length) return [] as MarqueeLogo[];
+    return Array.from({ length: reps }, (_, i) => marqueeLogos[i % marqueeLogos.length]);
+  }, [marqueeLogos]);
 
   useEffect(() => {
     const fetchBonuses = async () => {
@@ -333,6 +352,13 @@ export default function BonuslarClient() {
     <div className="min-h-screen bg-background">
       <Header currentPath="/bonuslar" />
 
+      {marqueeItems.length > 0 && (
+        <TopBrandTicker
+          items={marqueeItems.map((m) => ({ imageUrl: m.imageUrl, href: m.href }))}
+          className="md:pl-72"
+        />
+      )}
+
       <main className="container mx-auto px-4 py-8 md:pl-72">
         {/* Arama + Filtreler */}
         <motion.section
@@ -397,7 +423,7 @@ export default function BonuslarClient() {
                 <SelectItem value="Poker">Poker</SelectItem>
               </SelectContent>
             </Select>
-            <Button variant="outline" className="w-full lg:w-auto h-11" onClick={() => {
+            <Button variant="outline" className="w-full lg:w-auto h-11 flex items-center gap-1.5" onClick={() => {
               setSearchQuery("");
               setBonusType("all");
               setBonusAmount("all");
@@ -407,7 +433,8 @@ export default function BonuslarClient() {
               const qs = params.toString();
               router.replace(qs ? `${pathname}?${qs}` : `${pathname}`, { scroll: false });
             }}>
-              Filtreleri Temizle
+              <XCircle className="w-4 h-4" aria-hidden />
+              <span>Filtreleri Temizle</span>
             </Button>
           </div>
         </motion.section>
@@ -544,7 +571,7 @@ export default function BonuslarClient() {
             {/* Bottom CTA Button */}
             <div className="p-4 border-t border-border bg-card/40">
               <Button 
-                className="w-full" 
+                className="w-full flex items-center justify-center gap-1.5" 
                 onClick={() => { 
                   if (activeStory?.cta) {
                     window.open(activeStory.cta, '_blank');
@@ -552,7 +579,15 @@ export default function BonuslarClient() {
                 }}
                 disabled={!activeStory?.cta}
               >
-                {activeStory?.cta ? 'Bonusu Al' : 'Link Mevcut Değil'}
+                {activeStory?.cta ? (
+                  <>
+                    <Gift className="w-4 h-4" aria-hidden />
+                    <span>Bonusu Al</span>
+                    <ArrowRight className="w-4 h-4" aria-hidden />
+                  </>
+                ) : (
+                  <span>Link Mevcut Değil</span>
+                )}
               </Button>
             </div>
            </DialogContent>
@@ -573,7 +608,10 @@ export default function BonuslarClient() {
                   <Card className={`relative overflow-hidden md:backdrop-blur-sm bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-lg transition-colors duration-200 shadow-smooth ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                     <div className="absolute top-4 right-4">
                       {isExpired(bonus) && (
-                        <Badge variant="destructive" className="uppercase tracking-wide shadow-md">Süresi Doldu</Badge>
+                        <Badge variant="destructive" className="uppercase tracking-wide shadow-md flex items-center gap-1.5">
+                          <AlertTriangle className="w-3 h-3" aria-hidden />
+                          Süresi Doldu
+                        </Badge>
                       )}
                     </div>
                     <CardHeader>
@@ -602,13 +640,18 @@ export default function BonuslarClient() {
                               <Badge
                                 key={i}
                                 variant={isExpiredBadge ? 'destructive' : 'default'}
-                                className={`text-xs font-semibold px-3 py-1 ${
+                                className={`text-xs font-semibold px-3 py-1 flex items-center gap-1.5 ${
                                   isExpiredBadge 
                                     ? 'uppercase tracking-wide shadow-md bg-red-500 text-white' 
                                     : 'bg-gold/20 text-gold border-gold/30 hover:bg-gold/30 shadow-sm'
                                 }`}
                               >
-                                {badge}
+                                {isExpiredBadge ? (
+                                  <AlertTriangle className="w-3 h-3" aria-hidden />
+                                ) : (
+                                  <Gift className="w-3 h-3" aria-hidden />
+                                )}
+                                <span>{badge}</span>
                               </Badge>
                             );
                           })}
@@ -626,7 +669,11 @@ export default function BonuslarClient() {
                           {formatValidity(bonus)}
                         </div>
                       )}
-                      <Button variant="outline" className="w-full" onClick={() => openDetails(bonus)}>Detayları Gör</Button>
+                      <Button variant="outline" className="w-full flex items-center justify-center gap-1.5" onClick={() => openDetails(bonus)}>
+                        <Info className="w-4 h-4" aria-hidden />
+                        <span>Detayları Gör</span>
+                        <ArrowRight className="w-4 h-4" aria-hidden />
+                      </Button>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -649,7 +696,10 @@ export default function BonuslarClient() {
                 <Card key={bonus.id} className={`relative overflow-hidden md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 shadow-smooth ${isExpired(bonus) ? 'opacity-60' : ''}`}>
                   <div className="absolute top-4 right-4">
                     {isExpired(bonus) && (
-                      <Badge variant="destructive" className="bg-red-600 text-white">Süresi Doldu</Badge>
+                      <Badge variant="destructive" className="bg-red-600 text-white flex items-center gap-1.5">
+                        <AlertTriangle className="w-3 h-3" aria-hidden />
+                        Süresi Doldu
+                      </Badge>
                     )}
                     {!isExpired(bonus) && 'isFavourite' in (bonus as any) && (bonus as any)['isFavourite'] && (
                        <Badge variant="outline" className="border-yellow-400 text-yellow-400">Favori</Badge>
@@ -681,13 +731,18 @@ export default function BonuslarClient() {
                             <Badge
                               key={i}
                               variant={isExpiredBadge ? 'destructive' : 'default'}
-                              className={`text-xs font-semibold px-3 py-1 ${
+                              className={`text-xs font-semibold px-3 py-1 flex items-center gap-1.5 ${
                                 isExpiredBadge 
                                   ? 'uppercase tracking-wide shadow-md bg-red-500 text-white' 
                                   : 'bg-gold/20 text-gold border-gold/30 hover:bg-gold/30 shadow-sm'
                               }`}
                             >
-                              {badge}
+                              {isExpiredBadge ? (
+                                <AlertTriangle className="w-3 h-3" aria-hidden />
+                              ) : (
+                                <Gift className="w-3 h-3" aria-hidden />
+                              )}
+                              <span>{badge}</span>
                             </Badge>
                           );
                         })}
@@ -698,7 +753,11 @@ export default function BonuslarClient() {
                         {formatValidity(bonus)}
                       </div>
                     )}
-                    <Button variant="outline" className="w-full" onClick={() => openDetails(bonus)}>Detayları Gör</Button>
+                    <Button variant="outline" className="w-full flex items-center justify-center gap-1.5" onClick={() => openDetails(bonus)}>
+                      <Info className="w-4 h-4" aria-hidden />
+                      <span>Detayları Gör</span>
+                      <ArrowRight className="w-4 h-4" aria-hidden />
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -746,8 +805,12 @@ export default function BonuslarClient() {
               </div>
               {!!selectedBonus?.ctaUrl && (
                 <div className="p-4 border-t bg-background">
-                  <Button className="w-full" asChild>
-                    <a href={selectedBonus.ctaUrl} target="_blank" rel="noopener noreferrer">Kampanyaya Katıl</a>
+                  <Button className="w-full flex items-center justify-center gap-1.5" asChild>
+                    <a href={selectedBonus.ctaUrl} target="_blank" rel="noopener noreferrer">
+                      <Gift className="w-4 h-4" aria-hidden />
+                      <span>Bonusu Al</span>
+                      <ArrowRight className="w-4 h-4" aria-hidden />
+                    </a>
                   </Button>
                 </div>
               )}

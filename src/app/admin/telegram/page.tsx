@@ -20,6 +20,7 @@ type TelegramGroup = {
   type: "CHANNEL" | "GROUP"
   isFeatured: boolean
   badges?: string[] | null
+  priority?: number | null
 }
 
 export default function AdminTelegramPage() {
@@ -51,6 +52,67 @@ export default function AdminTelegramPage() {
 
   const featured = filtered.filter((i) => i.isFeatured)
   const listed = filtered.filter((i) => !i.isFeatured)
+
+  // Drag & drop state
+  const [dragging, setDragging] = useState<{ list: 'featured' | 'listed' | null; id: string | null }>({ list: null, id: null })
+  const [dirtyOrder, setDirtyOrder] = useState<{ featured: boolean; listed: boolean }>({ featured: false, listed: false })
+
+  function reorderWithin(listType: 'featured' | 'listed', sourceId: string, targetId: string) {
+    const sourceArray = listType === 'featured' ? featured : listed
+    const srcIndex = sourceArray.findIndex((x) => x.id === sourceId)
+    const tgtIndex = sourceArray.findIndex((x) => x.id === targetId)
+    if (srcIndex < 0 || tgtIndex < 0 || srcIndex === tgtIndex) return
+
+    const newOrder = sourceArray.slice()
+    const [moved] = newOrder.splice(srcIndex, 1)
+    newOrder.splice(tgtIndex, 0, moved)
+
+    // Merge back into items preserving other list
+    const otherArray = listType === 'featured' ? listed : featured
+    const rebuilt: TelegramGroup[] = []
+    // Keep featured first in original items order grouping
+    const featuredSet = new Set((listType === 'featured' ? newOrder : otherArray).map((x) => x.id))
+    const listedSet = new Set((listType === 'featured' ? otherArray : newOrder).map((x) => x.id))
+    for (const i of items) {
+      if (featuredSet.has(i.id)) continue
+      if (listedSet.has(i.id)) continue
+      // should not happen but keep any others
+      rebuilt.push(i)
+    }
+    // Rebuild: featured + listed + the rest
+    const finalItems: TelegramGroup[] = []
+    const newFeatured = listType === 'featured' ? newOrder : otherArray
+    const newListed = listType === 'featured' ? otherArray : newOrder
+    for (const f of newFeatured) finalItems.push(f)
+    for (const l of newListed) finalItems.push(l)
+    for (const r of rebuilt) finalItems.push(r)
+    setItems(finalItems)
+    setDirtyOrder((d) => ({ ...d, [listType]: true }))
+  }
+
+  async function saveOrder(listType: 'featured' | 'listed') {
+    const sourceArray = listType === 'featured' ? items.filter((i) => i.isFeatured) : items.filter((i) => !i.isFeatured)
+    // Highest priority for first row
+    const priorities = new Map<string, number>()
+    const base = sourceArray.length
+    sourceArray.forEach((it, idx) => priorities.set(it.id, base - idx))
+
+    try {
+      await Promise.all(
+        sourceArray.map((it) =>
+          fetch(`/api/telegram-groups/${it.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ priority: priorities.get(it.id) }),
+          })
+        )
+      )
+      setDirtyOrder((d) => ({ ...d, [listType]: false }))
+      await load()
+    } catch (e: any) {
+      setError(e?.message ?? 'Sıralama kaydedilemedi')
+    }
+  }
 
   async function load() {
     setLoading(true)
@@ -326,12 +388,18 @@ export default function AdminTelegramPage() {
               Önerilen Gruplar
               <Badge variant="secondary">{featured.length}</Badge>
             </CardTitle>
+            {dirtyOrder.featured && (
+              <div className="mt-2">
+                <Button variant="outline" size="sm" onClick={() => saveOrder('featured')}>Sıralamayı Kaydet</Button>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-10">Sıra</TableHead>
                     <TableHead>Ad</TableHead>
                     <TableHead>Tip</TableHead>
                     <TableHead>Üye (sayı)</TableHead>
@@ -344,7 +412,22 @@ export default function AdminTelegramPage() {
                 </TableHeader>
                 <TableBody>
                   {featured.map((g) => (
-                    <TableRow key={g.id}>
+                    <TableRow
+                      key={g.id}
+                      draggable
+                      onDragStart={() => setDragging({ list: 'featured', id: g.id })}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={() => {
+                        if (dragging.list === 'featured' && dragging.id && dragging.id !== g.id) {
+                          reorderWithin('featured', dragging.id, g.id)
+                        }
+                        setDragging({ list: null, id: null })
+                      }}
+                      className="cursor-grab"
+                    >
+                      <TableCell className="text-muted-foreground">
+                        <span className="inline-block w-4 h-4">↕︎</span>
+                      </TableCell>
                       <TableCell>
                         <Input
                           value={g.name}
@@ -489,6 +572,11 @@ export default function AdminTelegramPage() {
             Tüm Gruplar
             <Badge variant="secondary">{listed.length}</Badge>
           </CardTitle>
+          {dirtyOrder.listed && (
+            <div className="mt-2">
+              <Button variant="outline" size="sm" onClick={() => saveOrder('listed')}>Sıralamayı Kaydet</Button>
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           {listed.length === 0 ? (
@@ -498,6 +586,7 @@ export default function AdminTelegramPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-10">Sıra</TableHead>
                     <TableHead>Ad</TableHead>
                     <TableHead>Tip</TableHead>
                     <TableHead>Üye (sayı)</TableHead>
@@ -510,7 +599,22 @@ export default function AdminTelegramPage() {
                 </TableHeader>
                 <TableBody>
                   {listed.map((g) => (
-                    <TableRow key={g.id}>
+                    <TableRow
+                      key={g.id}
+                      draggable
+                      onDragStart={() => setDragging({ list: 'listed', id: g.id })}
+                      onDragOver={(e) => e.preventDefault()}
+                      onDrop={() => {
+                        if (dragging.list === 'listed' && dragging.id && dragging.id !== g.id) {
+                          reorderWithin('listed', dragging.id, g.id)
+                        }
+                        setDragging({ list: null, id: null })
+                      }}
+                      className="cursor-grab"
+                    >
+                      <TableCell className="text-muted-foreground">
+                        <span className="inline-block w-4 h-4">↕︎</span>
+                      </TableCell>
                       <TableCell>
                         <Input
                           value={g.name}

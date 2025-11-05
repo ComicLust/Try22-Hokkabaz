@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar, Trophy, Info, BookOpen, Clock, Target, Percent, CheckCircle2, XCircle, Hourglass, Award, Check, Star, ThumbsUp, ThumbsDown, Edit, Trash2, Archive } from "lucide-react";
+import { Calendar, Trophy, Info, BookOpen, Clock, Target, Percent, CheckCircle2, XCircle, Hourglass, Award, Check, Star, ThumbsUp, ThumbsDown, Edit, Trash2, Archive, Gift, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
@@ -293,25 +293,63 @@ export default function BankoKuponlarClient() {
     }
   };
 
+  const totalCount = coupons.length;
+  const wonCount = useMemo(() => coupons.filter(c => c.status === 'WON').length, [coupons]);
+  const pendingCount = useMemo(() => coupons.filter(c => c.status === 'PENDING').length, [coupons]);
+  const lostCount = useMemo(() => coupons.filter(c => c.status === 'LOST').length, [coupons]);
+  const computedSuccess = useMemo(() => {
+    const played = wonCount + lostCount;
+    return played > 0 ? Math.round((wonCount / played) * 100) : 0;
+  }, [wonCount, lostCount]);
+
   const header = (
-    <section className="mb-6">
-      <h1 className="text-2xl md:text-3xl font-bold text-gold flex items-center gap-2">
-        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gold text-background"><Trophy className="w-5 h-5" /></span>
-        Banko Kuponlar – Günün En Güçlü 3 Tahmini
-      </h1>
-      <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-gold/30 bg-gold/10 px-3 py-2 text-sm md:text-base text-foreground font-medium">
-        <Info className="w-4 h-4 text-gold" />
-        <span>Her gün saat 18:00’de güncellenir. Maç bitimlerinde sonuçlar otomatik olarak işlenir.</span>
+    <section className="mb-8 md:mb-10">
+      <h1 className="sr-only">Banko Kuponlar</h1>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="max-w-2xl">
+          <div className="inline-flex items-center gap-3">
+            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gold text-background"><Trophy className="w-5 h-5" /></span>
+            <div>
+              <div className="text-2xl md:text-3xl font-bold text-foreground">Banko Kuponlar</div>
+              <p className="mt-1 text-sm md:text-base text-muted-foreground">
+                Günün en güçlü 3 tahmin; her gün 18:00’de güncellenir. Sonuçlar maç bitiminde otomatik işlenir.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild>
+            <a href="#kuponlar" className="inline-flex items-center gap-2">
+              Kuponları Keşfet
+            </a>
+          </Button>
+          <Button asChild variant="outline">
+            <a href="/banko-kuponlar/arsiv" className="inline-flex items-center gap-2">
+              <BookOpen className="w-4 h-4" /> Arşiv
+            </a>
+          </Button>
+        </div>
       </div>
-      <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-gold/30 bg-gold/10 px-3 py-2 text-sm md:text-base text-foreground font-medium">
-        <Percent className="w-4 h-4 text-gold" />
-        <span>Son 30 gün başarı oranı: <span className="ml-1 font-semibold">%{stats ? Math.round(stats.successRate) : 0}</span></span>
+      <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="rounded-lg border bg-card p-3">
+          <div className="text-xs text-muted-foreground">Toplam</div>
+          <div className="text-xl font-bold">{totalCount}</div>
+        </div>
+        <div className="rounded-lg border bg-card p-3">
+          <div className="text-xs text-muted-foreground">Kazanan</div>
+          <div className="text-xl font-bold">{wonCount}</div>
+        </div>
+        <div className="rounded-lg border bg-card p-3">
+          <div className="text-xs text-muted-foreground">Beklemede</div>
+          <div className="text-xl font-bold">{pendingCount}</div>
+        </div>
+        <div className="rounded-lg border bg-card p-3">
+          <div className="text-xs text-muted-foreground">Kaybeden</div>
+          <div className="text-xl font-bold">{lostCount}</div>
+        </div>
       </div>
-      <div className="mt-3 flex items-center gap-3">
-        <Button asChild size="sm" variant="outline" className="inline-flex items-center gap-2">
-          <a href="/banko-kuponlar/arsiv"><BookOpen className="w-4 h-4" /> Önceki Günlerin Kuponları</a>
-        </Button>
-        {/* Hatırlat düğmesi kaldırıldı */}
+      <div className="mt-2 text-xs md:text-sm text-muted-foreground">
+        Son 30 gün başarı oranı: <span className="font-semibold">%{stats ? Math.round(stats.successRate) : computedSuccess}</span>
       </div>
     </section>
   );
@@ -574,7 +612,13 @@ export default function BankoKuponlarClient() {
                     {formatValidity(bonus)}
                   </div>
                 )}
-                <Button variant="outline" className="w-full" onClick={() => { setSelectedBonus(bonus); setIsDialogOpen(true); }}>Detayları Gör</Button>
+                <Button variant="outline" className="w-full" onClick={() => { setSelectedBonus(bonus); setIsDialogOpen(true); }}>
+                  <span className="inline-flex items-center justify-center gap-1.5 w-full flex-wrap text-xs md:text-sm text-center leading-tight">
+                    <Info className="w-4 h-4" />
+                    Detayları Gör
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                </Button>
               </CardContent>
             </Card>
           </motion.div>
@@ -592,6 +636,7 @@ export default function BankoKuponlarClient() {
         {error && <div className="text-center text-red-500 py-10">{error}</div>}
         {!loading && !error && (
           <>
+            <span id="kuponlar" className="block" />
             {/* Desktop grid */}
             {contentGrid}
             {/* Mobile carousel */}
@@ -652,7 +697,13 @@ export default function BankoKuponlarClient() {
                     {selectedBonus.ctaUrl && (
                       <div className="p-4 border-t bg-background">
                         <a href={selectedBonus.ctaUrl} target="_blank" rel="noopener noreferrer" className="block">
-                          <Button className="w-full">Kampanyaya Katıl</Button>
+                          <Button className="w-full">
+                            <span className="flex items-center justify-center gap-1.5 w-full flex-wrap text-xs md:text-sm text-center leading-tight">
+                              <Gift className="w-4 h-4" />
+                              Kampanyaya Katıl
+                              <ArrowRight className="w-4 h-4" />
+                            </span>
+                          </Button>
                         </a>
                       </div>
                     )}

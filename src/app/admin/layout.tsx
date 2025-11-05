@@ -73,6 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     yorumlar: 'Yorumlar',
     'yorum-onay': 'Yorum Onay',
     markalar: 'Markalar',
+    'marka-onerileri': 'Marka Önerileri',
     approval: 'Onay',
     links: 'Links',
     backup: 'Yedekleme',
@@ -224,6 +225,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/yorumlar/markalar')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/yorumlar/markalar"><List className="size-4" /> Markalar</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/yorumlar/marka-onerileri')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/yorumlar/marka-onerileri"><List className="size-4" /> Marka Önerileri</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Gift, AlertTriangle, Calendar, ArrowRight, ShieldCheck, Tag, Info, Star, Zap, CalendarDays } from 'lucide-react'
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog'
 
 interface SpecialOddItemApi {
@@ -130,28 +130,72 @@ export default function OzelOranlarClient() {
   }, [])
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-600/10 via-transparent to-yellow-400/5 pointer-events-none" />
-        <div className="container mx-auto px-4 py-6 md:py-12 relative">
-          <div className="flex items-center justify-between gap-4 mb-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-gold tracking-tight">Özel Oranlar</h1>
-            <Badge className="bg-yellow-500 text-black">Yeni</Badge>
-          </div>
-          <p className="text-base md:text-lg text-muted-foreground max-w-3xl">
-            Derbi ve özel maçlara sponsor markalardan artırılmış oranlı kuponlar. Şartları okuyun, tıklayıp markaya geçin.
-          </p>
-          {/* Basit filtre placeholder */}
-          <div className="mt-6 flex flex-wrap gap-2 text-xs md:text-sm">
-            <Badge variant="outline" className="border-yellow-500/40 text-yellow-300">Derbi</Badge>
-            <Badge variant="outline" className="border-yellow-500/40 text-yellow-300">Tekli Kupon</Badge>
-            <Badge variant="outline" className="border-yellow-500/40 text-yellow-300">Yeni Üye</Badge>
-          </div>
-        </div>
-      </section>
+      {/* Yeni Hero */}
+      {(() => {
+        const totalCount = items.length
+        const activeCount = items.filter((i) => !i.isExpired).length
+        const newCount = items.filter((i) => {
+          if (!i.createdAt) return false
+          const created = new Date(i.createdAt).getTime()
+          const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+          return created >= sevenDaysAgo
+        }).length
+        const endedCount = items.filter((i) => i.isExpired).length
+
+        return (
+          <section className="mb-6">
+            <div className="container mx-auto px-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div className="max-w-2xl">
+                  <h1 className="text-2xl font-bold text-gold flex items-center gap-2">
+                    <Star className="w-6 h-6" /> Özel Oranlar
+                  </h1>
+                  <p className="mt-1 text-sm md:text-base text-muted-foreground">
+                    Sponsor markalardan artırılmış oranlı kuponları keşfet; şartları karşılaştır ve hızlıca detaylara ulaş.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button asChild className="gap-1.5">
+                      <a href="#ozel-oranlar-listesi">Oranları Keşfet <ArrowRight className="w-4 h-4" /></a>
+                    </Button>
+                    <Button variant="outline" className="gap-1.5" asChild>
+                      <a href="/kampanyalar">Kampanyaları Gör <ArrowRight className="w-4 h-4" aria-hidden /></a>
+                    </Button>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+                  <div className="rounded-lg border bg-background/60 p-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Star className="w-4 h-4 text-gold" aria-hidden /> Toplam
+                    </div>
+                    <div className="mt-1 text-xl font-semibold">{totalCount}</div>
+                  </div>
+                  <div className="rounded-lg border bg-background/60 p-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Zap className="w-4 h-4 text-gold" aria-hidden /> Aktif
+                    </div>
+                    <div className="mt-1 text-xl font-semibold">{activeCount}</div>
+                  </div>
+                  <div className="rounded-lg border bg-background/60 p-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <CalendarDays className="w-4 h-4 text-gold" aria-hidden /> Yeni Eklenen
+                    </div>
+                    <div className="mt-1 text-xl font-semibold">{newCount}</div>
+                  </div>
+                  <div className="rounded-lg border bg-background/60 p-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <AlertTriangle className="w-4 h-4 text-gold" aria-hidden /> Süresi Biten
+                    </div>
+                    <div className="mt-1 text-xl font-semibold">{endedCount}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )
+      })()}
 
       {/* Grid */}
-      <section className="container mx-auto px-4 pb-8 md:pb-10">
+      <section id="ozel-oranlar-listesi" className="container mx-auto px-4 pb-8 md:pb-10">
         {hasError && (
           <div className="mb-4 text-sm text-red-400">Veri yüklenemedi, örnek içerik gösteriliyor.</div>
         )}
@@ -169,9 +213,9 @@ export default function OzelOranlarClient() {
                     {item.match}
                   </CardTitle>
                   <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/30">Özel</Badge>
+                    <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 flex items-center gap-1.5"><Gift className="w-3.5 h-3.5" /> Özel</Badge>
                     {isExpired && (
-                      <Badge variant="secondary" className="bg-red-600/30 text-red-200 border border-red-500/40">Süresi bitti</Badge>
+                      <Badge variant="secondary" className="bg-red-600/30 text-red-200 border border-red-500/40 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</Badge>
                     )}
                   </div>
                 </div>
@@ -205,11 +249,11 @@ export default function OzelOranlarClient() {
                       className="absolute inset-0 w-full h-full object-cover"
                     />
                     <div className="absolute bottom-3 left-3 z-10 bg-gradient-to-r from-yellow-400 to-amber-500 px-2.5 py-0.5 rounded-full border border-amber-600/40 shadow-lg ring-1 ring-black/20">
-                      <span className="text-[11px] md:text-[12px] font-semibold text-black leading-none">Güvenilir</span>
+                      <span className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-semibold text-black leading-none"><ShieldCheck className="w-3.5 h-3.5" /> Güvenilir</span>
                     </div>
                     {isExpired && (
                       <div className="absolute top-2 left-2 bg-red-600/80 backdrop-blur px-2 py-1 rounded-md border border-red-400/40">
-                        <span className="text-[11px] text-white">Süresi bitti</span>
+                        <span className="inline-flex items-center gap-1.5 text-[11px] text-white"><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</span>
                       </div>
                     )}
                   </div>
@@ -220,8 +264,15 @@ export default function OzelOranlarClient() {
                     <div className="text-3xl font-extrabold text-yellow-300 tracking-tight">{item.oddsLabel}</div>
                   </div>
                   {item.expiresAt && (
-                    <div className="text-xs text-muted-foreground">
-                      {isExpired ? 'Süresi bitti' : `Son Tarih: ${new Date(item.expiresAt).toLocaleString('tr-TR')}`}
+                    <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      {isExpired ? (
+                        <><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</>
+                      ) : (
+                        <>
+                          <Calendar className="w-3.5 h-3.5" />
+                          {`Son Tarih: ${new Date(item.expiresAt).toLocaleString('tr-TR')}`}
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -229,19 +280,19 @@ export default function OzelOranlarClient() {
               </CardContent>
               <CardFooter className="grid grid-cols-2 gap-2">
                 <Button className="bg-yellow-500 hover:bg-yellow-600 text-black w-full min-h-[44px]" asChild disabled={isExpired}>
-                  <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-2">
+                  <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight">
                     Bahise Git
-                    <ExternalLink className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4" />
                   </a>
                 </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="w-full min-h-[44px] border-yellow-500/30 text-yellow-300 hover:text-yellow-200">Şartlar</Button>
+                    <Button variant="outline" className="w-full min-h-[44px] border-yellow-500/30 text-yellow-300 hover:text-yellow-200 flex items-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight"><Info className="w-4 h-4" /> Şartlar</Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent className="sm:max-w-[640px] p-0">
                     <div className="flex max-h-[85vh] flex-col">
                       <AlertDialogHeader className="p-4">
-                        <AlertDialogTitle className="text-lg">Şartlar ve Kurallar</AlertDialogTitle>
+                        <AlertDialogTitle className="text-lg flex items-center gap-1.5"><Info className="w-5 h-5" /> Şartlar ve Kurallar</AlertDialogTitle>
                       </AlertDialogHeader>
                       <div className="overflow-y-auto p-4 space-y-4">
                         {item.imageUrl && (
@@ -258,9 +309,9 @@ export default function OzelOranlarClient() {
                       <AlertDialogFooter className="p-4">
                         <AlertDialogCancel className="border-yellow-500/30 text-yellow-300 hover:text-yellow-200 min-h-[40px]">Kapat</AlertDialogCancel>
                         <AlertDialogAction asChild className="bg-yellow-500 hover:bg-yellow-600 text-black min-h-[40px]">
-                          <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-2">
+                          <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight">
                             Bahise Git
-                            <ExternalLink className="w-4 h-4" />
+                            <ArrowRight className="w-4 h-4" />
                           </a>
                         </AlertDialogAction>
                       </AlertDialogFooter>

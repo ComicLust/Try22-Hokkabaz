@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Instagram, Twitter, Youtube, Send, Award, Calendar, Check } from "lucide-react";
+import { Search, Instagram, Twitter, Youtube, Send, Award, Calendar, Check, ArrowRight, Info, Gift, AlertTriangle, ShieldCheck, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SeoArticle from "@/components/SeoArticle";
+import { TopBrandTicker } from "@/components/top-brand-ticker/TopBrandTicker";
 
 export default function AnlasmaliSitelerClient() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -105,6 +106,12 @@ export default function AnlasmaliSitelerClient() {
     })();
   }, []);
 
+  // Mini istatistikler (Hero için)
+  const totalSites = useMemo(() => partnerSites.length, [partnerSites])
+  const highRatedCount = useMemo(() => partnerSites.filter((s)=> (s.rating ?? 0) >= 4).length, [partnerSites])
+  const badgedCount = useMemo(() => partnerSites.filter((s)=> Boolean(typeof s.features?.badge === 'string' && String(s.features?.badge).trim())).length, [partnerSites])
+  const externalUrlCount = useMemo(() => partnerSites.filter((s)=> !!s.siteUrl && /^(https?:\/\/|\/\/)/i.test(String(s.siteUrl))).length, [partnerSites])
+
   const handleBonusDetails = (bonus: any) => {
     setSelectedBonus(bonus)
     setIsDialogOpen(true)
@@ -158,23 +165,62 @@ export default function AnlasmaliSitelerClient() {
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/guvenilir-bahis-siteleri-listesi" />
+      {/* Üstte tam genişlikte kayan logolar (Ana sayfa ile aynı stil) */}
+      <TopBrandTicker items={marqueeItems.map((m)=>({ imageUrl: m.imageUrl, href: m.href ?? undefined }))} />
 
       <main className="container mx-auto px-4 py-8 space-y-16 md:pl-72">
-        <section className="w-full rounded-xl border border-border bg-gradient-to-b from-[#0d0d0d] to-[#151515] p-3">
-          <div className="marquee">
-            <div className="marquee-track">
-              {marqueeItems.map((l, i) => (
-                <a key={`m-${i}`} href={l.href ?? '#'} target="_blank" rel="noopener noreferrer" className="block shrink-0">
-                  <img src={l.imageUrl} alt="logo" className="w-[220px] h-[73px] opacity-90 hover:opacity-100 transition-opacity object-contain" />
-                </a>
-              ))}
+
+        {/* Hero bölümünü ekliyoruz */}
+        <motion.section className="mb-6" initial="initial" animate="animate" variants={fadeInUp}>
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-2xl">
+              <h1 className="text-2xl font-bold text-gold flex items-center gap-2">
+                <ShieldCheck className="w-6 h-6" /> Güvenilir Bahis Siteleri Listesi
+              </h1>
+              <p className="mt-1 text-sm md:text-base text-muted-foreground">
+                Güvenilir ve aktif bahis markalarını tek yerde keşfedin. Arama ve filtrelerle hızlıca istediğiniz siteye ulaşın; puan ve rozet bilgileriyle karşılaştırın.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button asChild className="gap-1.5">
+                  <a href="#site-listesi">Siteleri Keşfet <ArrowRight className="w-4 h-4" /></a>
+                </Button>
+                <Button variant="outline" className="gap-1.5" asChild>
+                  <a href="/yorumlar">Yorumlara Git <ArrowRight className="w-4 h-4" aria-hidden /></a>
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <ShieldCheck className="w-4 h-4 text-gold" aria-hidden /> Toplam Site
+                </div>
+                <div className="mt-1 text-xl font-semibold">{totalSites}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Award className="w-4 h-4 text-gold" aria-hidden /> Yüksek Puanlı
+                </div>
+                <div className="mt-1 text-xl font-semibold">{highRatedCount}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <ShieldCheck className="w-4 h-4 text-gold" aria-hidden /> Rozetli Marka
+                </div>
+                <div className="mt-1 text-xl font-semibold">{badgedCount}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Link className="w-4 h-4 text-gold" aria-hidden /> Resmi Site Linki
+                </div>
+                <div className="mt-1 text-xl font-semibold">{externalUrlCount}</div>
+              </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Masaüstü slider bölümü kaldırıldı */}
 
-        <motion.section initial="initial" animate="animate" variants={fadeInUp}>
+        <motion.section id="site-listesi" initial="initial" animate="animate" variants={fadeInUp}>
           <div className="mb-6 flex items-center gap-3">
             <div className="relative w-full">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -185,7 +231,7 @@ export default function AnlasmaliSitelerClient() {
             {filteredPrimary.map((b, i) => (
               <a key={`p-${i}`} href={b.href} target="_blank" rel="noopener noreferrer" className="relative group rounded-xl border border-border bg-gradient-to-br from-[#111] to-[#1a1a1a] p-5 text-center hover:border-gold hover:shadow-[0_0_22px_rgba(255,215,0,0.25)] transition-all w-full">
                 {b.badge && (
-                  <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                  <span className="absolute top-2 right-2 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold flex items-center gap-1.5"><ShieldCheck className="w-3 h-3" aria-hidden /> {b.badge}</span>
                 )}
                 <img src={b.img} alt="logo" className="w-full max-w-[220px] h-[73px] mx-auto opacity-90 group-hover:opacity-100 transition-opacity object-contain" />
               </a>
@@ -198,7 +244,7 @@ export default function AnlasmaliSitelerClient() {
             {featuredBrandLogos.map((b, i) => (
               <Card key={`f-${i}`} className="relative w-full md:w-[90%] bg-secondary-bg border-border text-center hover:border-gold transition-colors">
                 {b.badge && (
-                  <span className="absolute top-3 right-3 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold">{b.badge}</span>
+                  <span className="absolute top-3 right-3 text-[10px] md:text-xs px-2 py-1 rounded-full bg-gold/20 text-gold border border-gold flex items-center gap-1.5"><ShieldCheck className="w-3 h-3" aria-hidden /> {b.badge}</span>
                 )}
                 <CardContent className="py-10">
                   <img src={b.img} alt="featured" className="w-[220px] h-[73px] mx-auto object-contain" />
@@ -211,8 +257,8 @@ export default function AnlasmaliSitelerClient() {
         <motion.section initial="initial" animate="animate" variants={fadeInUp}>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gold">Sana özel seçilen bonuslar</h2>
-            <Button variant="outline" className="hover:border-gold hover:text-gold" asChild>
-              <a href="/bonuslar">Tüm Bonuslar</a>
+            <Button variant="outline" className="hover:border-gold hover:text-gold flex items-center gap-1.5" asChild>
+              <a href="/bonuslar">Tüm Bonuslar <ArrowRight className="w-4 h-4" aria-hidden /></a>
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -253,7 +299,12 @@ export default function AnlasmaliSitelerClient() {
                     {(
                       (Array.isArray((bonus as any).badges) ? (bonus as any).badges : [])
                     ).concat(isExpired(bonus) ? ['Süresi Doldu'] : []).map((badge: string, index: number) => (
-                      <Badge key={index} variant="outline" className="text-xs">
+                      <Badge key={index} variant="outline" className="text-xs flex items-center gap-1.5">
+                        {badge === 'Süresi Doldu' ? (
+                          <AlertTriangle className="w-3 h-3" aria-hidden />
+                        ) : (
+                          <Gift className="w-3 h-3" aria-hidden />
+                        )}
                         {badge}
                       </Badge>
                     ))}
@@ -266,8 +317,8 @@ export default function AnlasmaliSitelerClient() {
                     </div>
                   )}
 
-                  <Button variant="outline" className="w-full" onClick={() => handleBonusDetails(bonus)}>
-                    Detayları Gör
+                  <Button variant="outline" className="w-full flex items-center justify-center gap-1.5" onClick={() => handleBonusDetails(bonus)}>
+                    <Info className="w-4 h-4" aria-hidden /> Detayları Gör <ArrowRight className="w-4 h-4" aria-hidden />
                   </Button>
                 </CardContent>
               </Card>
@@ -319,7 +370,8 @@ export default function AnlasmaliSitelerClient() {
                     rel={isExternalUrl((selectedBonus as any).ctaUrl) ? "noopener noreferrer" : undefined}
                     className="block"
                   >
-                    <Button className="w-full">Kampanyaya Katıl</Button>
+                    <Button className="w-full flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight"> <Gift className="w-4 h-4" aria-hidden /> Kampanyaya Katıl <ArrowRight className="w-4 h-4" aria-hidden />
+                    </Button>
                   </a>
                 </div>
               )}

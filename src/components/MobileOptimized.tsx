@@ -48,7 +48,8 @@ export default function MobileOptimized({
 
     window.addEventListener('resize', checkMobile);
     
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mediaQuery = 
+    window.matchMedia('(prefers-reduced-motion: reduce)');
     mediaQuery.addEventListener('change', checkReducedMotion);
 
     return () => {

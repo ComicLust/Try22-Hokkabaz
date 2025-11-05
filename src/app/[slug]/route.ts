@@ -27,12 +27,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
   }
 
   if (wantsHTML) {
-    const targetUrl = link.targetUrl
-    let domain = targetUrl
-    try {
-      domain = new URL(targetUrl).hostname
-    } catch {}
-
+    const slugSafe = JSON.stringify(slug)
     return new Response(`<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -97,17 +92,32 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
       const subtitle = document.getElementById('subtitle')
       const domainWrap = document.getElementById('domain')
       const domainName = document.getElementById('domainName')
+      const slug = ${slugSafe}
+      let targetUrl = null
       setTimeout(() => { if(subtitle) subtitle.textContent = 'Güncel link adresi bulunuyor…' }, 1000)
-      setTimeout(() => {
+      setTimeout(async () => {
         try {
-          domainName.textContent = ${JSON.stringify(domain)}
-          domainWrap.style.display = 'block'
-        } catch(e) {
-          domainName.textContent = ${JSON.stringify(domain)}
-          domainWrap.style.display = 'block'
-        }
+          const res = await fetch('/api/redirect/'+encodeURIComponent(slug))
+          const data = await res.json()
+          if (res.ok && data.targetUrl) {
+            targetUrl = data.targetUrl
+            try { domainName.textContent = new URL(targetUrl).hostname } catch(e) { domainName.textContent = targetUrl }
+            domainWrap.style.display = 'block'
+          }
+        } catch(e){}
       }, 800)
-      setTimeout(() => { location.href = ${JSON.stringify(targetUrl)} }, 3000)
+      setTimeout(async () => {
+        try {
+          if (!targetUrl) {
+            const res = await fetch('/api/redirect/'+encodeURIComponent(slug))
+            const data = await res.json()
+            if (res.ok && data.targetUrl) targetUrl = data.targetUrl
+          }
+          if (targetUrl) location.href = targetUrl
+        } catch(e){
+          if(subtitle) subtitle.textContent = 'Yönlendirme hazırlanırken hata oluştu.'
+        }
+      }, 3000)
     })()
   </script>
 </body>

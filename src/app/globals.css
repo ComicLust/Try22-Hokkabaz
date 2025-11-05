@@ -32,7 +32,7 @@
   /* Marquee istisnası: mobilde sürekli kaydırma aktif kalsın */
   .marquee-track {
     animation-name: marquee-scroll !important;
-    animation-duration: 28s !important;
+    animation-duration: var(--marquee-duration, 32s) !important;
     animation-timing-function: linear !important;
     animation-iteration-count: infinite !important;
     animation-play-state: running !important;
@@ -56,7 +56,7 @@
   /* Marquee istisnası: erişilebilirlik tercihi açık olsa dahi tasarım gereği kaydırma aktif */
   .marquee-track {
     animation-name: marquee-scroll !important;
-    animation-duration: 28s !important;
+    animation-duration: var(--marquee-duration, 32s) !important;
     animation-timing-function: linear !important;
     animation-iteration-count: infinite !important;
     animation-play-state: running !important;
@@ -158,6 +158,49 @@
   --border-divider: rgba(255, 255, 255, 0.1);
   /* Hokkabaz özel renkler */
   --hokkabaz-gold: #FFD700;
+
+  /* Scrollbar Theme */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(255, 215, 0, 0.35); /* gold accent */
+  --scrollbar-thumb-hover: rgba(255, 215, 0, 0.6);
+  --scrollbar-corner: transparent;
+  --scrollbar-size: 10px;
+}
+
+/* Stabil scrollbar oluğu: CLS azaltır */
+html { scrollbar-gutter: stable both-edges; }
+
+/* Firefox scrollbar stilizasyonu */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* WebKit tabanlı tarayıcılar için */
+*::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+*::-webkit-scrollbar-corner {
+  background: var(--scrollbar-corner);
+}
+
+/* Mobilde daha ince scrollbar */
+@media (max-width: 768px) {
+  *::-webkit-scrollbar { width: 8px; height: 8px; }
 }
 
 /* MDXEditor Dark Mode Styles */
@@ -593,14 +636,19 @@
     align-items: center;
     gap: 24px;
     width: max-content;
-    animation: marquee-scroll 28s linear infinite;
+    animation: marquee-scroll var(--marquee-duration, 32s) linear infinite;
+    will-change: transform;
+  }
+  /* Düşük performanslı cihazlar için daha uzun süre (daha yavaş akış) */
+  [data-lowperf="true"] .marquee-track {
+    --marquee-duration: 40s;
   }
   .marquee:hover .marquee-track {
     animation-play-state: paused;
   }
   @keyframes marquee-scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
   }
 
   /* Scrollbar gizleme yardımcı sınıfı (Chrome/Safari/Firefox/Edge) */

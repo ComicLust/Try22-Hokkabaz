@@ -4,6 +4,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import SeoArticle from '@/components/SeoArticle'
 import { getSeoRecord } from '@/lib/seo'
+import { db } from '@/lib/db'
+import { TopBrandTicker } from '@/components/top-brand-ticker/TopBrandTicker'
 
 export default async function OzelOranlarPage() {
   const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://hokkabaz.bet'
@@ -41,9 +43,15 @@ export default async function OzelOranlarPage() {
     })),
   }
 
+  const logos = await db.marqueeLogo.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } })
+  const marqueeItems = logos.length ? Array.from({ length: 12 }, (_, i) => logos[i % logos.length]).map((m) => ({ imageUrl: m.imageUrl, href: m.href })) : []
+
   return (
     <div className="min-h-screen bg-background">
       <Header currentPath="/ozel-oranlar" />
+      {marqueeItems.length > 0 && (
+        <TopBrandTicker items={marqueeItems} className="md:pl-72" />
+      )}
       <main className="pt-3 md:pl-72">
         <OzelOranlarClient />
       </main>

@@ -1,21 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { db } from '@/lib/db'
-import { Prisma } from '@prisma/client'
+import { Prisma, TelegramType } from '@prisma/client'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const q = searchParams.get('q') ?? undefined
   const featured = searchParams.get('featured')
-  const type = searchParams.get('type') ?? undefined
+  const typeRaw = searchParams.get('type') ?? undefined
 
   const where: Prisma.TelegramGroupWhereInput = {}
   if (q) {
-    where.name = { contains: q, mode: 'insensitive' }
+    // SQLite'da case-insensitive mod desteklenmediği için sade contains kullanıyoruz
+    where.name = { contains: q }
   }
   if (featured === 'true') where.isFeatured = true
   if (featured === 'false') where.isFeatured = false
-  if (type) where.type = { equals: type }
+  if (typeRaw === 'CHANNEL' || typeRaw === 'GROUP') {
+    where.type = { equals: typeRaw as TelegramType }
+  }
 
   const items = await db.telegramGroup.findMany({
     where,

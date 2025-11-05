@@ -53,10 +53,7 @@ export async function DELETE(
     const existing = await (db as any).affiliateLink.findUnique({ where: { id: params.id } })
     if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-    // Otomatik linkler silinemez (güvenlik)
-    if (!existing.isManual) {
-      return NextResponse.json({ error: 'Otomatik oluşturulan linkler silinemez' }, { status: 400 })
-    }
+    // Otomatik linkler için silme serbest bırakıldı (isteğe bağlı politika)
 
     // Önce tıklama loglarını sil, sonra linki sil
     const trx = await db.$transaction([

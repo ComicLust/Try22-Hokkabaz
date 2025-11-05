@@ -58,10 +58,6 @@ export default function RowActions({ id, slug, isManual }: { id: string; slug: s
   }
 
   const remove = async () => {
-    if (!isManual) {
-      toast({ title: 'İzin verilmez', description: 'Otomatik linkler silinemez' })
-      return
-    }
     if (!confirm('Bu linki silmek istediğinize emin misiniz?')) return
     setBusy(true)
     try {
@@ -83,7 +79,7 @@ export default function RowActions({ id, slug, isManual }: { id: string; slug: s
       <Button size="sm" variant="outline" onClick={copyLink} disabled={busy}>
         <Copy className="w-4 h-4 mr-2" /> Kopyala
       </Button>
-      <Button size="sm" variant="destructive" onClick={remove} disabled={busy || !isManual}>
+      <Button size="sm" variant="destructive" onClick={remove} disabled={busy}>
         <Trash2 className="w-4 h-4 mr-2" /> Sil
       </Button>
     </div>

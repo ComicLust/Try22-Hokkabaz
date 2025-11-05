@@ -107,14 +107,14 @@ export async function middleware(req: NextRequest) {
     return attachNonce(NextResponse.next())
   }
 
-  // Protect Admin APIs (all methods)
-  if (pathname.startsWith('/api/admin')) {
+  // Protect Admin APIs (all methods) — use trailing slash to avoid prefix collisions
+  if (pathname.startsWith('/api/admin/')) {
     const res = await requireAuthForApi(req)
     return attachNonce(res)
   }
 
-  // Protect Brand APIs (all methods)
-  if (pathname.startsWith('/api/brand')) {
+  // Protect Brand APIs (all methods) — use trailing slash to avoid prefix collisions
+  if (pathname.startsWith('/api/brand/')) {
     const token = req.cookies.get('brand_token')?.value
     if (!token) {
       return attachNonce(new NextResponse('Unauthorized', { status: 401 }))

@@ -8,7 +8,7 @@ type LinkItem = { name: string; Icon: React.ComponentType<React.SVGProps<SVGSVGE
 const socialLinks: LinkItem[] = [
   { name: "Telegram", Icon: Send, url: "https://t.me/+-H20aHx5MyZlZjQ0" },
   { name: "Twitter / X", Icon: Twitter, url: "#" },
-  { name: "Instagram", Icon: Instagram, url: "#" },
+  { name: "Instagram", Icon: Instagram, url: "http://instagram.com/hokkabazduyuru" },
   { name: "YouTube", Icon: Youtube, url: "#" },
 ]
 

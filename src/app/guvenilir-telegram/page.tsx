@@ -2,6 +2,7 @@ import React from 'react'
 import type { Metadata } from 'next'
 import { unstable_noStore as noStore } from 'next/cache'
 import Header from '@/components/Header'
+import { Send, ArrowRight, Users, Megaphone } from 'lucide-react'
 import Footer from '@/components/Footer'
 import { db } from '@/lib/db'
 import { getSeoRecord } from '@/lib/seo'
@@ -9,6 +10,7 @@ import ActiveCounter from '@/components/ActiveCounter'
 import ClientOnly from '@/components/ClientOnly'
 import TelegramSuggestionCard from '@/components/TelegramSuggestionCard'
 import SeoArticle from '@/components/SeoArticle'
+import { TopBrandTicker } from '@/components/top-brand-ticker/TopBrandTicker'
 
 function formatMembers(n: number) {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
@@ -30,29 +32,80 @@ export default async function GuvenilirTelegramPage() {
   const pageTitle = seo?.title ?? 'Güvenilir Telegram Grupları'
   const pageDescription = seo?.description ?? 'Seçtiğimiz güvenilir kanal ve grupları aşağıda bulabilirsiniz.'
   const items = await (db as any).telegramGroup.findMany({
-    orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+    orderBy: [{ isFeatured: 'desc' }, { priority: 'desc' }, { createdAt: 'desc' }],
   })
   const featured = items.filter((g) => g.isFeatured)
   const regular = items.filter((g) => !g.isFeatured)
+  const logos = await db.marqueeLogo.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } })
+  const marqueeItems = logos.length ? Array.from({ length: 12 }, (_, i) => logos[i % logos.length]).map((m) => ({ imageUrl: m.imageUrl, href: m.href })) : []
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <main className="container mx-auto px-4 pt-16 md:pt-8 pb-8 w-full flex-1 space-y-8 md:pl-72">
-        <header className="space-y-2">
-          <h1 className="hidden md:block text-2xl font-semibold text-foreground">{pageTitle}</h1>
-          <p className="text-sm text-muted-foreground">{pageDescription}</p>
-        </header>
+      {marqueeItems.length > 0 && (
+        <TopBrandTicker items={marqueeItems} className="md:pl-72" />
+      )}
+      <main className="container mx-auto px-4 pt-6 md:pt-4 pb-8 w-full flex-1 space-y-8 md:pl-72">
+        {/* Hero */}
+        <section className="relative">
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold text-gold leading-tight">{pageTitle}</h1>
+              <p className="mt-1 text-sm md:text-base text-foreground/80">{pageDescription}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <a href="#gruplar" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-xs md:text-sm">
+                  Grupları Keşfet <ArrowRight className="w-4 h-4" aria-hidden />
+                </a>
+                <a href="/kampanyalar" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-border bg-background/60 hover:bg-background transition-colors text-xs md:text-sm">
+                  Aktif Kampanyalar <ArrowRight className="w-4 h-4" aria-hidden />
+                </a>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Send className="w-4 h-4 text-gold" aria-hidden /> Toplam Grup
+                </div>
+                <div className="mt-1 text-xl font-semibold">{items.length}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Users className="w-4 h-4 text-gold" aria-hidden /> Önerilen
+                </div>
+                <div className="mt-1 text-xl font-semibold">{featured.length}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Megaphone className="w-4 h-4 text-gold" aria-hidden /> Kanal Sayısı
+                </div>
+                <div className="mt-1 text-xl font-semibold">{items.filter((g:any)=> g.type === 'CHANNEL').length}</div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Users className="w-4 h-4 text-gold" aria-hidden /> Grup Sayısı
+                </div>
+                <div className="mt-1 text-xl font-semibold">{items.filter((g:any)=> g.type === 'GROUP').length}</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* İçerik anchor */}
+        <span id="gruplar" className="block" />
 
         {featured.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Önerdiğimiz Telegram Grupları</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               <TelegramSuggestionCard />
               {featured.map((g) => (
                 <div
                   key={g.id}
                   className="relative border border-border rounded-lg p-4 flex flex-col items-center text-center gap-3 bg-card text-foreground"
                 >
+                  {/* Tip etiketi */}
+                  <span className="absolute top-2 left-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset border bg-background/70">
+                    {g.type === 'CHANNEL' ? 'Kanal' : 'Grup'}
+                  </span>
                   {g.isFeatured && (
                     <span className={`absolute top-2 right-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset shadow-sm ${badgeClass('Önerilen')}`}>
                       Önerilen
@@ -91,9 +144,9 @@ export default async function GuvenilirTelegramPage() {
                     href={g.ctaUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-sm w-full"
+                  className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-xs md:text-sm w-full gap-1.5 flex-wrap text-center leading-tight"
                   >
-                    Telegram’a Katıl
+                    <Send className="w-4 h-4" aria-hidden /> Telegram’a Katıl <ArrowRight className="w-4 h-4" aria-hidden />
                   </a>
                 </div>
               ))}
@@ -103,13 +156,17 @@ export default async function GuvenilirTelegramPage() {
 
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">Tüm Gruplar</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             <TelegramSuggestionCard />
             {regular.map((g) => (
               <div
                 key={g.id}
                 className="relative border border-border rounded-lg p-4 flex flex-col items-center text-center gap-3 bg-card text-foreground"
               >
+                {/* Tip etiketi */}
+                <span className="absolute top-2 left-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset border bg-background/70">
+                  {g.type === 'CHANNEL' ? 'Kanal' : 'Grup'}
+                </span>
                 <img
                   src={g.imageUrl ?? '/placeholder.svg'}
                   alt={g.name}
@@ -140,9 +197,9 @@ export default async function GuvenilirTelegramPage() {
                   href={g.ctaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-sm w-full"
+                  className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-xs md:text-sm w-full gap-1.5 flex-wrap text-center leading-tight"
                 >
-                  Telegram’a Katıl
+                  <Send className="w-4 h-4" aria-hidden /> Telegram’a Katıl <ArrowRight className="w-4 h-4" aria-hidden />
                 </a>
               </div>
             ))}
