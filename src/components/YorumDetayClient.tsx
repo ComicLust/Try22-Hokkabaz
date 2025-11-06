@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Calendar, ExternalLink, MessageSquare, ThumbsUp, ThumbsDown, AlertCircle } from 'lucide-react'
+import { Calendar, ExternalLink, MessageSquare, ThumbsUp, ThumbsDown, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -240,7 +241,17 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
                             loading="lazy"
                           />
                           <div>
-                            <div className="font-medium text-sm">{r.isAnonymous ? 'Anonim Kullanıcı' : (r.author || 'Kullanıcı')}</div>
+                            <div className="flex items-center gap-1">
+                              <span className="font-medium text-sm">{r.isAnonymous ? 'Anonim Kullanıcı' : (r.author || 'Kullanıcı')}</span>
+                              <TooltipProvider delayDuration={150}>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <CheckCircle2 aria-label="Doğrulanmış Kullanıcı" className="w-4 h-4 text-sky-500 ml-1" />
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="text-xs">Doğrulanmış Kullanıcı</TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
                             <div className="text-xs text-muted-foreground"><Calendar className="w-3 h-3 inline mr-1" /> {new Date(r.createdAt).toLocaleString('tr-TR')}</div>
                           </div>
                         </div>
@@ -250,7 +261,7 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-sm mb-3 break-words">{r.content}</div>
+                      <div className="text-sm mb-3 break-words whitespace-pre-line">{r.content}</div>
                       <div className="hidden"></div>
                       {r.replyText && (
                         <div className="mt-3 p-3 rounded-md border bg-muted/30 text-sm">
