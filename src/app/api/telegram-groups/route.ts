@@ -20,11 +20,27 @@ export async function GET(req: NextRequest) {
     where.type = { equals: typeRaw as TelegramType }
   }
 
+  // Prisma tipleri 'priority' alanını orderBy için tanımamış olabilir.
+  // Bu nedenle DB sıralamasını güvenli alanlarla yapıp, ardından öncelik bazlı sıralamayı hafızada uyguluyoruz.
   const items = await db.telegramGroup.findMany({
     where,
     orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
   })
-  return NextResponse.json(items)
+  const sorted = items.slice().sort((a: any, b: any) => {
+    // 1) isFeatured desc
+    const f = Number(b.isFeatured) - Number(a.isFeatured)
+    if (f !== 0) return f
+    // 2) priority desc (tanımsız ise 0)
+    const ap = typeof a.priority === 'number' ? a.priority : 0
+    const bp = typeof b.priority === 'number' ? b.priority : 0
+    const p = bp - ap
+    if (p !== 0) return p
+    // 3) createdAt desc
+    const at = new Date(a.createdAt).getTime()
+    const bt = new Date(b.createdAt).getTime()
+    return bt - at
+  })
+  return NextResponse.json(sorted)
 }
 
 export async function POST(req: NextRequest) {

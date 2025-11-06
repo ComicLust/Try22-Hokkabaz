@@ -36,6 +36,7 @@ import {
   Bell,
   Database,
   Trophy,
+  Star,
 } from 'lucide-react'
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 
@@ -69,6 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     bonuses: 'Bonuslar',
     'bonus-onay': 'Bonus Onay',
     'banko-kuponlar': 'Banko Kuponlar',
+    'ozel-oranlar': 'Özel Oranlar',
     telegram: 'Telegram',
     yorumlar: 'Yorumlar',
     'yorum-onay': 'Yorum Onay',
@@ -169,6 +171,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive('/admin/bonuses')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
                   <Link href="/admin/bonuses"><Gift className="size-4" /> Bonuslar</Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive('/admin/ozel-oranlar')} className="data-[active=true]:bg-primary/15 data-[active=true]:text-primary data-[active=true]:ring-1 data-[active=true]:ring-primary data-[active=true]:font-semibold">
+                  <Link href="/admin/ozel-oranlar"><Star className="size-4" /> Özel Oranlar</Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

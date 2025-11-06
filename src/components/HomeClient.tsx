@@ -17,6 +17,7 @@ import Footer from '@/components/Footer';
 import SeoArticle from '@/components/SeoArticle';
 import TelegramPanel from '@/components/TelegramPanel';
 import FAQDesktop from '@/components/FAQDesktop';
+import { HeroStats } from '@/components/hero-stats/HeroStats';
 
 // Telegram Icon Component
 const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -189,6 +190,7 @@ export default function HomeClient() {
     isActive: boolean;
     isFeatured: boolean;
     priority: number;
+    createdAt: string;
   };
 
   type UiCampaign = {
@@ -200,6 +202,8 @@ export default function HomeClient() {
     image: string;
     bonusAmount: string;
     featured: boolean;
+    priority: number;
+    createdAt: string;
     badgeLabel?: string | null;
     ctaUrl?: string | null;
   };
@@ -215,8 +219,8 @@ export default function HomeClient() {
         const mapped: UiCampaign[] = data.map((c) => {
           const start = c.startDate ? Date.parse(c.startDate) : undefined;
           const end = c.endDate ? Date.parse(c.endDate) : undefined;
-          const activeRange = (!start || start <= now) && (!end || end >= now);
-          const status = c.isActive && activeRange ? 'active' : (start && start > now ? 'upcoming' : 'ended');
+          // Ana sayfa: Admin'de aktif olanların tamamı görünmeli
+          const status = c.isActive ? 'active' : (start && start > now ? 'upcoming' : 'ended');
           const featured = !!c.isFeatured;
           const bonusDisplay = (c.bonusText && c.bonusText.trim().length > 0)
             ? c.bonusText
@@ -230,6 +234,8 @@ export default function HomeClient() {
             image: c.imageUrl ?? '/api/placeholder/400/225',
             bonusAmount: bonusDisplay,
             featured,
+            priority: c.priority ?? 0,
+            createdAt: c.createdAt,
             badgeLabel: c.badgeLabel ?? null,
             ctaUrl: c.ctaUrl ?? null,
           };
@@ -357,8 +363,9 @@ export default function HomeClient() {
       {/* Üstte tam genişlikte kayan logolar */}
       <TopBrandTicker items={marqueeItems.map((m)=>({ imageUrl: m.imageUrl, href: m.href ?? undefined }))} />
 
-      <main className="pt-3 md:pl-72">
-        {/* Hero kaldırıldı: diğer sayfalarla uyumlu sade giriş */}
+      <main className="pt-0 md:pl-72">
+        {/* Mobil odaklı istatistik hero alanı */}
+        <HeroStats />
         {/* Öne Çıkan Kampanyalar - Kampanyalar Sayfasıyla Birebir */}
         <motion.section 
           className="mb-8"
@@ -601,9 +608,13 @@ export default function HomeClient() {
             </div>
             <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {kampanyalar
-                .filter(k => !k.featured && k.status === 'active')
-                .sort((a, b) => a.title.localeCompare(b.title))
-                .slice(0, 6)
+                .filter(k => k.status === 'active' && !k.featured)
+                .sort((a, b) => {
+                  const ta = Date.parse(a.createdAt);
+                  const tb = Date.parse(b.createdAt);
+                  return (tb || 0) - (ta || 0);
+                })
+                .slice(0, 3)
                 .map((kampanya) => (
                   <Card key={kampanya.id} className="md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth">
                     <CardHeader>

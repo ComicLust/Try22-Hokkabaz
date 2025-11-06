@@ -17,7 +17,7 @@ function nowDateStr() {
 export async function GET() {
   try {
     // Fetch all tables concurrently
-    const [
+  const [
       users,
       posts,
       campaigns,
@@ -39,6 +39,7 @@ export async function GET() {
       pageSponsors,
       liveMatches,
       brandManagers,
+      specialOdds,
     ] = await Promise.all([
       db.user.findMany(),
       db.post.findMany(),
@@ -61,6 +62,7 @@ export async function GET() {
       db.pageSponsor.findMany(),
       db.liveMatch.findMany(),
       db.brandManager.findMany(),
+      (db as any).specialOdd.findMany(),
     ]);
 
     const backup = {
@@ -91,6 +93,7 @@ export async function GET() {
         pageSponsors,
         liveMatches,
         brandManagers,
+        specialOdds,
       },
     };
 
