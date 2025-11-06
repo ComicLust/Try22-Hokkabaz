@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLink, Gift, AlertTriangle, Calendar, ArrowRight, ShieldCheck, Tag, Info, Star, Zap, CalendarDays } from 'lucide-react'
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface SpecialOddItemApi {
   id: string
@@ -127,204 +128,232 @@ export default function OzelOranlarClient() {
     }
     fetchItems()
     return () => { active = false }
-  }, [])
+  }, []);
   return (
-    <>
-      {/* Yeni Hero */}
-      {(() => {
-        const totalCount = items.length
-        const activeCount = items.filter((i) => !i.isExpired).length
-        const newCount = items.filter((i) => {
-          if (!i.createdAt) return false
-          const created = new Date(i.createdAt).getTime()
-          const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
-          return created >= sevenDaysAgo
-        }).length
-        const endedCount = items.filter((i) => i.isExpired).length
-
-        return (
-          <section className="mb-6">
-            <div className="container mx-auto px-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="max-w-2xl">
-                  <h1 className="text-2xl font-bold text-gold flex items-center gap-2">
-                    <Star className="w-6 h-6" /> Özel Oranlar
-                  </h1>
-                  <p className="mt-1 text-sm md:text-base text-muted-foreground">
-                    Sponsor markalardan artırılmış oranlı kuponları keşfet; şartları karşılaştır ve hızlıca detaylara ulaş.
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Button asChild className="gap-1.5">
-                      <a href="#ozel-oranlar-listesi">Oranları Keşfet <ArrowRight className="w-4 h-4" /></a>
-                    </Button>
-                    <Button variant="outline" className="gap-1.5" asChild>
-                      <a href="/kampanyalar">Kampanyaları Gör <ArrowRight className="w-4 h-4" aria-hidden /></a>
-                    </Button>
-                  </div>
+    <div>
+      <section className="mb-6">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="max-w-2xl">
+              <h1 className="text-2xl font-bold text-gold flex items-center gap-2">
+                <Star className="w-6 h-6" /> Özel Oranlar
+              </h1>
+              <p className="mt-1 text-sm md:text-base text-muted-foreground">
+                Sponsor markalardan artırılmış oranlı kuponları keşfet; şartları karşılaştır ve hızlıca detaylara ulaş.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button asChild className="gap-1.5">
+                  <a href="#ozel-oranlar-listesi">Oranları Keşfet <ArrowRight className="w-4 h-4" /></a>
+                </Button>
+                <Button variant="outline" className="gap-1.5" asChild>
+                  <a href="/kampanyalar">Kampanyaları Gör <ArrowRight className="w-4 h-4" aria-hidden /></a>
+                </Button>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Star className="w-4 h-4 text-gold" aria-hidden /> Toplam
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
-                  <div className="rounded-lg border bg-background/60 p-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Star className="w-4 h-4 text-gold" aria-hidden /> Toplam
-                    </div>
-                    <div className="mt-1 text-xl font-semibold">{totalCount}</div>
-                  </div>
-                  <div className="rounded-lg border bg-background/60 p-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Zap className="w-4 h-4 text-gold" aria-hidden /> Aktif
-                    </div>
-                    <div className="mt-1 text-xl font-semibold">{activeCount}</div>
-                  </div>
-                  <div className="rounded-lg border bg-background/60 p-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <CalendarDays className="w-4 h-4 text-gold" aria-hidden /> Yeni Eklenen
-                    </div>
-                    <div className="mt-1 text-xl font-semibold">{newCount}</div>
-                  </div>
-                  <div className="rounded-lg border bg-background/60 p-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <AlertTriangle className="w-4 h-4 text-gold" aria-hidden /> Süresi Biten
-                    </div>
-                    <div className="mt-1 text-xl font-semibold">{endedCount}</div>
-                  </div>
+                <div className="mt-1 text-xl font-semibold">
+                  {isLoading ? <Skeleton className="h-6 w-10" /> : items.length}
+                </div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <Zap className="w-4 h-4 text-gold" aria-hidden /> Aktif
+                </div>
+                <div className="mt-1 text-xl font-semibold">
+                  {isLoading ? <Skeleton className="h-6 w-10" /> : items.filter((i) => !i.isExpired).length}
+                </div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <CalendarDays className="w-4 h-4 text-gold" aria-hidden /> Yeni Eklenen
+                </div>
+                <div className="mt-1 text-xl font-semibold">
+                  {isLoading ? <Skeleton className="h-6 w-10" /> : items.filter((i) => {
+                    if (!i.createdAt) return false
+                    const created = new Date(i.createdAt).getTime()
+                    const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000
+                    return created >= sevenDaysAgo
+                  }).length}
+                </div>
+              </div>
+              <div className="rounded-lg border bg-background/60 p-3">
+                <div className="flex items-center gap-2 text-sm">
+                  <AlertTriangle className="w-4 h-4 text-gold" aria-hidden /> Süresi Biten
+                </div>
+                <div className="mt-1 text-xl font-semibold">
+                  {isLoading ? <Skeleton className="h-6 w-10" /> : items.filter((i) => i.isExpired).length}
                 </div>
               </div>
             </div>
-          </section>
-        )
-      })()}
-
-      {/* Grid */}
+          </div>
+        </div>
+      </section>
       <section id="ozel-oranlar-listesi" className="container mx-auto px-4 pb-8 md:pb-10">
-        {hasError && (
-          <div className="mb-4 text-sm text-red-400">Veri yüklenemedi, örnek içerik gösteriliyor.</div>
-        )}
-        {isLoading && (
-          <div className="mb-4 text-sm text-muted-foreground">Yükleniyor…</div>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item) => {
-            const isExpired = item.isExpired
-            return (
-            <Card key={item.id} className={`bg-neutral-950/60 border-yellow-500/20 shadow-smooth ${isExpired ? 'opacity-60' : ''}`}>
-              <CardHeader className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl md:text-2xl font-semibold text-gold">
-                    {item.match}
-                  </CardTitle>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 flex items-center gap-1.5"><Gift className="w-3.5 h-3.5" /> Özel</Badge>
-                    {isExpired && (
-                      <Badge variant="secondary" className="bg-red-600/30 text-red-200 border border-red-500/40 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</Badge>
-                    )}
-                  </div>
-                </div>
-                <div className="text-xs text-muted-foreground flex items-center gap-2">
-                  <span>Marka:</span>
-                  {item.brandLogoUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <a href={item.brandSlug ? `/yorumlar/${item.brandSlug}` : undefined} className="inline-flex items-center gap-1">
-                      <img
-                        src={item.brandLogoUrl}
-                        alt={`${item.brand} logo`}
-                        className="w-5 h-5 rounded-full object-cover border border-yellow-500/30"
-                        loading="lazy"
-                      />
-                      <span className="font-medium text-foreground/80 hover:text-yellow-300 transition-colors">{item.brand}</span>
-                    </a>
-                  ) : (
-                    <a href={item.brandSlug ? `/yorumlar/${item.brandSlug}` : undefined} className="font-medium text-foreground/80 hover:text-yellow-300 transition-colors">
-                      {item.brand}
-                    </a>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent>
-                {item.imageUrl && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <div className={`relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden ${isExpired ? 'grayscale' : ''}`}>
-                    <img
-                      src={item.imageUrl}
-                      alt={`${item.brand} özel oran – ${item.match}`}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-3 left-3 z-10 bg-gradient-to-r from-yellow-400 to-amber-500 px-2.5 py-0.5 rounded-full border border-amber-600/40 shadow-lg ring-1 ring-black/20">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-semibold text-black leading-none"><ShieldCheck className="w-3.5 h-3.5" /> Güvenilir</span>
-                    </div>
-                    {isExpired && (
-                      <div className="absolute top-2 left-2 bg-red-600/80 backdrop-blur px-2 py-1 rounded-md border border-red-400/40">
-                        <span className="inline-flex items-center gap-1.5 text-[11px] text-white"><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</span>
+        {isLoading ? (
+          <>
+            <h2 className="text-xl font-bold text-gold mb-4">Özel oranlar yükleniyor…</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card key={i} className="bg-neutral-950/60 border-yellow-500/20 shadow-smooth">
+                  <CardHeader className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-6 w-40" />
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-6 w-16" />
+                        <Skeleton className="h-6 w-20" />
                       </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="h-5 w-5 rounded-full" />
+                      <Skeleton className="h-4 w-24" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
+                      <Skeleton className="absolute inset-0 h-full w-full" />
+                    </div>
+                    <div className="flex items-end justify-between">
+                      <div>
+                        <Skeleton className="h-3 w-24" />
+                        <Skeleton className="mt-2 h-8 w-24" />
+                      </div>
+                      <Skeleton className="h-4 w-40" />
+                    </div>
+                    <Skeleton className="mt-3 h-4 w-full" />
+                  </CardContent>
+                  <CardFooter className="grid grid-cols-2 gap-2">
+                    <Skeleton className="h-11 w-full" />
+                    <Skeleton className="h-11 w-full" />
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {items.map((item) => (
+              <Card key={item.id} className="bg-neutral-950/60 border-yellow-500/20 shadow-smooth">
+                <CardHeader className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl md:text-2xl font-semibold text-gold">
+                      {item.match}
+                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-300 border border-yellow-500/30 flex items-center gap-1.5"><Gift className="w-3.5 h-3.5" /> Özel</Badge>
+                      {item.isExpired && (
+                        <Badge variant="secondary" className="bg-red-600/30 text-red-200 border border-red-500/40 flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-xs text-muted-foreground flex items-center gap-2">
+                    <span>Marka:</span>
+                    {item.brandLogoUrl ? (
+                      <a href={item.brandSlug ? `/yorumlar/${item.brandSlug}` : undefined} className="inline-flex items-center gap-1">
+                        <img
+                          src={item.brandLogoUrl}
+                          alt={`${item.brand} logo`}
+                          className="w-5 h-5 rounded-full object-cover border border-yellow-500/30"
+                          loading="lazy"
+                        />
+                        <span className="font-medium text-foreground/80 hover:text-yellow-300 transition-colors">{item.brand}</span>
+                      </a>
+                    ) : (
+                      <a href={item.brandSlug ? `/yorumlar/${item.brandSlug}` : undefined} className="font-medium text-foreground/80 hover:text-yellow-300 transition-colors">
+                        {item.brand}
+                      </a>
                     )}
                   </div>
-                )}
-                <div className="flex items-end justify-between">
-                  <div>
-                    <div className="text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">Özel Oran</div>
-                    <div className="text-3xl font-extrabold text-yellow-300 tracking-tight">{item.oddsLabel}</div>
-                  </div>
-                  {item.expiresAt && (
-                    <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-                      {isExpired ? (
-                        <><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</>
-                      ) : (
-                        <>
-                          <Calendar className="w-3.5 h-3.5" />
-                          {`Son Tarih: ${new Date(item.expiresAt).toLocaleString('tr-TR')}`}
-                        </>
+                </CardHeader>
+                <CardContent>
+                  {item.imageUrl && (
+                    <div className={`relative aspect-square bg-muted rounded-lg mb-4 overflow-hidden ${item.isExpired ? 'grayscale' : ''}`}>
+                      <img
+                        src={item.imageUrl}
+                        alt={`${item.brand} özel oran – ${item.match}`}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      <div className="absolute bottom-3 left-3 z-10 bg-gradient-to-r from-yellow-400 to-amber-500 px-2.5 py-0.5 rounded-full border border-amber-600/40 shadow-lg ring-1 ring-black/20">
+                        <span className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-semibold text-black leading-none"><ShieldCheck className="w-3.5 h-3.5" /> Güvenilir</span>
+                      </div>
+                      {item.isExpired && (
+                        <div className="absolute top-2 left-2 bg-red-600/80 backdrop-blur px-2 py-1 rounded-md border border-red-400/40">
+                          <span className="inline-flex items-center gap-1.5 text-[11px] text-white"><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</span>
+                        </div>
                       )}
                     </div>
                   )}
-                </div>
-                <div className="mt-3 text-sm text-muted-foreground">{truncateWords(item.conditions, 30)}</div>
-              </CardContent>
-              <CardFooter className="grid grid-cols-2 gap-2">
-                <Button className="bg-yellow-500 hover:bg-yellow-600 text-black w-full min-h-[44px]" asChild disabled={isExpired}>
-                  <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight">
-                    Bahise Git
-                    <ArrowRight className="w-4 h-4" />
-                  </a>
-                </Button>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="w-full min-h-[44px] border-yellow-500/30 text-yellow-300 hover:text-yellow-200 flex items-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight"><Info className="w-4 h-4" /> Şartlar</Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent className="sm:max-w-[640px] p-0">
-                    <div className="flex max-h-[85vh] flex-col">
-                      <AlertDialogHeader className="p-4">
-                        <AlertDialogTitle className="text-lg flex items-center gap-1.5"><Info className="w-5 h-5" /> Şartlar ve Kurallar</AlertDialogTitle>
-                      </AlertDialogHeader>
-                      <div className="overflow-y-auto p-4 space-y-4">
-                        {item.imageUrl && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <div className="relative w-full aspect-[4/3] md:aspect-square overflow-hidden rounded-md border bg-muted">
-                            <img src={item.imageUrl} alt={`${item.brand} özel oran görseli`} className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                        <div className="text-sm text-muted-foreground space-y-2">
-                          <p>{item.conditions}</p>
-                          <p>Marka kural ve limitlerine uyunuz. Sorumlu bahis. 18+.</p>
-                        </div>
-                      </div>
-                      <AlertDialogFooter className="p-4">
-                        <AlertDialogCancel className="border-yellow-500/30 text-yellow-300 hover:text-yellow-200 min-h-[40px]">Kapat</AlertDialogCancel>
-                        <AlertDialogAction asChild className="bg-yellow-500 hover:bg-yellow-600 text-black min-h-[40px]">
-                          <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight">
-                            Bahise Git
-                            <ArrowRight className="w-4 h-4" />
-                          </a>
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <div className="text-xs font-semibold uppercase tracking-wider bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">Özel Oran</div>
+                      <div className="text-3xl font-extrabold text-yellow-300 tracking-tight">{item.oddsLabel}</div>
                     </div>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </CardFooter>
-            </Card>
-          )})}
-        </div>
-        <div className="mt-8 text-xs text-muted-foreground">Sorumlu bahis. 18+. Oran ve şartlar marka tarafından değiştirilebilir.</div>
+                    {item.expiresAt && (
+                      <div className="text-xs text-muted-foreground">
+                        {item.isExpired ? (
+                          <span className="inline-flex items-center gap-1.5"><AlertTriangle className="w-3.5 h-3.5" /> Süresi bitti</span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5">
+                            <Calendar className="w-3.5 h-3.5" />
+                            {`Son Tarih: ${new Date(item.expiresAt).toLocaleString('tr-TR')}`}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-3 text-sm text-muted-foreground">{truncateWords(item.conditions, 30)}</div>
+                </CardContent>
+                <CardFooter className="grid grid-cols-2 gap-2">
+                  <Button className="bg-yellow-500 hover:bg-yellow-600 text-black w-full min-h-[44px]" asChild disabled={item.isExpired}>
+                    <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight">
+                      Bahise Git
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
+                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="w-full min-h-[44px] border-yellow-500/30 text-yellow-300 hover:text-yellow-200 flex items-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight">
+                        <Info className="w-4 h-4" /> Şartlar
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="sm:max-w-[640px] p-0">
+                      <div className="flex max-h-[85vh] flex-col">
+                        <AlertDialogHeader className="p-4">
+                          <AlertDialogTitle className="text-lg flex items-center gap-1.5"><Info className="w-5 h-5" /> Şartlar ve Kurallar</AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <div className="overflow-y-auto p-4 space-y-4">
+                          {item.imageUrl && (
+                            <div className="relative w-full aspect-[4/3] md:aspect-square overflow-hidden rounded-md border bg-muted">
+                              <img src={item.imageUrl} alt={`${item.brand} özel oran görseli`} className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                          <div className="text-sm text-muted-foreground space-y-2">
+                            <p>{item.conditions}</p>
+                            <p>Marka kural ve limitlerine uyunuz. Sorumlu bahis. 18+.</p>
+                          </div>
+                        </div>
+                        <AlertDialogFooter className="p-4">
+                          <AlertDialogCancel className="border-yellow-500/30 text-yellow-300 hover:text-yellow-200 min-h-[40px]">Kapat</AlertDialogCancel>
+                          <AlertDialogAction asChild className="bg-yellow-500 hover:bg-yellow-600 text-black min-h-[40px]">
+                            <a href={item.ctaUrl} rel="nofollow noopener" target="_blank" className="flex items-center justify-center gap-1.5 flex-wrap text-xs md:text-sm text-center leading-tight">
+                              Bahise Git
+                              <ArrowRight className="w-4 h-4" />
+                            </a>
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </div>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
       </section>
-    </>
+    </div>
   )
 }
 

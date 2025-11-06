@@ -250,12 +250,7 @@ export default function HomeClient() {
 
   const featuredKampanyalar = kampanyalar
     .filter(k => k.featured)
-    .sort((a, b) => {
-      const pa = Number(a.bonusAmount) || 0;
-      const pb = Number(b.bonusAmount) || 0;
-      if (pb !== pa) return pb - pa;
-      return a.title.localeCompare(b.title);
-    });
+    .sort((a, b) => b.priority - a.priority);
 
   // Deneme Bonusları artık API'den çekiliyor (bonuses)
 
@@ -609,11 +604,7 @@ export default function HomeClient() {
             <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {kampanyalar
                 .filter(k => k.status === 'active' && !k.featured)
-                .sort((a, b) => {
-                  const ta = Date.parse(a.createdAt);
-                  const tb = Date.parse(b.createdAt);
-                  return (tb || 0) - (ta || 0);
-                })
+                .sort((a, b) => b.priority - a.priority)
                 .slice(0, 3)
                 .map((kampanya) => (
                   <Card key={kampanya.id} className="md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth">
@@ -635,7 +626,12 @@ export default function HomeClient() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground text-sm mb-4">{kampanya.description}</p>
+                      <p
+                        className="text-muted-foreground text-sm mb-4 overflow-hidden text-ellipsis"
+                        style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}
+                      >
+                        {kampanya.description}
+                      </p>
                       <div className="space-y-3 mb-4">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-muted-foreground">Bonus Miktarı:</span>
@@ -713,7 +709,7 @@ export default function HomeClient() {
                   <div className="text-3xl font-bold text-gold mb-2">
                     {selectedCampaign.title}
                   </div>
-                  <div className="text-muted-foreground mb-2">{selectedCampaign.description}</div>
+                  <div className="text-muted-foreground mb-2 whitespace-pre-line">{selectedCampaign.description}</div>
                   <div className="text-2xl font-bold text-gold mb-4">
                     {selectedCampaign.bonusAmount}
                   </div>

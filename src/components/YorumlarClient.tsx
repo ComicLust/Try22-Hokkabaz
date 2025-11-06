@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
 import SeoArticle from "@/components/SeoArticle";
 import { TopBrandTicker } from '@/components/top-brand-ticker/TopBrandTicker'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type ReviewBrand = { id: string; name: string; slug: string; logoUrl?: string | null; createdAt: string; }
 type ReviewStat = { brandId: string; slug: string; name: string; logoUrl?: string | null; createdAt: string; isActive?: boolean; reviewCount: number; lastReviewAt?: string | null; positiveCount: number; negativeCount: number }
@@ -284,7 +285,7 @@ export default function YorumlarClient() {
           <div className="mt-4 text-sm text-muted-foreground">Yüklenemedi. Lütfen sayfayı yenileyin.</div>
         )}
 
-        {!error && (
+        {!error && !loading && (
           <motion.section id="yorumlu-siteler" className="mt-6" initial="initial" animate="animate" variants={fadeInUp}>
             <h2 className="text-xl font-bold text-gold mb-4">Yorumlu Siteler</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -323,7 +324,33 @@ export default function YorumlarClient() {
           </motion.section>
         )}
 
-        {!!uncommented.length && (
+        {loading && (
+          <motion.section className="mt-6" initial="initial" animate="animate" variants={fadeInUp}>
+            <h2 className="text-xl font-bold text-gold mb-4">Siteler yükleniyor…</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardHeader className="flex flex-col items-center">
+                    <div className="w-full max-w-[220px] h-[60px] md:max-w-[240px] md:h-[72px] mx-auto overflow-hidden bg-card flex items-center justify-center border rounded-lg p-2">
+                      <Skeleton className="h-10 w-24" />
+                    </div>
+                    <CardTitle className="text-base text-center mt-2">
+                      <Skeleton className="h-4 w-40" />
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Skeleton className="h-10 w-full" />
+                      <Skeleton className="h-10 w-full" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
+        {!loading && !!uncommented.length && (
           <motion.section className="mt-10" initial="initial" animate="animate" variants={fadeInUp}>
             <h2 className="text-xl font-bold text-gold mb-4">Henüz Yorumlanmayanlar / Yeni Eklenecekler</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

@@ -15,6 +15,7 @@ import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import SeoArticle from "@/components/SeoArticle";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Match = {
   homeTeam: string;
@@ -632,7 +633,47 @@ export default function BankoKuponlarClient() {
       <Header currentPath="/banko-kuponlar" />
       <main className="container mx-auto px-4 py-8 md:pl-72 pb-20">
         {header}
-        {loading && <div className="text-center text-muted-foreground py-10">Yükleniyor…</div>}
+        {loading && (
+          <>
+            <h2 className="text-xl font-bold text-gold mb-4 text-center">Kuponlar yükleniyor…</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 3 }).map((_, idx) => (
+                <Card key={idx} className="overflow-hidden rounded-2xl shadow-md">
+                  <CardHeader className="border-b">
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-6 w-48" />
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-6 w-24" />
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="py-4 space-y-4">
+                    {Array.from({ length: 3 }).map((__, i) => (
+                      <div key={i} className="p-3 rounded-lg border bg-background/50">
+                        <Skeleton className="h-4 w-56" />
+                        <div className="flex items-center gap-3 mt-2">
+                          <Skeleton className="h-4 w-24" />
+                          <Skeleton className="h-4 w-16" />
+                          <Skeleton className="h-4 w-12" />
+                        </div>
+                      </div>
+                    ))}
+                    <div className="grid items-center gap-2">
+                      <div className="flex items-center justify-between">
+                        <Skeleton className="h-4 w-32" />
+                        <div className="inline-flex items-center gap-2">
+                          <Skeleton className="h-8 w-16" />
+                          <Skeleton className="h-8 w-16" />
+                        </div>
+                      </div>
+                      <Skeleton className="h-3 w-full" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
+        )}
         {error && <div className="text-center text-red-500 py-10">{error}</div>}
         {!loading && !error && (
           <>

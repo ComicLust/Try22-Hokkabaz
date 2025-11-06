@@ -16,6 +16,7 @@ import Image from "next/image";
 import SeoArticle from "@/components/SeoArticle";
 import { slugifyTr } from "@/lib/slugify";
 import { TopBrandTicker } from "@/components/top-brand-ticker/TopBrandTicker";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type Bonus = {
   id: string;
@@ -692,7 +693,32 @@ export default function BonuslarClient() {
         {/* Tüm bonuslar */}
         <motion.section initial="initial" animate="animate" variants={fadeInUp}>
           {loading && (
-            <div className="text-center text-muted-foreground py-6">Yükleniyor…</div>
+            <>
+              <h2 className="text-xl font-bold text-gold mb-4 text-center">Bonuslar yükleniyor…</h2>
+              <div className="content-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Card key={i} className="relative overflow-hidden bg-card border border-border rounded-2xl">
+                    <CardHeader>
+                      <div className="mx-auto mb-4 w-full max-w-[200px] h-[64px] bg-muted flex items-center justify-center border rounded-md p-2">
+                        <Skeleton className="h-10 w-32" />
+                      </div>
+                      <Skeleton className="h-6 w-40 mx-auto" />
+                    </CardHeader>
+                    <CardContent>
+                      <Skeleton className="h-7 w-24 mx-auto mb-2" />
+                      <Skeleton className="h-4 w-64 mx-auto mb-4" />
+                      <div className="flex flex-wrap gap-2 justify-center mb-4">
+                        <Skeleton className="h-6 w-16" />
+                        <Skeleton className="h-6 w-20" />
+                        <Skeleton className="h-6 w-14" />
+                      </div>
+                      <Skeleton className="h-4 w-40 mx-auto mb-4" />
+                      <Skeleton className="h-10 w-full" />
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </>
           )}
           {error && (
             <div className="text-center text-red-500 py-6">{error}</div>

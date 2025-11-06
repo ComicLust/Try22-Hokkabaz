@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
 export async function GET() {
-  const items = await db.campaign.findMany({ orderBy: [
-    { isFeatured: 'desc' },
-    { priority: 'desc' },
-  ] })
+  const items = await db.campaign.findMany({
+    // Sıralamayı tek kaynak: admin’deki sürükle-bırak ile belirlenen priority
+    orderBy: { priority: 'desc' }
+  })
   return NextResponse.json(items)
 }
 

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Star, ArrowRight, Info, Gift, Tag, Zap, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -41,6 +42,7 @@ type UiCampaign = {
   image: string;
   bonusAmount: string;
   featured: boolean;
+  priority: number;
   badgeLabel?: string | null;
   ctaUrl?: string | null;
 };
@@ -49,6 +51,7 @@ export default function KampanyalarClient() {
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [kampanyalar, setKampanyalar] = useState<UiCampaign[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [seoTitle, setSeoTitle] = useState<string>('Kampanyalar');
 
   // Marquee (kayan logolar)
@@ -86,6 +89,7 @@ export default function KampanyalarClient() {
   // Kampanyaları API'den çek
   useEffect(() => {
     const load = async () => {
+      setIsLoading(true);
       try {
         const res = await fetch('/api/campaigns');
         const data: ApiCampaign[] = await res.json();
@@ -110,6 +114,7 @@ export default function KampanyalarClient() {
             image: c.imageUrl ?? '/api/placeholder/400/225',
             bonusAmount: bonusDisplay,
             featured,
+            priority: c.priority ?? 0,
             badgeLabel: c.badgeLabel ?? null,
             ctaUrl: c.ctaUrl ?? null,
           };
@@ -117,6 +122,8 @@ export default function KampanyalarClient() {
         setKampanyalar(mapped);
       } catch (e) {
         // sessiz geç; sayfa yine çalışır
+      } finally {
+        setIsLoading(false);
       }
     };
     load();
@@ -130,12 +137,7 @@ export default function KampanyalarClient() {
 
   const featuredKampanyalar = kampanyalar
     .filter(k => k.featured)
-    .sort((a, b) => {
-      const pa = Number(a.bonusAmount) || 0
-      const pb = Number(b.bonusAmount) || 0
-      if (pb !== pa) return pb - pa
-      return a.title.localeCompare(b.title)
-    });
+    .sort((a, b) => b.priority - a.priority);
 
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
@@ -277,6 +279,29 @@ export default function KampanyalarClient() {
           </motion.section>
         )}
 
+        {isLoading && (
+          <motion.section className="mb-12" initial="initial" animate="animate" variants={fadeInUp}>
+            <h2 className="text-2xl font-bold text-gold mb-6">Kampanyalar yükleniyor…</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Card key={i} className="md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl">
+                  <CardHeader>
+                    <div className="relative aspect-square rounded-lg mb-4 overflow-hidden border bg-muted">
+                      <Skeleton className="h-full w-full" />
+                    </div>
+                    <Skeleton className="h-5 w-40" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-4 w-5/6 mb-4" />
+                    <Skeleton className="h-10 w-full" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </motion.section>
+        )}
+
         <motion.section 
           id="aktif-kampanyalar"
           className="mb-12"
@@ -292,8 +317,8 @@ export default function KampanyalarClient() {
             animate="animate"
           >
             {kampanyalar
-              .filter(k => k.status === 'active')
-              .sort((a, b) => a.title.localeCompare(b.title))
+              .filter(k => k.status === 'active' && !k.featured)
+              .sort((a, b) => b.priority - a.priority)
               .map((kampanya) => (
               <motion.div key={kampanya.id} variants={fadeInUp}>
                 <Card className="md:backdrop-blur-sm bg-opacity-80 bg-card border border-border rounded-2xl hover:shadow-lg transition-colors duration-200 hover:border-gold shadow-smooth">
@@ -342,7 +367,7 @@ export default function KampanyalarClient() {
           </motion.div>
         </motion.section>
 
-        {kampanyalar.length === 0 && (
+        {!isLoading && kampanyalar.length === 0 && (
           <motion.div 
             className="text-center py-12"
             initial="initial"
@@ -350,10 +375,8 @@ export default function KampanyalarClient() {
             variants={fadeInUp}
           >
             <div className="text-6xl mb-4">🎯</div>
-            <h3 className="text-xl font-semibold mb-2">Kampanya Bulunamadı</h3>
-            <p className="text-muted-foreground">
-              Henüz kampanya eklenmemiş.
-            </p>
+            <h3 className="text-xl font-semibold mb-2">Kampanya bulunamadı</h3>
+            <p className="text-muted-foreground">Henüz kampanya eklenmemiş.</p>
           </motion.div>
         )}
       </main>
