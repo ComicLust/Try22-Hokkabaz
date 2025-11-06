@@ -415,7 +415,7 @@ export default function AnlasmaliSitelerClient() {
                   </div>
                 )}
                 {!!(selectedBonus as any)?.description && (
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground whitespace-pre-line">
                     {(selectedBonus as any).description}
                   </div>
                 )}

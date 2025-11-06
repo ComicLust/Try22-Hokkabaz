@@ -125,6 +125,11 @@ export default function BankoKuponlarClient() {
   const [isAdmin, setIsAdmin] = useState(false);
   const { toast } = useToast();
 
+  // Yalnızca spor kategorisindeki öne çıkan bonusları göster
+  const featuredSportBonuses = useMemo(() => {
+    return bonuses.filter(b => String(b.gameCategory ?? '').toLowerCase() === 'spor');
+  }, [bonuses]);
+
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
@@ -573,7 +578,7 @@ export default function BankoKuponlarClient() {
         Öne Çıkan Bonuslar
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {bonuses.map((bonus) => (
+        {featuredSportBonuses.map((bonus) => (
           <motion.div key={bonus.id} variants={fadeInUp}>
             <Card className={`relative overflow-hidden backdrop-blur-lg bg-opacity-80 bg-card border-2 border-gold rounded-2xl hover:shadow-xl transition-all duration-300 ${isExpired(bonus) ? 'opacity-60' : ''}`}>
               <div className="absolute top-4 right-4">
@@ -596,7 +601,7 @@ export default function BankoKuponlarClient() {
               <CardContent>
                 <div className="text-3xl font-bold text-gold text-center mb-2">{Number(bonus.amount ?? 0)} TL</div>
                 {(bonus.shortDescription || bonus.description) && (
-                  <div className="text-muted-foreground text-sm text-center mb-4">
+                  <div className="text-muted-foreground text-sm text-center mb-4 whitespace-pre-line">
                     {String(bonus.shortDescription || bonus.description)}
                   </div>
                 )}
@@ -728,7 +733,7 @@ export default function BankoKuponlarClient() {
 
                       {/* Açıklama */}
                       {selectedBonus.description && (
-                        <div className="text-sm text-muted-foreground">
+                        <div className="text-sm text-muted-foreground whitespace-pre-line">
                           {selectedBonus.description}
                         </div>
                       )}

@@ -394,7 +394,7 @@ export default function KampanyalarClient() {
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-gold mb-2">{selectedCampaign.title}</div>
-                  <div className="text-muted-foreground mb-2">{selectedCampaign.description}</div>
+                  <div className="text-muted-foreground mb-2 whitespace-pre-line">{selectedCampaign.description}</div>
                   <div className="text-2xl font-bold text-gold mb-4">{selectedCampaign.bonusAmount}</div>
                 </div>
                 <div className="space-y-2">

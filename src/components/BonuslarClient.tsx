@@ -831,7 +831,7 @@ export default function BonuslarClient() {
                   </div>
                 )}
                 {!!selectedBonus?.description && (
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground whitespace-pre-line">
                     {selectedBonus.description}
                   </div>
                 )}
