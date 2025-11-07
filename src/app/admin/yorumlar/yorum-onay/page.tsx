@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { useToast } from '@/hooks/use-toast'
 
 // Types aligned with API response
 type AdminReviewItem = {
@@ -30,6 +31,7 @@ type ReviewBrand = { id: string; name: string; slug: string }
 type StatusTab = 'pending' | 'approved' | 'rejected' | 'all'
 
 export default function AdminCommentApprovalPage() {
+  const { toast } = useToast()
   const [status, setStatus] = useState<StatusTab>('pending')
   const [brandSlug, setBrandSlug] = useState<string>('')
   const [q, setQ] = useState<string>('')
@@ -99,7 +101,11 @@ export default function AdminCommentApprovalPage() {
       setItems(next)
     }
     const res = await fetch(`/api/admin/site-reviews/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'approve' }) })
-    if (!res.ok) await load()
+    if (!res.ok) {
+      await load()
+    } else {
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const unapprove = async (id: string) => {
@@ -110,7 +116,11 @@ export default function AdminCommentApprovalPage() {
       setItems(next)
     }
     const res = await fetch(`/api/admin/site-reviews/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'unapprove' }) })
-    if (!res.ok) await load()
+    if (!res.ok) {
+      await load()
+    } else {
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const saveContent = async (id: string, content: string) => {
@@ -121,7 +131,11 @@ export default function AdminCommentApprovalPage() {
       setItems(next)
     }
     const res = await fetch(`/api/admin/site-reviews/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content }) })
-    if (!res.ok) await load()
+    if (!res.ok) {
+      await load()
+    } else {
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const remove = async (id: string) => {
@@ -130,6 +144,7 @@ export default function AdminCommentApprovalPage() {
     if (res.ok) {
       setItems((prev) => prev.filter((i) => i.id !== id))
       setTotal((t) => Math.max(0, t - 1))
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       await load()
     }
@@ -153,6 +168,7 @@ export default function AdminCommentApprovalPage() {
         return i
       }))
       clearSelection()
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       await load()
     }

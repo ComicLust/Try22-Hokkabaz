@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { MediaPicker } from '@/components/media/MediaPicker'
+import { useToast } from '@/hooks/use-toast'
 
 type MarqueeLogo = {
   id: string
@@ -16,6 +17,7 @@ export default function MarqueeLogosPage() {
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState<Partial<MarqueeLogo>>({ isActive: true, order: 0, imageUrl: '' })
   const [uploading, setUploading] = useState(false)
+  const { toast } = useToast()
   
   // Markalarımız (Partner Sites) yönetimi
   type PartnerSite = {
@@ -165,6 +167,7 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
       setBrandForm({ isActive: true, name: '', siteUrl: '', logoUrl: '' })
       setShowBrandModal(false)
       await loadBrands()
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       alert('Marka oluşturma hatası')
     }
@@ -177,14 +180,20 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patch),
     })
-    if (res.ok) await loadBrands()
+    if (res.ok) {
+      await loadBrands()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   // Marka sil
   const deleteBrand = async (id: string) => {
     if (!confirm('Bu marka silinsin mi?')) return
     const res = await fetch(`/api/partner-sites/${id}`, { method: 'DELETE' })
-    if (res.ok) await loadBrands()
+    if (res.ok) {
+      await loadBrands()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   // Sürükle-bırak sıralama ve kaydetme
@@ -198,6 +207,7 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
     setBrands(next)
     setDragIndex(null)
     await Promise.all(next.map((b, i) => updateBrand(b.id, { features: { ...(b.features || {}), order: i + 1 } })))
+    toast({ title: 'Önbellek temizlendi' })
   }
 
   // Hero markalar: ayrı yönetim (3 adet, sıralı)
@@ -345,6 +355,7 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
       setSlideForm({ isActive: true, order: 0, imageUrl: '', desktopImageUrl: '', mobileImageUrl: '' })
       setShowSlideModal(false)
       await loadSlides()
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       try {
         const err = await res.json()
@@ -361,13 +372,19 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patch),
     })
-    if (res.ok) await loadSlides()
+    if (res.ok) {
+      await loadSlides()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const deleteSlide = async (id: string) => {
     if (!confirm('Bu slider silinsin mi?')) return
     const res = await fetch(`/api/carousel/${id}`, { method: 'DELETE' })
-    if (res.ok) await loadSlides()
+    if (res.ok) {
+      await loadSlides()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const createItem = async (e: React.FormEvent) => {
@@ -401,6 +418,7 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
       setForm({ isActive: true, order: 0, imageUrl: '' })
       setShowMarqueeModal(false)
       await load()
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       try {
         const err = await res.json()
@@ -417,13 +435,19 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patch),
     })
-    if (res.ok) await load()
+    if (res.ok) {
+      await load()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const deleteItem = async (id: string) => {
     if (!confirm('Bu logo silinsin mi?')) return
     const res = await fetch(`/api/marquee-logos/${id}`, { method: 'DELETE' })
-    if (res.ok) await load()
+    if (res.ok) {
+      await load()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   // Marquee (kayan logolar) için sürükle-bırak ve modal ekleme
@@ -438,6 +462,7 @@ const [mediaOpenSlideRowMobileId, setMediaOpenSlideRowMobileId] = useState<strin
     setItems(next)
     setMarqueeDragIndex(null)
     await Promise.all(next.map((it, i) => updateItem(it.id, { order: i + 1 })))
+    toast({ title: 'Önbellek temizlendi' })
   }
 
   const [showMarqueeModal, setShowMarqueeModal] = useState(false)

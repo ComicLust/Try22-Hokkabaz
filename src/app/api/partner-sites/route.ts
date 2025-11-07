@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { revalidateTag } from 'next/cache'
 
 export async function GET() {
   // Tüm partner siteleri al ve frontend ile tutarlı olması için
@@ -21,6 +22,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
     const created = await db.partnerSite.create({ data: body })
+    // Anasayfa partner-sites cache'ini temizle
+    revalidateTag('home:partner-sites')
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })

@@ -17,7 +17,7 @@ import Footer from '@/components/Footer';
 import SeoArticle from '@/components/SeoArticle';
 import TelegramPanel from '@/components/TelegramPanel';
 import FAQDesktop from '@/components/FAQDesktop';
-import { HeroStats } from '@/components/hero-stats/HeroStats';
+import { HeroStats, type CountStats } from '@/components/hero-stats/HeroStats';
 
 // Telegram Icon Component
 const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -31,11 +31,13 @@ export default function HomeClient({
   initialMarqueeLogos,
   initialPartnerSites,
   initialCampaigns,
+  initialHeroStats,
 }: {
   initialBonuses?: any[];
   initialMarqueeLogos?: Array<{ id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean }>;
   initialPartnerSites?: Array<{ id: string; name?: string; slug?: string; logoUrl?: string | null; siteUrl?: string | null; rating?: number | null; features?: any; isActive: boolean }>;
   initialCampaigns?: any[];
+  initialHeroStats?: CountStats;
 }) {
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
   const [selectedBonus, setSelectedBonus] = useState<any>(null);
@@ -401,7 +403,7 @@ export default function HomeClient({
 
       <main className="pt-0 md:pl-72">
         {/* Mobil odaklı istatistik hero alanı */}
-        <HeroStats />
+        <HeroStats initialStats={initialHeroStats} />
         {/* Öne Çıkan Kampanyalar - Kampanyalar Sayfasıyla Birebir */}
         <motion.section 
           className="mb-8"

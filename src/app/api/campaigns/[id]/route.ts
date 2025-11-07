@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { revalidateTag } from 'next/cache'
 
 export async function GET(
   _req: NextRequest,
@@ -19,6 +20,8 @@ export async function PATCH(
     const body = await req.json()
     const { id } = await context.params
     const updated = await db.campaign.update({ where: { id }, data: body })
+    // Anasayfa kampanyalar cache'ini temizle
+    revalidateTag('home:campaigns')
     return NextResponse.json(updated)
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })
@@ -32,6 +35,8 @@ export async function DELETE(
   try {
     const { id } = await context.params
     await db.campaign.delete({ where: { id } })
+    // Anasayfa kampanyalar cache'ini temizle
+    revalidateTag('home:campaigns')
     return NextResponse.json({ ok: true })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })

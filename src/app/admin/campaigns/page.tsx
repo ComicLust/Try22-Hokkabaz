@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { MediaPicker } from '@/components/media/MediaPicker'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useToast } from '@/hooks/use-toast'
 
 type Campaign = {
   id: string
@@ -35,6 +36,7 @@ export default function CampaignsPage() {
   const [mediaOpenForm, setMediaOpenForm] = useState(false)
   const [query, setQuery] = useState('')
   const [dragId, setDragId] = useState<string | null>(null)
+  const { toast } = useToast()
 
   const load = async () => {
     setLoading(true)
@@ -58,6 +60,7 @@ export default function CampaignsPage() {
     if (res.ok) {
       setForm({ isActive: true, isFeatured: false, priority: 0 })
       await load()
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       alert('Oluşturma hatası')
     }
@@ -69,13 +72,19 @@ export default function CampaignsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patch),
     })
-    if (res.ok) await load()
+    if (res.ok) {
+      await load()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const deleteItem = async (id: string) => {
     if (!confirm('Bu kampanya silinsin mi?')) return
     const res = await fetch(`/api/campaigns/${id}`, { method: 'DELETE' })
-    if (res.ok) await load()
+    if (res.ok) {
+      await load()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   // Sürükle-bırak sıralama (priority desc)
@@ -100,6 +109,7 @@ export default function CampaignsPage() {
       })
     ))
     await load()
+    toast({ title: 'Önbellek temizlendi' })
   }
 
   const filteredItems = useMemo(() => {

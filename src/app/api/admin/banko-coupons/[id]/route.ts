@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { revalidateTag } from 'next/cache'
 
 export const runtime = 'nodejs'
 
@@ -117,6 +118,9 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
     const trust = final.upVotes + final.downVotes > 0 ? Math.round((final.upVotes / (final.upVotes + final.downVotes)) * 100) : 0
 
+    // Anasayfa banko istatistikleri tag'ini temizle
+    revalidateTag('home:banko-stats')
+
     return NextResponse.json({
       ok: true,
       data: {
@@ -143,6 +147,8 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
     // Delete matches first, then coupon
     await (db as any).bankoMatch.deleteMany({ where: { couponId: id } })
     await (db as any).bankoCoupon.delete({ where: { id } })
+    // Anasayfa banko istatistikleri tag'ini temizle
+    revalidateTag('home:banko-stats')
     return NextResponse.json({ ok: true })
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: err?.message || 'Unexpected error' }, { status: 500 })

@@ -10,6 +10,8 @@ interface ApiBonus { id: string; title?: string; shortDescription?: string | nul
 interface MarqueeLogo { id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean }
 interface PartnerSite { id: string; name?: string; slug?: string; logoUrl?: string | null; siteUrl?: string | null; rating?: number | null; features?: any; isActive: boolean }
 interface ApiCampaign { id: string; title: string; slug: string; description?: string | null; imageUrl?: string | null; ctaUrl?: string | null; badgeLabel?: string | null; bonusText?: string | null; bonusAmount?: number | null; tags?: string[] | null; startDate?: string | null; endDate?: string | null; isActive: boolean; isFeatured: boolean; priority: number; createdAt: string }
+interface ReviewsStatItem { brandId: string; reviewCount: number }
+interface BankoStats { total: number; successRate: number }
 
 export default async function Page() {
   // Server-side veri çekimi (ISR + tag)
@@ -17,18 +19,44 @@ export default async function Page() {
   let initialMarqueeLogos: MarqueeLogo[] = []
   let initialPartnerSites: PartnerSite[] = []
   let initialCampaigns: ApiCampaign[] = []
+  let initialHeroStats: { bonuses: number; campaigns: number; brands: number; reviews: number; demoBonuses: number; bankoTotal: number; bankoSuccessRate: number } | undefined
 
   try {
-    const [bRes, mRes, pRes, cRes] = await Promise.all([
+    const [bRes, mRes, pRes, cRes, rStatsRes, bStatsRes] = await Promise.all([
       fetch('/api/bonuses?active=true&featured=true', { next: { revalidate, tags: ['home:bonuses'] } }),
       fetch('/api/marquee-logos', { next: { revalidate, tags: ['home:marquee'] } }),
       fetch('/api/partner-sites', { next: { revalidate, tags: ['home:partner-sites'] } }),
       fetch('/api/campaigns', { next: { revalidate, tags: ['home:campaigns'] } }),
+      fetch('/api/site-reviews/stats', { next: { revalidate, tags: ['home:reviews-stats'] } }),
+      fetch('/api/banko-coupons/archive/stats', { next: { revalidate, tags: ['home:banko-stats'] } }),
     ])
     initialBonuses = bRes.ok ? await bRes.json() : []
     initialMarqueeLogos = mRes.ok ? await mRes.json() : []
     initialPartnerSites = pRes.ok ? await pRes.json() : []
     initialCampaigns = cRes.ok ? await cRes.json() : []
+
+    const reviewsStats: ReviewsStatItem[] = rStatsRes.ok ? await rStatsRes.json() : []
+    const bankoStats: BankoStats = bStatsRes.ok ? await bStatsRes.json() : { total: 0, successRate: 0 }
+
+    const bonusesArr: ApiBonus[] = Array.isArray(initialBonuses) ? initialBonuses : []
+    const campaignsArr: ApiCampaign[] = Array.isArray(initialCampaigns) ? initialCampaigns : []
+    const partnersArr: PartnerSite[] = Array.isArray(initialPartnerSites) ? initialPartnerSites : []
+    const demoBonuses = bonusesArr.filter((b: any) => Array.isArray(b?.features) && b.features.includes('demo'))
+    const activeCampaigns = campaignsArr.filter((c: any) => c?.isActive)
+    const activeBrands = partnersArr.filter((p: any) => p?.isActive)
+    const totalReviews = Array.isArray(reviewsStats)
+      ? reviewsStats.reduce((acc, cur) => acc + Number((cur as any)?.reviewCount ?? 0), 0)
+      : 0
+
+    initialHeroStats = {
+      bonuses: bonusesArr.length,
+      campaigns: activeCampaigns.length,
+      brands: activeBrands.length,
+      reviews: totalReviews,
+      demoBonuses: demoBonuses.length,
+      bankoTotal: Number(bankoStats?.total ?? 0),
+      bankoSuccessRate: Number(bankoStats?.successRate ?? 0),
+    }
   } catch {}
 
   return (
@@ -40,6 +68,7 @@ export default async function Page() {
           initialMarqueeLogos={Array.isArray(initialMarqueeLogos) ? initialMarqueeLogos : []}
           initialPartnerSites={Array.isArray(initialPartnerSites) ? initialPartnerSites : []}
           initialCampaigns={Array.isArray(initialCampaigns) ? initialCampaigns : []}
+          initialHeroStats={initialHeroStats}
         />
       </div>
       <div id="fallback" className="min-h-screen bg-background text-foreground">

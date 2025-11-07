@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { revalidateTag } from 'next/cache'
 
 // PATCH /api/admin/bonuses/bulk
 // Body: { action: 'approve' | 'unapprove', ids: string[] }
@@ -19,6 +20,8 @@ export async function PATCH(req: NextRequest) {
     if (action === 'unapprove') data.isApproved = false
 
     const result = await (db as any).bonus.updateMany({ where: { id: { in: ids } }, data })
+    // Anasayfa bonus listesi cache'ini temizle
+    revalidateTag('home:bonuses')
     return NextResponse.json({ ok: true, count: result?.count ?? 0 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Bulk işlem hatası' }, { status: 500 })

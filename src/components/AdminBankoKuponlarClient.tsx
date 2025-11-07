@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+import { useToast } from '@/hooks/use-toast'
 
 type MatchResult = 'PENDING' | 'WON' | 'LOST' | 'DRAW' | 'CANCELLED'
 
@@ -162,6 +163,7 @@ function PredictionPicker({ value, onSelect }: PredictionPickerProps) {
 }
 
 export default function AdminBankoKuponlarClient() {
+  const { toast } = useToast()
   const [loading, setLoading] = useState(false)
   const [items, setItems] = useState<BankoCoupon[]>([])
   const [q, setQ] = useState('')
@@ -258,6 +260,7 @@ export default function AdminBankoKuponlarClient() {
       setNewDate(new Date().toISOString().substring(0, 10))
       setNewPublish(true)
       await loadList()
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       alert(json.error || 'Hata')
     }
@@ -307,6 +310,7 @@ export default function AdminBankoKuponlarClient() {
       setEditOpen(false)
       setEditing(null)
       await loadList()
+      toast({ title: 'Önbellek temizlendi' })
     } else {
       alert(json.error || 'Hata')
     }
@@ -320,14 +324,20 @@ export default function AdminBankoKuponlarClient() {
       body: JSON.stringify({ isActive: false }),
     })
     const json = await res.json()
-    if (json.ok) await loadList()
+    if (json.ok) {
+      await loadList()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   async function deleteCoupon(id: string) {
     if (!confirm('Kuponu silmek istediğinize emin misiniz?')) return
     const res = await fetch(`/api/admin/banko-coupons/${id}`, { method: 'DELETE', credentials: 'include' })
     const json = await res.json()
-    if (json.ok) await loadList()
+    if (json.ok) {
+      await loadList()
+      toast({ title: 'Önbellek temizlendi' })
+    }
   }
 
   const trustPct = (c: BankoCoupon) => (c.upVotes + c.downVotes > 0 ? Math.round((c.upVotes / (c.upVotes + c.downVotes)) * 100) : 0)

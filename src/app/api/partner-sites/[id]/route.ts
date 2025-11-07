@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { revalidateTag } from 'next/cache'
 
 export async function GET(
   _req: NextRequest,
@@ -16,13 +17,9 @@ export async function PATCH(
 ) {
   try {
     const body = await req.json()
-    // features için merge değil replace: client tam nesne gönderiyor
-    const nextData: any = { ...body }
-    if (body && typeof body === 'object' && 'features' in body) {
-      nextData.features = body.features ?? null
-    }
-
-    const updated = await db.partnerSite.update({ where: { id: params.id }, data: nextData })
+    const updated = await db.partnerSite.update({ where: { id: params.id }, data: body })
+    // Anasayfa partner-sites cache'ini temizle
+    revalidateTag('home:partner-sites')
     return NextResponse.json(updated)
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })
@@ -35,6 +32,8 @@ export async function DELETE(
 ) {
   try {
     await db.partnerSite.delete({ where: { id: params.id } })
+    // Anasayfa partner-sites cache'ini temizle
+    revalidateTag('home:partner-sites')
     return NextResponse.json({ ok: true })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })

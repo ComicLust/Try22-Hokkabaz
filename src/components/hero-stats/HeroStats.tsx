@@ -3,7 +3,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Gift, Star, Award, MessageSquare, BadgeCheck, TrendingUp } from 'lucide-react'
 
-interface CountStats {
+// CountStats ve initialStats tekil tanım: aşağıda export ile yer alıyor
+
+function formatNumber(n: number) {
+  return new Intl.NumberFormat('tr-TR').format(n)
+}
+
+export interface CountStats {
   bonuses: number
   campaigns: number
   brands: number
@@ -23,19 +29,16 @@ const initialStats: CountStats = {
   bankoSuccessRate: 0,
 }
 
-function formatNumber(n: number) {
-  return new Intl.NumberFormat('tr-TR').format(n)
-}
-
-export function HeroStats() {
-  const [stats, setStats] = useState<CountStats>(initialStats)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+export function HeroStats({ initialStats: initialFromServer }: { initialStats?: CountStats }) {
+  const [stats, setStats] = useState<CountStats>(initialFromServer ?? initialStats)
+  const [isLoading, setIsLoading] = useState<boolean>(!initialFromServer)
   const [hasError, setHasError] = useState<boolean>(false)
 
   useEffect(() => {
     let mounted = true
     ;(async () => {
       try {
+        if (initialFromServer) return
         setHasError(false)
         setIsLoading(true)
         const [bonusesRes, campaignsRes, partnersRes, reviewsRes, bankoStatsRes] = await Promise.all([
@@ -85,7 +88,7 @@ export function HeroStats() {
     return () => {
       mounted = false
     }
-  }, [])
+  }, [initialFromServer])
 
   const tilesTop = useMemo(() => ([
     { label: 'Aktif Bonus', value: stats.bonuses, href: '/bonuslar', Icon: Gift },

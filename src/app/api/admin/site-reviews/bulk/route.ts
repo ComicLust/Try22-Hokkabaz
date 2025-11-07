@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { revalidateSiteReviewsTag } from '@/lib/cache'
+import { revalidateTag } from 'next/cache'
 
 const prisma: any = db
 
@@ -34,6 +35,8 @@ export async function PATCH(req: NextRequest) {
         revalidateSiteReviewsTag(bid)
       }
     }
+    // Anasayfa yorum istatistikleri cache tag'ini de temizle
+    revalidateTag('home:reviews-stats')
     return NextResponse.json({ ok: true, count: result?.count ?? 0 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Bulk işlem hatası' }, { status: 500 })

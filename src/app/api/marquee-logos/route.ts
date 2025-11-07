@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { revalidateTag } from 'next/cache'
 
 export async function GET() {
   const items = await db.marqueeLogo.findMany({ orderBy: { order: 'asc' } })
@@ -35,6 +36,8 @@ export async function POST(req: NextRequest) {
         order: desiredOrder,
       },
     })
+    // Anasayfa marquee cache'ini temizle
+    revalidateTag('home:marquee')
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })
