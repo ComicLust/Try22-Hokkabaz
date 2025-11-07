@@ -11,6 +11,7 @@ import ClientOnly from '@/components/ClientOnly'
 import TelegramSuggestionCard from '@/components/TelegramSuggestionCard'
 import SeoArticle from '@/components/SeoArticle'
 import { TopBrandTicker } from '@/components/top-brand-ticker/TopBrandTicker'
+import LazyImage from '@/components/LazyImage'
 
 function formatMembers(n: number) {
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`
@@ -42,9 +43,9 @@ export default async function GuvenilirTelegramPage() {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       {marqueeItems.length > 0 && (
-        <TopBrandTicker items={marqueeItems} className="md:pl-72" />
+        <TopBrandTicker items={marqueeItems} className="lg:pl-64" />
       )}
-      <main className="container mx-auto px-4 pt-6 md:pt-4 pb-8 w-full flex-1 space-y-8 md:pl-72">
+      <main className="max-w-7xl mx-auto px-4 pt-6 md:pt-4 pb-8 w-full flex-1 space-y-8 lg:pl-64">
         {/* Hero */}
         <section className="relative">
           <div className="grid md:grid-cols-2 gap-4">
@@ -95,7 +96,7 @@ export default async function GuvenilirTelegramPage() {
         {featured.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Önerdiğimiz Telegram Grupları</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 md:gap-6">
               <TelegramSuggestionCard />
               {featured.map((g) => (
                 <div
@@ -111,11 +112,12 @@ export default async function GuvenilirTelegramPage() {
                       Önerilen
                     </span>
                   )}
-                  <img
+                  <LazyImage
                     src={g.imageUrl ?? '/placeholder.svg'}
                     alt={g.name}
-                    className="w-20 h-20 rounded-full object-cover border border-border"
-                    loading="lazy"
+                    width={80}
+                    height={80}
+                    className="w-20 h-20 rounded-full border border-border"
                   />
                   {/* Önerilen rozet sağ üstte; diğer rozetler görselin altında */}
                   {Array.isArray((g as any).badges) && (g as any).badges.length > 0 && (
@@ -144,9 +146,11 @@ export default async function GuvenilirTelegramPage() {
                     href={g.ctaUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                  className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-xs md:text-sm w-full gap-1.5 flex-wrap text-center leading-tight"
+                    className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-xs md:text-sm w-full gap-1.5 text-center leading-tight whitespace-nowrap"
                   >
-                    <Send className="w-4 h-4" aria-hidden /> Telegram’a Katıl <ArrowRight className="w-4 h-4" aria-hidden />
+                    <Send className="w-4 h-4 shrink-0" aria-hidden />
+                    <span>Telegram’a Katıl</span>
+                    <ArrowRight className="w-4 h-4 shrink-0" aria-hidden />
                   </a>
                 </div>
               ))}
@@ -156,7 +160,7 @@ export default async function GuvenilirTelegramPage() {
 
         <section className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">Tüm Gruplar</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 md:gap-6">
             <TelegramSuggestionCard />
             {regular.map((g) => (
               <div
@@ -167,11 +171,12 @@ export default async function GuvenilirTelegramPage() {
                 <span className="absolute top-2 left-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset border bg-background/70">
                   {g.type === 'CHANNEL' ? 'Kanal' : 'Grup'}
                 </span>
-                <img
+                <LazyImage
                   src={g.imageUrl ?? '/placeholder.svg'}
                   alt={g.name}
-                  className="w-20 h-20 rounded-full object-cover border border-border"
-                  loading="lazy"
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 rounded-full border border-border"
                 />
                 {Array.isArray((g as any).badges) && (g as any).badges.length > 0 && (
                   <div className="flex flex-wrap justify-center gap-1">
@@ -197,9 +202,11 @@ export default async function GuvenilirTelegramPage() {
                   href={g.ctaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-xs md:text-sm w-full gap-1.5 flex-wrap text-center leading-tight"
+                  className="mt-1 inline-flex items-center justify-center px-3 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-colors text-xs md:text-sm w-full gap-1.5 text-center leading-tight whitespace-nowrap"
                 >
-                  <Send className="w-4 h-4" aria-hidden /> Telegram’a Katıl <ArrowRight className="w-4 h-4" aria-hidden />
+                  <Send className="w-4 h-4 shrink-0" aria-hidden />
+                  <span>Telegram’a Katıl</span>
+                  <ArrowRight className="w-4 h-4 shrink-0" aria-hidden />
                 </a>
               </div>
             ))}
