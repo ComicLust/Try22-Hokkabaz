@@ -16,6 +16,13 @@ export default function AnalyticsInjector() {
   useEffect(() => {
     let cancelled = false
     async function load() {
+      // Admin sayfalarında analitik kodları enjekte etmeyelim
+      try {
+        if (typeof window !== 'undefined') {
+          const path = window.location.pathname || ''
+          if (path.startsWith('/admin')) return
+        }
+      } catch {}
       try {
         const res = await fetch('/api/analytics-codes')
         if (!res.ok) return
@@ -50,6 +57,9 @@ export default function AnalyticsInjector() {
           // Append remaining non-script nodes directly
           Array.from(container.childNodes).forEach((node) => {
             try {
+              if (node instanceof HTMLElement) {
+                node.dataset.analyticsId = item.id
+              }
               target.appendChild(node)
             } catch {}
           })
