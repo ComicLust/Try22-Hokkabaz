@@ -4,12 +4,43 @@ import { getSeoRecord } from '@/lib/seo'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 
-export default function Page() {
+export const revalidate = 300
+
+interface ApiBonus { id: string; title?: string; shortDescription?: string | null; imageUrl?: string | null; isActive: boolean; isFeatured?: boolean | null; validityText?: string | null; startDate?: string | null; endDate?: string | null }
+interface MarqueeLogo { id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean }
+interface PartnerSite { id: string; name?: string; slug?: string; logoUrl?: string | null; siteUrl?: string | null; rating?: number | null; features?: any; isActive: boolean }
+interface ApiCampaign { id: string; title: string; slug: string; description?: string | null; imageUrl?: string | null; ctaUrl?: string | null; badgeLabel?: string | null; bonusText?: string | null; bonusAmount?: number | null; tags?: string[] | null; startDate?: string | null; endDate?: string | null; isActive: boolean; isFeatured: boolean; priority: number; createdAt: string }
+
+export default async function Page() {
+  // Server-side veri çekimi (ISR + tag)
+  let initialBonuses: ApiBonus[] = []
+  let initialMarqueeLogos: MarqueeLogo[] = []
+  let initialPartnerSites: PartnerSite[] = []
+  let initialCampaigns: ApiCampaign[] = []
+
+  try {
+    const [bRes, mRes, pRes, cRes] = await Promise.all([
+      fetch('/api/bonuses?active=true&featured=true', { next: { revalidate, tags: ['home:bonuses'] } }),
+      fetch('/api/marquee-logos', { next: { revalidate, tags: ['home:marquee'] } }),
+      fetch('/api/partner-sites', { next: { revalidate, tags: ['home:partner-sites'] } }),
+      fetch('/api/campaigns', { next: { revalidate, tags: ['home:campaigns'] } }),
+    ])
+    initialBonuses = bRes.ok ? await bRes.json() : []
+    initialMarqueeLogos = mRes.ok ? await mRes.json() : []
+    initialPartnerSites = pRes.ok ? await pRes.json() : []
+    initialCampaigns = cRes.ok ? await cRes.json() : []
+  } catch {}
+
   return (
     <>
       {/* SSR fallback: boş ekranı önlemek için minimal içerik */}
       <div id="app-root">
-        <HomeClient />
+        <HomeClient
+          initialBonuses={Array.isArray(initialBonuses) ? initialBonuses : []}
+          initialMarqueeLogos={Array.isArray(initialMarqueeLogos) ? initialMarqueeLogos : []}
+          initialPartnerSites={Array.isArray(initialPartnerSites) ? initialPartnerSites : []}
+          initialCampaigns={Array.isArray(initialCampaigns) ? initialCampaigns : []}
+        />
       </div>
       <div id="fallback" className="min-h-screen bg-background text-foreground">
         <div className="container mx-auto px-4 py-6 space-y-4">

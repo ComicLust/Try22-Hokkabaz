@@ -5,6 +5,8 @@ const prisma: any = db
 
 type Props = { params: Promise<{ slug: string }> }
 
+export const revalidate = 300
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { slug } = await params
@@ -105,5 +107,19 @@ const canonical = `https://hokkabaz.bet/yorumlar/${slug}`
 
 export default async function YorumDetayPage({ params }: Props) {
   const { slug } = await params
-  return <YorumDetayClient slug={slug} />
+  // Server-side data fetch with ISR and tag-based caching
+  let initialSite: any = null
+  let initialReviews: any[] = []
+
+  try {
+    const siteRes = await fetch(`/api/review-brands/by-slug/${slug}`, { next: { tags: [`review-brand:${slug}`], revalidate } })
+    initialSite = siteRes.ok ? await siteRes.json() : null
+    if (initialSite?.id) {
+      const listRes = await fetch(`/api/site-reviews?brandSlug=${slug}&sort=newest`, { next: { tags: [`site-reviews:${initialSite.id}`], revalidate } })
+      const listData = listRes.ok ? await listRes.json() : { items: [] }
+      initialReviews = listData?.items || []
+    }
+  } catch {}
+
+  return <YorumDetayClient slug={slug} initialSite={initialSite} initialReviews={initialReviews} />
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { revalidateSiteReviewsTag } from '@/lib/cache'
 
 const prisma: any = db
 
@@ -23,6 +24,16 @@ export async function PATCH(req: NextRequest) {
     if (action === 'unreject') data = { isRejected: false }
 
     const result = await prisma.siteReview.updateMany({ where: { id: { in: ids } }, data })
+    // Revalidate affected brands' review lists with explicit typing
+    const affected = await prisma.siteReview.findMany({ where: { id: { in: ids } }, select: { brandId: true } })
+    const seen = new Set<string>()
+    for (const r of affected as Array<{ brandId?: string | null }>) {
+      const bid = r.brandId
+      if (typeof bid === 'string' && bid.length && !seen.has(bid)) {
+        seen.add(bid)
+        revalidateSiteReviewsTag(bid)
+      }
+    }
     return NextResponse.json({ ok: true, count: result?.count ?? 0 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Bulk işlem hatası' }, { status: 500 })

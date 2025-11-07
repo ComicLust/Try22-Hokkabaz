@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { randomUUID } from 'crypto'
 import { sanitizeText, createIpRateLimiter, getClientIp } from '@/lib/security'
+import { withCache, revalidateSiteReviewsTag } from '@/lib/cache'
 
 function dicebearAvatar(seed: string) {
   const s = encodeURIComponent(seed)
@@ -24,15 +25,25 @@ export async function GET(req: NextRequest) {
   const orderBy = sort === 'newest' ? { createdAt: 'desc' as const } : { createdAt: 'asc' as const }
   const skip = (page - 1) * limit
 
-  const [items, total] = await Promise.all([
-    db.siteReview.findMany({
-      where: { brandId: brand.id, isApproved: true },
-      orderBy,
-      skip,
-      take: limit,
-    }),
-    db.siteReview.count({ where: { brandId: brand.id, isApproved: true } }),
-  ])
+  const { items, total } = await withCache(
+    async () => {
+      const [list, count] = await Promise.all([
+        db.siteReview.findMany({
+          where: { brandId: brand.id, isApproved: true },
+          orderBy,
+          skip,
+          take: limit,
+        }),
+        db.siteReview.count({ where: { brandId: brand.id, isApproved: true } }),
+      ])
+      return { items: list, total: count }
+    },
+    {
+      key: ['site-reviews', brand.id, sort, String(page), String(limit)],
+      tags: [`site-reviews:${brand.id}`],
+      revalidate: 300,
+    }
+  )
 
   // One-time backfill: Assign random avatar to reviews missing avatarUrl
   const toFill = items.filter((i: any) => !i.avatarUrl)
@@ -81,6 +92,7 @@ export async function POST(req: NextRequest) {
         avatarUrl,
       },
     })
+    revalidateSiteReviewsTag(brand.id)
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Error' }, { status: 400 })

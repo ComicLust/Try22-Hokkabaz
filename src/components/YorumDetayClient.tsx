@@ -22,9 +22,9 @@ const fadeInUp = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.25 } },
 }
 
-export default function YorumDetayClient({ slug }: { slug: string }) {
-  const [site, setSite] = useState<ReviewBrand | null>(null)
-  const [reviews, setReviews] = useState<Review[]>([])
+export default function YorumDetayClient({ slug, initialSite, initialReviews }: { slug: string; initialSite?: ReviewBrand | null; initialReviews?: Review[] | null }) {
+  const [site, setSite] = useState<ReviewBrand | null>(initialSite ?? null)
+  const [reviews, setReviews] = useState<Review[]>(initialReviews ?? [])
   const [sort, setSort] = useState<'newest' | 'oldest'>('newest')
   const [toneFilter, setToneFilter] = useState<'all' | 'positive' | 'negative'>('all')
   const [loading, setLoading] = useState(true)
@@ -51,12 +51,19 @@ export default function YorumDetayClient({ slug }: { slug: string }) {
     (async () => {
       try {
         setLoading(true)
-        const siteRes = await fetch(`/api/review-brands/by-slug/${slug}`)
-        const siteData = await siteRes.json()
-        if (siteRes.ok) setSite(siteData)
-        const listRes = await fetch(`/api/site-reviews?brandSlug=${slug}&sort=${sort}`)
-        const listData = await listRes.json()
-        if (listRes.ok) setReviews(listData.items || [])
+        // Site bilgisi yoksa getir
+        if (!site) {
+          const siteRes = await fetch(`/api/review-brands/by-slug/${slug}`)
+          const siteData = await siteRes.json()
+          if (siteRes.ok) setSite(siteData)
+        }
+        // İlk yüklemede newest için initialReviews varsa tekrar fetch etme
+        const shouldFetchList = !(sort === 'newest' && Array.isArray(initialReviews) && initialReviews.length > 0)
+        if (shouldFetchList) {
+          const listRes = await fetch(`/api/site-reviews?brandSlug=${slug}&sort=${sort}`)
+          const listData = await listRes.json()
+          if (listRes.ok) setReviews(listData.items || [])
+        }
         setError(null)
       } catch (e: any) {
         setError(e?.message ?? 'Yüklenemedi')

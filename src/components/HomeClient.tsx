@@ -26,7 +26,17 @@ const TelegramIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
   </svg>
 );
 
-export default function HomeClient() {
+export default function HomeClient({
+  initialBonuses,
+  initialMarqueeLogos,
+  initialPartnerSites,
+  initialCampaigns,
+}: {
+  initialBonuses?: any[];
+  initialMarqueeLogos?: Array<{ id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean }>;
+  initialPartnerSites?: Array<{ id: string; name?: string; slug?: string; logoUrl?: string | null; siteUrl?: string | null; rating?: number | null; features?: any; isActive: boolean }>;
+  initialCampaigns?: any[];
+}) {
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
   const [selectedBonus, setSelectedBonus] = useState<any>(null);
   const [isCampaignDialogOpen, setIsCampaignDialogOpen] = useState(false);
@@ -68,7 +78,7 @@ export default function HomeClient() {
   };
 
   // Bonuslar (API) verisi
-  const [bonuses, setBonuses] = useState<any[]>([]);
+  const [bonuses, setBonuses] = useState<any[]>(Array.isArray(initialBonuses) ? initialBonuses.slice(0, 12) : []);
   const [bonusesError, setBonusesError] = useState<string | null>(null);
   const [bonusesLoading, setBonusesLoading] = useState<boolean>(false);
 
@@ -77,10 +87,11 @@ export default function HomeClient() {
       try {
         setBonusesLoading(true);
         setBonusesError(null);
-        const res = await fetch('/api/bonuses?active=true&featured=true', { cache: 'no-store' });
-        const data = await res.json();
-        // Maksimum 12 bonus göster (3 sıra x 4 kolon)
-        setBonuses(Array.isArray(data) ? data.slice(0, 12) : []);
+        if (!Array.isArray(initialBonuses) || initialBonuses.length === 0) {
+          const res = await fetch('/api/bonuses?active=true&featured=true', { cache: 'no-store' });
+          const data = await res.json();
+          setBonuses(Array.isArray(data) ? data.slice(0, 12) : []);
+        }
       } catch (e) {
         setBonusesError('Bonuslar yüklenemedi');
       } finally {
@@ -88,7 +99,7 @@ export default function HomeClient() {
       }
     };
     fetchBonuses();
-  }, []);
+  }, [initialBonuses]);
 
   // Geçerlilik metni ve süre kontrolü (Bonuslar sayfasıyla aynı)
   const formatValidity = (b: any) => {
@@ -116,16 +127,18 @@ export default function HomeClient() {
 
   // Marquee ve Partner Siteler (Anlaşmalı Siteler sayfasıyla aynı veri kaynakları)
   type MarqueeLogo = { id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean };
-  const [marqueeLogos, setMarqueeLogos] = useState<MarqueeLogo[]>([]);
+  const [marqueeLogos, setMarqueeLogos] = useState<MarqueeLogo[]>(Array.isArray(initialMarqueeLogos) ? initialMarqueeLogos.filter((d: MarqueeLogo) => d.isActive) : []);
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/marquee-logos');
-        const data = await res.json();
-        setMarqueeLogos(Array.isArray(data) ? data.filter((d: MarqueeLogo) => d.isActive) : []);
+        if (!Array.isArray(initialMarqueeLogos) || initialMarqueeLogos.length === 0) {
+          const res = await fetch('/api/marquee-logos');
+          const data = await res.json();
+          setMarqueeLogos(Array.isArray(data) ? data.filter((d: MarqueeLogo) => d.isActive) : []);
+        }
       } catch {}
     })();
-  }, []);
+  }, [initialMarqueeLogos]);
 
   const marqueeItems = useMemo(() => {
     const reps = 12;
@@ -134,17 +147,19 @@ export default function HomeClient() {
   }, [marqueeLogos]);
 
   type PartnerSite = { id: string; name?: string; slug?: string; logoUrl?: string | null; siteUrl?: string | null; rating?: number | null; features?: any; isActive: boolean };
-  const [partnerSites, setPartnerSites] = useState<PartnerSite[]>([]);
+  const [partnerSites, setPartnerSites] = useState<PartnerSite[]>(Array.isArray(initialPartnerSites) ? initialPartnerSites.filter((d: PartnerSite) => d.isActive) : []);
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/partner-sites');
-        const data = await res.json();
-        const actives = Array.isArray(data) ? data.filter((d: PartnerSite) => d.isActive) : [];
-        setPartnerSites(actives);
+        if (!Array.isArray(initialPartnerSites) || initialPartnerSites.length === 0) {
+          const res = await fetch('/api/partner-sites');
+          const data = await res.json();
+          const actives = Array.isArray(data) ? data.filter((d: PartnerSite) => d.isActive) : [];
+          setPartnerSites(actives);
+        }
       } catch {}
     })();
-  }, []);
+  }, [initialPartnerSites]);
   const primaryBrandLogos = useMemo(() => {
     const sorted = [...partnerSites].sort((a, b) => ((a?.features?.order ?? 999) - (b?.features?.order ?? 999)));
     return sorted.map((s) => ({
@@ -208,45 +223,71 @@ export default function HomeClient() {
     ctaUrl?: string | null;
   };
 
-  const [kampanyalar, setKampanyalar] = useState<UiCampaign[]>([]);
+  const [kampanyalar, setKampanyalar] = useState<UiCampaign[]>(Array.isArray(initialCampaigns) ? ((): UiCampaign[] => {
+    const now = Date.now();
+    return initialCampaigns.map((c: any) => {
+      const start = c.startDate ? Date.parse(c.startDate) : undefined;
+      const end = c.endDate ? Date.parse(c.endDate) : undefined;
+      const status = c.isActive ? 'active' : (start && start > now ? 'upcoming' : 'ended');
+      const featured = !!c.isFeatured;
+      const bonusDisplay = (c.bonusText && String(c.bonusText).trim().length > 0)
+        ? c.bonusText
+        : (c.bonusAmount != null ? String(c.bonusAmount) : '');
+      return {
+        id: c.id,
+        title: c.title,
+        description: c.description ?? '',
+        tags: Array.isArray(c.tags) ? c.tags! : [],
+        status,
+        image: c.imageUrl ?? '/api/placeholder/400/225',
+        bonusAmount: bonusDisplay,
+        featured,
+        priority: c.priority ?? 0,
+        createdAt: c.createdAt,
+        badgeLabel: c.badgeLabel ?? null,
+        ctaUrl: c.ctaUrl ?? null,
+      } as UiCampaign;
+    });
+  })() : []);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch('/api/campaigns');
-        const data: ApiCampaign[] = await res.json();
-        const now = Date.now();
-        const mapped: UiCampaign[] = data.map((c) => {
-          const start = c.startDate ? Date.parse(c.startDate) : undefined;
-          const end = c.endDate ? Date.parse(c.endDate) : undefined;
-          // Ana sayfa: Admin'de aktif olanların tamamı görünmeli
-          const status = c.isActive ? 'active' : (start && start > now ? 'upcoming' : 'ended');
-          const featured = !!c.isFeatured;
-          const bonusDisplay = (c.bonusText && c.bonusText.trim().length > 0)
-            ? c.bonusText
-            : (c.bonusAmount != null ? String(c.bonusAmount) : '');
-          return {
-            id: c.id,
-            title: c.title,
-            description: c.description ?? '',
-            tags: Array.isArray(c.tags) ? c.tags! : [],
-            status,
-            image: c.imageUrl ?? '/api/placeholder/400/225',
-            bonusAmount: bonusDisplay,
-            featured,
-            priority: c.priority ?? 0,
-            createdAt: c.createdAt,
-            badgeLabel: c.badgeLabel ?? null,
-            ctaUrl: c.ctaUrl ?? null,
-          };
-        });
-        setKampanyalar(mapped);
+        if (!Array.isArray(initialCampaigns) || initialCampaigns.length === 0) {
+          const res = await fetch('/api/campaigns');
+          const data: ApiCampaign[] = await res.json();
+          const now = Date.now();
+          const mapped: UiCampaign[] = data.map((c) => {
+            const start = c.startDate ? Date.parse(c.startDate) : undefined;
+            const end = c.endDate ? Date.parse(c.endDate) : undefined;
+            const status = c.isActive ? 'active' : (start && start > now ? 'upcoming' : 'ended');
+            const featured = !!c.isFeatured;
+            const bonusDisplay = (c.bonusText && c.bonusText.trim().length > 0)
+              ? c.bonusText
+              : (c.bonusAmount != null ? String(c.bonusAmount) : '');
+            return {
+              id: c.id,
+              title: c.title,
+              description: c.description ?? '',
+              tags: Array.isArray(c.tags) ? c.tags! : [],
+              status,
+              image: c.imageUrl ?? '/api/placeholder/400/225',
+              bonusAmount: bonusDisplay,
+              featured,
+              priority: c.priority ?? 0,
+              createdAt: c.createdAt,
+              badgeLabel: c.badgeLabel ?? null,
+              ctaUrl: c.ctaUrl ?? null,
+            };
+          });
+          setKampanyalar(mapped);
+        }
       } catch (e) {
         // sessiz geç; ana sayfa yine çalışır
       }
     };
     load();
-  }, []);
+  }, [initialCampaigns]);
 
   const featuredKampanyalar = kampanyalar
     .filter(k => k.featured)
