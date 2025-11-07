@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Award, Menu, Users, Star, Gift, Trophy, Ticket, Send, Twitter, Facebook, Home, MessageSquare, Shield, ChevronRight } from 'lucide-react';
+import { Award, Menu, Users, Star, Gift, Trophy, Ticket, Send, Twitter, Instagram, Music, Home, MessageSquare, Shield, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -257,22 +257,31 @@ export default function Header({ currentPath = '/' }: HeaderProps) {
                         <Send className="w-4 h-4" />
                       </a>
                       <a
-                        href="#"
+                        href="https://www.instagram.com/hokkabazduyuru"
                         target="_blank"
                         rel="noopener noreferrer nofollow"
-                        aria-label="Facebook"
+                        aria-label="Instagram"
                         className="w-8 h-8 rounded-md bg-muted flex items-center justify-center hover:bg-muted/80"
                       >
-                        <Facebook className="w-4 h-4" />
+                        <Instagram className="w-4 h-4" />
                       </a>
                       <a
-                        href="#"
+                        href="https://x.com/hokkabazduyuru"
                         target="_blank"
                         rel="noopener noreferrer nofollow"
-                        aria-label="Twitter"
+                        aria-label="X (Twitter)"
                         className="w-8 h-8 rounded-md bg-muted flex items-center justify-center hover:bg-muted/80"
                       >
                         <Twitter className="w-4 h-4" />
+                      </a>
+                      <a
+                        href="https://www.tiktok.com/@hokkabazofficial"
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        aria-label="TikTok"
+                        className="w-8 h-8 rounded-md bg-muted flex items-center justify-center hover:bg-muted/80"
+                      >
+                        <Music className="w-4 h-4" />
                       </a>
                     </div>
                   </div>

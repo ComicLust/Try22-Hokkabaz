@@ -1,5 +1,5 @@
 "use client"
-import { Send, Twitter, Instagram, Youtube } from "lucide-react"
+import { Send, Twitter, Instagram, Music } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -7,9 +7,9 @@ type LinkItem = { name: string; Icon: React.ComponentType<React.SVGProps<SVGSVGE
 
 const socialLinks: LinkItem[] = [
   { name: "Telegram", Icon: Send, url: "https://t.me/+-H20aHx5MyZlZjQ0" },
-  { name: "Twitter / X", Icon: Twitter, url: "#" },
-  { name: "Instagram", Icon: Instagram, url: "http://instagram.com/hokkabazduyuru" },
-  { name: "YouTube", Icon: Youtube, url: "#" },
+  { name: "Twitter / X", Icon: Twitter, url: "https://x.com/hokkabazduyuru" },
+  { name: "Instagram", Icon: Instagram, url: "https://www.instagram.com/hokkabazduyuru" },
+  { name: "TikTok", Icon: Music, url: "https://www.tiktok.com/@hokkabazofficial" },
 ]
 
 interface SocialBarProps {
