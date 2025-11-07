@@ -431,7 +431,14 @@ export default function AdminTelegramPage() {
                       <TableCell>
                         <Input
                           value={g.name}
-                          onChange={(e) => updateItem(g.id, { name: e.target.value })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, name: val } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { name: val })
+                          }}
                           className="min-w-[150px]"
                         />
                       </TableCell>
@@ -453,7 +460,15 @@ export default function AdminTelegramPage() {
                         <Input
                           type="number"
                           value={g.members ?? ""}
-                          onChange={(e) => updateItem(g.id, { members: e.target.value ? Number(e.target.value) : null })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            const num = val ? Number(val) : null
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, members: num } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { members: val ? Number(val) : null })
+                          }}
                           className="w-24"
                         />
                       </TableCell>
@@ -461,14 +476,28 @@ export default function AdminTelegramPage() {
                         <Input
                           placeholder="Üye (metin)"
                           value={g.membersText ?? ""}
-                          onChange={(e) => updateItem(g.id, { membersText: e.target.value })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, membersText: val } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { membersText: val })
+                          }}
                           className="min-w-[120px]"
                         />
                       </TableCell>
                       <TableCell>
                         <Input
                           value={g.ctaUrl}
-                          onChange={(e) => updateItem(g.id, { ctaUrl: e.target.value })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, ctaUrl: val } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { ctaUrl: val })
+                          }}
                           className="min-w-[200px]"
                         />
                       </TableCell>
@@ -476,7 +505,14 @@ export default function AdminTelegramPage() {
                         <div className="flex items-center gap-2">
                           <Input
                             value={g.imageUrl ?? ""}
-                            onChange={(e) => updateItem(g.id, { imageUrl: e.target.value || null })}
+                            onChange={(e) => {
+                              const val = e.target.value
+                              setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, imageUrl: val || null } : it))
+                            }}
+                            onBlur={(e) => {
+                              const val = e.target.value
+                              updateItem(g.id, { imageUrl: val || null })
+                            }}
                             className="min-w-[150px]"
                           />
                           <Button 
@@ -618,7 +654,14 @@ export default function AdminTelegramPage() {
                       <TableCell>
                         <Input
                           value={g.name}
-                          onChange={(e) => updateItem(g.id, { name: e.target.value })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, name: val } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { name: val })
+                          }}
                           className="min-w-[150px]"
                         />
                       </TableCell>
@@ -640,7 +683,15 @@ export default function AdminTelegramPage() {
                         <Input
                           type="number"
                           value={g.members ?? ""}
-                          onChange={(e) => updateItem(g.id, { members: e.target.value ? Number(e.target.value) : null })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            const num = val ? Number(val) : null
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, members: num } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { members: val ? Number(val) : null })
+                          }}
                           className="w-24"
                         />
                       </TableCell>
@@ -648,14 +699,28 @@ export default function AdminTelegramPage() {
                         <Input
                           placeholder="Üye (metin)"
                           value={g.membersText ?? ""}
-                          onChange={(e) => updateItem(g.id, { membersText: e.target.value })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, membersText: val } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { membersText: val })
+                          }}
                           className="min-w-[120px]"
                         />
                       </TableCell>
                       <TableCell>
                         <Input
                           value={g.ctaUrl}
-                          onChange={(e) => updateItem(g.id, { ctaUrl: e.target.value })}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, ctaUrl: val } : it))
+                          }}
+                          onBlur={(e) => {
+                            const val = e.target.value
+                            updateItem(g.id, { ctaUrl: val })
+                          }}
                           className="min-w-[200px]"
                         />
                       </TableCell>
@@ -663,7 +728,14 @@ export default function AdminTelegramPage() {
                         <div className="flex items-center gap-2">
                           <Input
                             value={g.imageUrl ?? ""}
-                            onChange={(e) => updateItem(g.id, { imageUrl: e.target.value || null })}
+                            onChange={(e) => {
+                              const val = e.target.value
+                              setItems((prev) => prev.map((it) => it.id === g.id ? { ...it, imageUrl: val || null } : it))
+                            }}
+                            onBlur={(e) => {
+                              const val = e.target.value
+                              updateItem(g.id, { imageUrl: val || null })
+                            }}
                             className="min-w-[150px]"
                           />
                           <Button 

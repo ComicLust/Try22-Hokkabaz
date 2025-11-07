@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { slugifyTr } from '@/lib/slugify'
+import { revalidateReviewBrandTags } from '@/lib/cache'
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const item = await db.reviewBrand.findUnique({ where: { id: params.id } })
@@ -10,6 +11,8 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // Eski öğeyi alın (slug değişimi ve cache revalidate için gerekli)
+    const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
     const patch = await req.json()
     const data: any = { ...patch }
 
@@ -34,6 +37,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     const updated = await db.reviewBrand.update({ where: { id: params.id }, data })
+    // Liste ve slug bazlı cache’i revalidate et
+    revalidateReviewBrandTags(updated.slug)
+    if (prev && prev.slug !== updated.slug) {
+      revalidateReviewBrandTags(prev.slug)
+    }
     return NextResponse.json(updated)
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Güncelleme hatası' }, { status: 400 })
@@ -42,12 +50,22 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
 export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // Eski öğenin slug’ını al (slug bazlı cache’i temizlemek için)
+    const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
+    if (!prev) {
+      return NextResponse.json({ error: 'Kayıt bulunamadı' }, { status: 404 })
+    }
     // İlişkili zorunlu kayıtları (SiteReview, BrandManager) temizleyip ardından markayı sil
     await db.$transaction([
       db.siteReview.deleteMany({ where: { brandId: params.id } }),
       db.brandManager.deleteMany({ where: { brandId: params.id } }),
+      db.bonus.deleteMany({ where: { brandId: params.id } }),
+      db.telegramSuggestion.deleteMany({ where: { brandId: params.id } }),
+      db.specialOdd.deleteMany({ where: { brandId: params.id } }),
       db.reviewBrand.delete({ where: { id: params.id } }),
     ])
+    // Liste ve varsa slug bazlı cache’i revalidate et
+    revalidateReviewBrandTags(prev?.slug || undefined)
     return NextResponse.json({ ok: true })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'Silme hatası' }, { status: 400 })

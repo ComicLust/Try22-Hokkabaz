@@ -72,27 +72,46 @@ export default function AdminReviewBrandsPage() {
   }
 
   const setActive = async (id: string, isActive: boolean) => {
-    await fetch(`/api/review-brands/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isActive }) })
-    await load()
+    try {
+      const res = await fetch(`/api/review-brands/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ isActive }) })
+      if (!res.ok) {
+        const data = await res.json().catch(()=>({}))
+        alert(data?.error ?? 'Güncelleme hatası')
+        return
+      }
+    } finally {
+      await load()
+    }
   }
 
   const saveField = async (id: string, patch: Partial<ReviewBrand>) => {
-    await fetch(`/api/review-brands/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
-    await load()
+    try {
+      const res = await fetch(`/api/review-brands/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
+      if (!res.ok) {
+        const data = await res.json().catch(()=>({}))
+        alert(data?.error ?? 'Güncelleme hatası')
+        return
+      }
+    } finally {
+      await load()
+    }
   }
 
   const remove = async (id: string) => {
     if (!confirm('Silmek istediğinize emin misiniz?')) return
-    const res = await fetch(`/api/review-brands/${id}`, { method: 'DELETE' })
-    if (res.ok) {
+    try {
+      const res = await fetch(`/api/review-brands/${id}`, { method: 'DELETE' })
+      if (!res.ok) {
+        let msg = 'Silme hatası'
+        try {
+          const data = await res.json()
+          msg = data?.error ?? msg
+        } catch {}
+        alert(msg)
+        return
+      }
+    } finally {
       await load()
-    } else {
-      let msg = 'Silme hatası'
-      try {
-        const data = await res.json()
-        msg = data?.error ?? msg
-      } catch {}
-      alert(msg)
     }
   }
 
