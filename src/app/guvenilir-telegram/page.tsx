@@ -2,7 +2,7 @@ import React from 'react'
 import type { Metadata } from 'next'
 import { unstable_noStore as noStore } from 'next/cache'
 import Header from '@/components/Header'
-import { Send, ArrowRight, Users, Megaphone } from 'lucide-react'
+import { Send, ArrowRight, Users, Megaphone, Filter } from 'lucide-react'
 import Footer from '@/components/Footer'
 import { db } from '@/lib/db'
 import { getSeoRecord } from '@/lib/seo'
@@ -27,7 +27,7 @@ function badgeClass(b: string) {
   return 'bg-secondary text-foreground ring-border'
 }
 
-export default async function GuvenilirTelegramPage() {
+export default async function GuvenilirTelegramPage({ searchParams }: { searchParams?: { tip?: string } }) {
   noStore()
   const seo = await getSeoRecord('/guvenilir-telegram', ['guvenilir-telegram']) as any
   const pageTitle = seo?.title ?? 'Güvenilir Telegram Grupları'
@@ -35,8 +35,18 @@ export default async function GuvenilirTelegramPage() {
   const items = await (db as any).telegramGroup.findMany({
     orderBy: [{ isFeatured: 'desc' }, { priority: 'desc' }, { createdAt: 'desc' }],
   })
-  const featured = items.filter((g) => g.isFeatured)
-  const regular = items.filter((g) => !g.isFeatured)
+  const filterType = (searchParams?.tip ?? '').toLowerCase()
+  const byType = (t: string) => (g: any) => g.type === t
+  const featuredBase = items.filter((g) => g.isFeatured)
+  const regularBase = items.filter((g) => !g.isFeatured)
+  const featured =
+    filterType === 'group' ? featuredBase.filter(byType('GROUP'))
+    : filterType === 'channel' ? featuredBase.filter(byType('CHANNEL'))
+    : featuredBase
+  const regular =
+    filterType === 'group' ? regularBase.filter(byType('GROUP'))
+    : filterType === 'channel' ? regularBase.filter(byType('CHANNEL'))
+    : regularBase
   const logos = await db.marqueeLogo.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } })
   const marqueeItems = logos.length ? Array.from({ length: 12 }, (_, i) => logos[i % logos.length]).map((m) => ({ imageUrl: m.imageUrl, href: m.href })) : []
   return (
@@ -58,6 +68,30 @@ export default async function GuvenilirTelegramPage() {
                 </a>
                 <a href="/kampanyalar" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-border bg-background/60 hover:bg-background transition-colors text-xs md:text-sm">
                   Aktif Kampanyalar <ArrowRight className="w-4 h-4" aria-hidden />
+                </a>
+              </div>
+              {/* Filtre: Tümü / Grup / Kanal */}
+              <div className="mt-3 flex items-center gap-2 text-xs md:text-sm">
+                <a
+                  href="/guvenilir-telegram"
+                  className={`inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-md border transition-colors ${!filterType ? 'bg-primary text-primary-foreground border-primary' : 'bg-background/60 border-border hover:bg-background'}`}
+                >
+                  <Filter className="w-4 h-4 shrink-0" aria-hidden />
+                  <span>Tümü</span>
+                </a>
+                <a
+                  href="/guvenilir-telegram?tip=group"
+                  className={`inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-md border transition-colors ${filterType === 'group' ? 'bg-primary text-primary-foreground border-primary' : 'bg-background/60 border-border hover:bg-background'}`}
+                >
+                  <Users className="w-4 h-4 shrink-0" aria-hidden />
+                  <span>Gruplar</span>
+                </a>
+                <a
+                  href="/guvenilir-telegram?tip=channel"
+                  className={`inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-md border transition-colors ${filterType === 'channel' ? 'bg-primary text-primary-foreground border-primary' : 'bg-background/60 border-border hover:bg-background'}`}
+                >
+                  <Megaphone className="w-4 h-4 shrink-0" aria-hidden />
+                  <span>Kanallar</span>
                 </a>
               </div>
             </div>
@@ -132,7 +166,7 @@ export default async function GuvenilirTelegramPage() {
                     </div>
                   )}
                   <div className="space-y-1">
-                    <div className="font-medium text-foreground">{g.name}</div>
+                    <div className="font-medium text-foreground w-full truncate">{g.name}</div>
                     <div className="text-xs text-muted-foreground flex items-center justify-center gap-2">
                       {(g as any).membersText ? (
                         <span>{(g as any).membersText}</span>
@@ -188,7 +222,7 @@ export default async function GuvenilirTelegramPage() {
                   </div>
                 )}
                 <div className="space-y-1">
-                  <div className="font-medium text-foreground">{g.name}</div>
+                  <div className="font-medium text-foreground w-full truncate">{g.name}</div>
                   <div className="text-xs text-muted-foreground flex items-center justify-center gap-2">
                     {(g as any).membersText ? (
                       <span>{(g as any).membersText}</span>
