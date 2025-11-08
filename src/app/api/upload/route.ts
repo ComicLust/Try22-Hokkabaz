@@ -5,10 +5,21 @@ import sharp from 'sharp'
 
 export const runtime = 'nodejs'
 
-const allowedMimeToExt: Record<string, string> = {
-  'image/png': '.webp',
-  'image/jpeg': '.webp',
-  'image/webp': '.webp',
+// Gerçek imza (magic number) tespiti
+function detectImageType(bytes: Uint8Array): 'png' | 'jpeg' | 'webp' | null {
+  if (bytes.length < 12) return null
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  const pngSig = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]
+  const isPng = pngSig.every((v, i) => bytes[i] === v)
+  if (isPng) return 'png'
+  // JPEG: FF D8 FF at start
+  const isJpeg = bytes[0] === 0xFF && bytes[1] === 0xD8 && bytes[2] === 0xFF
+  if (isJpeg) return 'jpeg'
+  // WEBP (RIFF): 'RIFF' at 0..3 and 'WEBP' at 8..11
+  const riff = String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3])
+  const webp = String.fromCharCode(bytes[8], bytes[9], bytes[10], bytes[11])
+  if (riff === 'RIFF' && webp === 'WEBP') return 'webp'
+  return null
 }
 const MAX_SIZE = 500 * 1024 // 500 KB
 
@@ -16,31 +27,33 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
     const file = formData.get('file') as File | null
-    if (!file) return NextResponse.json({ error: 'No file' }, { status: 400 })
+    if (!file) return NextResponse.json({ error: 'Dosya bulunamadı' }, { status: 400 })
 
     if (file.size > MAX_SIZE) {
       return NextResponse.json({ error: 'Maksimum dosya boyutu 500KB' }, { status: 413 })
-    }
-
-    const ext = allowedMimeToExt[file.type]
-    if (!ext) {
-      return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 })
     }
 
     const arrayBuffer = await file.arrayBuffer()
     // ArrayBuffer → Uint8Array (generik Buffer tip uyuşmazlıklarını önlemek için)
     let data = new Uint8Array(arrayBuffer)
 
+    // Gerçek dosya türünü imza ile doğrula
+    const detected = detectImageType(data)
+    if (!detected) {
+      return NextResponse.json({ error: 'Desteklenmeyen veya bozuk görsel' }, { status: 400 })
+    }
+
     const uploadsDir = path.join(process.cwd(), 'public', 'uploads')
     await mkdir(uploadsDir, { recursive: true })
 
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`
+    const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`
     const fullPath = path.join(uploadsDir, filename)
     // Otomatik WebP dönüşümü: PNG/JPEG ise dönüştür, WEBP ise olduğu gibi kaydet
-    if (file.type === 'image/png' || file.type === 'image/jpeg') {
+    if (detected === 'png' || detected === 'jpeg') {
       const converted = await sharp(data).webp({ quality: 70, effort: 4 }).toBuffer()
       await writeFile(fullPath, converted)
     } else {
+      // WEBP ise doğrudan kaydet (ek güvenlik için yeniden encode etmeyi de düşünebilirsiniz)
       await writeFile(fullPath, data)
     }
 

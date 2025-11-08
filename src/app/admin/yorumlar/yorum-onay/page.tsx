@@ -6,7 +6,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
+import { ThumbsUp, ThumbsDown, X, ZoomIn } from 'lucide-react'
 
 // Types aligned with API response
 type AdminReviewItem = {
@@ -23,6 +25,8 @@ type AdminReviewItem = {
   notHelpfulCount: number
   createdAt: string
   updatedAt: string
+  imageUrl?: string | null
+  imageUrls?: string[] | null
   brand?: { id: string; name: string; slug: string; logoUrl?: string | null }
 }
 
@@ -39,6 +43,7 @@ export default function AdminCommentApprovalPage() {
   const limit = 20
 
   const [items, setItems] = useState<AdminReviewItem[]>([])
+  const [imagePreview, setImagePreview] = useState<{ open: boolean; url?: string }>({ open: false })
   const [total, setTotal] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -147,6 +152,58 @@ export default function AdminCommentApprovalPage() {
       toast({ title: 'Önbellek temizlendi' })
     } else {
       await load()
+    }
+  }
+
+  const clearImages = async (id: string) => {
+    // Optimistic: temizle
+    const idx = items.findIndex((i) => i.id === id)
+    if (idx >= 0) {
+      const next = [...items]
+      next[idx] = { ...next[idx], imageUrl: null, imageUrls: null }
+      setItems(next)
+    }
+    const res = await fetch(`/api/admin/site-reviews/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageUrl: null, imageUrls: null })
+    })
+    if (!res.ok) {
+      await load()
+    } else {
+      toast({ title: 'Görseller kaldırıldı' })
+    }
+  }
+
+  const removeImage = async (id: string, url: string) => {
+    // Optimistik: listedeki tekil görseli kaldır ve payload hazırla
+    let payload: { imageUrl: string | null; imageUrls: string[] | null } = { imageUrl: null, imageUrls: null }
+    const idx = items.findIndex((i) => i.id === id)
+    if (idx >= 0) {
+      const next = [...items]
+      const it = next[idx]
+      const merged = [
+        ...(it.imageUrl ? [it.imageUrl] : []),
+        ...(Array.isArray(it.imageUrls) ? it.imageUrls : [])
+      ]
+      const filtered = merged.filter((u) => u !== url)
+      payload = {
+        imageUrl: filtered[0] || null,
+        imageUrls: filtered.length > 1 ? filtered.slice(1) : null
+      }
+      next[idx] = { ...it, imageUrl: payload.imageUrl, imageUrls: payload.imageUrls }
+      setItems(next)
+    }
+    const res = await fetch(`/api/admin/site-reviews/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    if (!res.ok) {
+      await load()
+      toast({ title: 'Görsel kaldırılamadı', description: 'Lütfen tekrar deneyin', variant: 'destructive' })
+    } else {
+      toast({ title: 'Görsel kaldırıldı' })
     }
   }
 
@@ -268,7 +325,48 @@ export default function AdminCommentApprovalPage() {
                   <div className="md:col-span-3">
                     <label className="text-xs">Yorum Metni</label>
                     <Textarea defaultValue={it.content} onBlur={(e)=>saveContent(it.id, e.target.value)} rows={4} />
-                    <div className="text-xs text-muted-foreground mt-1">Faydalı: {it.helpfulCount} | Faydalı Değil: {it.notHelpfulCount}</div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="outline" className="flex items-center gap-1">
+                        <ThumbsUp className="w-3 h-3" /> {it.helpfulCount}
+                      </Badge>
+                      <Badge variant="destructive" className="flex items-center gap-1">
+                        <ThumbsDown className="w-3 h-3" /> {it.notHelpfulCount}
+                      </Badge>
+                    </div>
+                    {/* Görsel önizlemeleri */}
+                    {(() => {
+                      const imgs = [
+                        ...(it.imageUrl ? [it.imageUrl] : []),
+                        ...(Array.isArray(it.imageUrls) ? it.imageUrls : [])
+                      ]
+                      return imgs.length > 0 ? (
+                        <div className="mt-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            {imgs.map((url) => (
+                              <div key={url} className="relative group">
+                                <img
+                                  src={url}
+                                  alt={it.author || it.brand?.name || 'yorum görseli'}
+                                  className="w-20 h-20 object-cover rounded border cursor-pointer"
+                                  onClick={() => setImagePreview({ open: true, url })}
+                                />
+                                <div className="absolute inset-0 hidden group-hover:flex items-center justify-center gap-2 bg-black/30 rounded">
+                                  <Button size="icon" variant="secondary" className="h-7 w-7" onClick={() => setImagePreview({ open: true, url })}>
+                                    <ZoomIn className="w-4 h-4" />
+                                  </Button>
+                                  <Button size="icon" variant="destructive" className="h-7 w-7" onClick={() => removeImage(it.id, url)}>
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="mt-2">
+                            <Button size="sm" variant="outline" onClick={()=>clearImages(it.id)}>Görselleri Kaldır</Button>
+                          </div>
+                        </div>
+                      ) : null
+                    })()}
                   </div>
                   <div className="flex items-center gap-2">
                     {!it.isApproved ? (
@@ -293,6 +391,14 @@ export default function AdminCommentApprovalPage() {
           </div>
         </CardContent>
       </Card>
+      {/* Görsel büyük önizleme */}
+      <Dialog open={imagePreview.open} onOpenChange={(open) => setImagePreview((p) => ({ ...p, open }))}>
+        <DialogContent className="max-w-3xl">
+          {imagePreview.url ? (
+            <img src={imagePreview.url} alt="Önizleme" className="w-full h-auto rounded" />
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

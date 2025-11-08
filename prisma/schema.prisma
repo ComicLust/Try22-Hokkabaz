@@ -173,6 +173,8 @@ model SiteReview {
   rating           Int?
   isPositive       Boolean?
   content          String
+  imageUrl         String?
+  imageUrls        Json?
   isApproved       Boolean      @default(false)
   isRejected       Boolean      @default(false)
   helpfulCount     Int          @default(0)
@@ -193,6 +195,7 @@ model ReviewBrand {
   logoUrl          String?
   editorialSummary String?
   siteUrl          String?
+  priority         Int      @default(0)
   isActive         Boolean  @default(true)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

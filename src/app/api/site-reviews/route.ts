@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { randomUUID } from 'crypto'
-import { sanitizeText, createIpRateLimiter, getClientIp } from '@/lib/security'
+import { sanitizeText, createIpRateLimiter, getClientIp, isSafeLocalUploadPath } from '@/lib/security'
 import { withCache, revalidateSiteReviewsTag } from '@/lib/cache'
 
 function dicebearAvatar(seed: string) {
@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
   const sort = (searchParams.get('sort') || 'newest') as 'newest' | 'oldest'
   const page = Number(searchParams.get('page') || '1')
   const limit = Math.min(50, Math.max(1, Number(searchParams.get('limit') || '20')))
+  const hasImage = (searchParams.get('hasImage') === 'true')
 
   if (!brandSlug) return NextResponse.json({ error: 'brandSlug is required' }, { status: 400 })
 
@@ -29,17 +30,37 @@ export async function GET(req: NextRequest) {
     async () => {
       const [list, count] = await Promise.all([
         db.siteReview.findMany({
-          where: { brandId: brand.id, isApproved: true },
+          where: {
+            brandId: brand.id,
+            isApproved: true,
+            ...(hasImage ? {
+              OR: [
+                { imageUrl: { not: null } },
+                { imageUrls: { not: null } },
+              ],
+            } : {}),
+          },
           orderBy,
           skip,
           take: limit,
         }),
-        db.siteReview.count({ where: { brandId: brand.id, isApproved: true } }),
+        db.siteReview.count({
+          where: {
+            brandId: brand.id,
+            isApproved: true,
+            ...(hasImage ? {
+              OR: [
+                { imageUrl: { not: null } },
+                { imageUrls: { not: null } },
+              ],
+            } : {}),
+          },
+        }),
       ])
       return { items: list, total: count }
     },
     {
-      key: ['site-reviews', brand.id, sort, String(page), String(limit)],
+      key: ['site-reviews', brand.id, sort, String(page), String(limit), hasImage ? 'images-only' : 'all'],
       tags: [`site-reviews:${brand.id}`],
       revalidate: 300,
     }
@@ -71,7 +92,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { brandSlug, siteSlug, author, isAnonymous, content, isPositive } = body || {}
+    const { brandSlug, siteSlug, author, isAnonymous, content, isPositive, imageUrl, imageUrls } = body || {}
     const slug = brandSlug || siteSlug
     if (!slug || !content) return NextResponse.json({ error: 'brandSlug ve content zorunlu' }, { status: 400 })
 
@@ -80,18 +101,35 @@ export async function POST(req: NextRequest) {
 
     const avatarUrl = dicebearAvatar(randomUUID())
 
-    const created = await db.siteReview.create({
-      data: {
-        brandId: brand.id,
-        author: isAnonymous ? null : sanitizeText(author ?? '', 50) || null,
-        isAnonymous: Boolean(isAnonymous),
-        rating: null,
-        isPositive: typeof isPositive === 'boolean' ? isPositive : null,
-        content: sanitizeText(content, 2000),
-        isApproved: false,
-        avatarUrl,
-      },
-    })
+    // Prisma Client tipleri henüz şema güncellemesini yansıtmayabilir.
+    // imageUrl'i koşullu olarak ekleyip create data'yı geniş bir tip ile geçiriyoruz.
+    const createData: any = {
+      brandId: brand.id,
+      author: isAnonymous ? null : sanitizeText(author ?? '', 50) || null,
+      isAnonymous: Boolean(isAnonymous),
+      rating: null,
+      isPositive: typeof isPositive === 'boolean' ? isPositive : null,
+      content: sanitizeText(content, 2000),
+      isApproved: false,
+      avatarUrl,
+    }
+    // Çoklu görsel: en fazla 3 güvenli yol, Json alanına yazılır
+    const safeArray = Array.isArray(imageUrls)
+      ? imageUrls
+          .filter((u: unknown): u is string => typeof u === 'string')
+          .filter((u: string) => isSafeLocalUploadPath(u))
+      : []
+    const uniqueSafe = Array.from(new Set(safeArray)).slice(0, 3)
+    if (uniqueSafe.length > 0) {
+      createData.imageUrls = uniqueSafe
+      // Geriye uyumluluk için ilkini tekil alana da yaz
+      createData.imageUrl = uniqueSafe[0]
+    } else if (typeof imageUrl === 'string' && isSafeLocalUploadPath(imageUrl)) {
+      // Tekil alan kullanımı (eski istemciler için)
+      createData.imageUrl = imageUrl
+      createData.imageUrls = [imageUrl]
+    }
+    const created = await db.siteReview.create({ data: createData })
     revalidateSiteReviewsTag(brand.id)
     return NextResponse.json(created, { status: 201 })
   } catch (e: any) {

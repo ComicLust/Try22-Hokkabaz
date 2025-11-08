@@ -7,7 +7,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   try {
     const id = params.id
     const body = await req.json().catch(() => ({}))
-    const { action, content, author, isAnonymous, isPositive } = body || {}
+    const { action, content, author, isAnonymous, isPositive, imageUrl, imageUrls } = body || {}
 
     if (action === 'approve') {
       const updated = await db.siteReview.update({ where: { id }, data: { isApproved: true }, select: { id: true, brandId: true, isApproved: true } })
@@ -35,6 +35,14 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     if (typeof author === 'string') data.author = author.length ? author : null
     if (typeof isAnonymous === 'boolean') data.isAnonymous = isAnonymous
     if (typeof isPositive === 'boolean') data.isPositive = isPositive
+
+    // Görsel alanlarını isteğe bağlı ve güvenli biçimde güncelle
+    if (typeof imageUrl !== 'undefined') {
+      (data as any).imageUrl = typeof imageUrl === 'string' && imageUrl.length > 0 ? imageUrl : null
+    }
+    if (typeof imageUrls !== 'undefined') {
+      (data as any).imageUrls = Array.isArray(imageUrls) ? (imageUrls as string[]).slice(0, 6) : null
+    }
 
     const updated = await db.siteReview.update({ where: { id }, data, select: { id: true, brandId: true, author: true, content: true, isAnonymous: true, isPositive: true } })
     revalidateSiteReviewsTag(updated.brandId)
