@@ -15,6 +15,8 @@ type ReviewBrand = {
   logoUrl?: string | null
   siteUrl?: string | null
   editorialSummary?: string | null
+  seoTitle?: string | null
+  seoDescription?: string | null
   isActive: boolean
   createdAt: string
 }
@@ -23,6 +25,7 @@ export default function AdminReviewBrandsPage() {
   const [items, setItems] = useState<ReviewBrand[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [routeSeo, setRouteSeo] = useState<Record<string, { id?: string, title?: string | null, description?: string | null }>>({})
 
   // Form state
   const [name, setName] = useState('')
@@ -30,6 +33,8 @@ export default function AdminReviewBrandsPage() {
   const [siteUrl, setSiteUrl] = useState('')
   // REPLACED STATE START
   const [editorialSummary, setEditorialSummary] = useState('')
+  const [seoTitle, setSeoTitle] = useState('')
+  const [seoDescription, setSeoDescription] = useState('')
   const [creating, setCreating] = useState(false)
   const [mediaOpenBrandForm, setMediaOpenBrandForm] = useState(false)
   const [mediaOpenBrandRowId, setMediaOpenBrandRowId] = useState<string | null>(null)
@@ -52,6 +57,36 @@ export default function AdminReviewBrandsPage() {
 
   useEffect(() => { load() }, [])
 
+  // Mevcut marka sayfaları için rota bazlı SEO kayıtlarını yükle
+  useEffect(() => {
+    async function loadRouteSeo() {
+      if (!items.length) { setRouteSeo({}); return }
+      try {
+        const results = await Promise.all(
+          items.map(async (it) => {
+            const pageKey = `/yorumlar/${it.slug}`
+            try {
+              const res = await fetch(`/api/seo?page=${encodeURIComponent(pageKey)}`)
+              const data = await res.json()
+              if (res.ok && data) {
+                return { slug: it.slug, id: data.id, title: data.title ?? null, description: data.description ?? null }
+              }
+              return { slug: it.slug, id: undefined, title: null, description: null }
+            } catch {
+              return { slug: it.slug, id: undefined, title: null, description: null }
+            }
+          })
+        )
+        const map: Record<string, { id?: string, title?: string | null, description?: string | null }> = {}
+        for (const r of results) {
+          map[r.slug] = { id: r.id, title: r.title, description: r.description }
+        }
+        setRouteSeo(map)
+      } catch {}
+    }
+    loadRouteSeo()
+  }, [items])
+
   const create = async () => {
     if (!name.trim()) return alert('Marka adı gerekli')
     try {
@@ -59,11 +94,18 @@ export default function AdminReviewBrandsPage() {
       const res = await fetch('/api/review-brands', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, logoUrl: logoUrl || null, siteUrl: siteUrl || null, editorialSummary: editorialSummary || null }),
+        body: JSON.stringify({
+          name,
+          logoUrl: logoUrl || null,
+          siteUrl: siteUrl || null,
+          editorialSummary: editorialSummary || null,
+          seoTitle: seoTitle || null,
+          seoDescription: seoDescription || null,
+        }),
       })
       const data = await res.json()
       if (res.ok) {
-        setName(''); setLogoUrl(''); setSiteUrl(''); setEditorialSummary('')
+        setName(''); setLogoUrl(''); setSiteUrl(''); setEditorialSummary(''); setSeoTitle(''); setSeoDescription('')
         await load()
       } else alert(data?.error ?? 'Oluşturma hatası')
     } finally {
@@ -95,6 +137,43 @@ export default function AdminReviewBrandsPage() {
     } finally {
       await load()
     }
+  }
+
+  // Rota bazlı SEO başlık/açıklama kaydetme (gerekirse kayıt oluşturur)
+  const saveRouteSeoField = async (slug: string, patch: { title?: string | null, description?: string | null }) => {
+    try {
+      const pageKey = `/yorumlar/${slug}`
+      const res = await fetch(`/api/seo?page=${encodeURIComponent(pageKey)}`)
+      const existing = await res.json().catch(()=>null)
+      const url = existing?.id ? `/api/seo/${existing.id}` : '/api/seo'
+      const method = existing?.id ? 'PATCH' : 'POST'
+      const body = existing?.id ? patch : { page: pageKey.replace(/^\/+/,'').length ? pageKey.replace(/^\/+/,'') : pageKey, ...patch }
+      const saveRes = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      const data = await saveRes.json().catch(()=>({}))
+      if (!saveRes.ok) {
+        alert(data?.error ?? 'SEO güncelleme hatası')
+        return
+      }
+      // local state'i güncelle
+      setRouteSeo(prev => ({
+        ...prev,
+        [slug]: {
+          id: data?.id ?? existing?.id,
+          title: typeof patch.title === 'string' ? patch.title : (patch.title === null ? null : (prev[slug]?.title ?? null)),
+          description: typeof patch.description === 'string' ? patch.description : (patch.description === null ? null : (prev[slug]?.description ?? null))
+        }
+      }))
+    } catch (e: any) {
+      alert(e?.message ?? 'SEO güncelleme hatası')
+    }
+  }
+
+  // Varsayılan başlık/açıklama oluşturucular (yorumlar sayfasındaki mantıkla tutarlı)
+  function buildDefaultBrandTitle(name: string): string {
+    return `${name} Yorumları ve Şikayetleri Hokkabaz'da!`
+  }
+  function buildDefaultBrandDescription(name: string): string {
+    return `${name} hakkında gerçek kullanıcı yorumları ve şikayetleri Hokkabaz'da. Güvenilirlik, ödeme, bonuslar ve destek deneyimleri tek sayfada!`
   }
 
   const remove = async (id: string) => {
@@ -181,10 +260,18 @@ export default function AdminReviewBrandsPage() {
               <label className="text-sm mb-1 block">Siteye Git Linki (URL)</label>
               <Input value={siteUrl} onChange={(e)=>setSiteUrl(e.target.value)} placeholder="https://..." />
             </div>
-            <div className="md:col-span-2">
-              <label className="text-sm mb-1 block">Özet İnceleme Metni</label>
-              <Textarea rows={3} value={editorialSummary} onChange={(e)=>setEditorialSummary(e.target.value)} placeholder="Kısa editöryel özet…" />
-            </div>
+          <div className="md:col-span-2">
+            <label className="text-sm mb-1 block">Özet İnceleme Metni</label>
+            <Textarea rows={3} value={editorialSummary} onChange={(e)=>setEditorialSummary(e.target.value)} placeholder="Kısa editöryel özet…" />
+          </div>
+          <div>
+            <label className="text-sm mb-1 block">SEO Başlık (Title)</label>
+            <Input value={seoTitle} onChange={(e)=>setSeoTitle(e.target.value)} placeholder="Örn: OrnekBet Yorumları" />
+          </div>
+          <div>
+            <label className="text-sm mb-1 block">SEO Açıklama (Description)</label>
+            <Textarea rows={3} value={seoDescription} onChange={(e)=>setSeoDescription(e.target.value)} placeholder="Arama motoru açıklaması…" />
+          </div>
           </div>
           <div className="mt-4">
             <Button onClick={create} disabled={creating}>{creating ? 'Ekleniyor…' : 'Markayı Ekle'}</Button>
@@ -203,7 +290,7 @@ export default function AdminReviewBrandsPage() {
           {!loading && !error && (
             <div className="space-y-3">
               {items.map((it) => (
-                <div key={it.id} className="grid grid-cols-1 md:grid-cols-6 gap-3 items-start border rounded-md p-3">
+                <div key={it.id} className="grid grid-cols-1 md:grid-cols-7 gap-3 items-start border rounded-md p-3">
                   <div className="md:col-span-1 flex items-center gap-2">
                     <div className="w-16 h-10 bg-white shadow-sm flex items-center justify-center border rounded">
                       {it.logoUrl ? (
@@ -236,10 +323,28 @@ export default function AdminReviewBrandsPage() {
                     <label className="text-xs">Site Linki</label>
                     <Input defaultValue={it.siteUrl ?? ''} onBlur={(e)=>saveField(it.id,{ siteUrl: e.target.value || null })} />
                   </div>
-                  <div className="md:col-span-6">
-                    <label className="text-xs">Özet İnceleme</label>
-                    <Textarea defaultValue={it.editorialSummary ?? ''} onBlur={(e)=>saveField(it.id,{ editorialSummary: e.target.value || null })} />
-                  </div>
+              <div className="md:col-span-7">
+                <label className="text-xs">Özet İnceleme</label>
+                <Textarea defaultValue={it.editorialSummary ?? ''} onBlur={(e)=>saveField(it.id,{ editorialSummary: e.target.value || null })} />
+              </div>
+              <div>
+                <label className="text-xs">SEO Başlık (Title)</label>
+                <Input
+                  defaultValue={routeSeo[it.slug]?.title ?? it.seoTitle ?? buildDefaultBrandTitle(it.name)}
+                  placeholder="SEO başlık"
+                  onBlur={(e)=>saveRouteSeoField(it.slug, { title: e.target.value || null })}
+                />
+                <div className="text-[10px] text-muted-foreground mt-1">Etkili değer: rota SEO veya marka alanı, yoksa varsayılan</div>
+              </div>
+              <div className="md:col-span-2">
+                <label className="text-xs">SEO Açıklama (Description)</label>
+                <Textarea
+                  defaultValue={routeSeo[it.slug]?.description ?? it.seoDescription ?? (it.editorialSummary ?? buildDefaultBrandDescription(it.name))}
+                  placeholder="SEO açıklama"
+                  onBlur={(e)=>saveRouteSeoField(it.slug, { description: e.target.value || null })}
+                />
+                <div className="text-[10px] text-muted-foreground mt-1">Etkili değer: rota SEO veya marka alanı, yoksa varsayılan</div>
+              </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={it.isActive ? 'default' : 'secondary'}>{it.isActive ? 'Aktif' : 'Pasif'}</Badge>
                     <Button variant="outline" size="sm" onClick={()=>setActive(it.id,!it.isActive)}>{it.isActive ? 'Pasifleştir' : 'Aktifleştir'}</Button>

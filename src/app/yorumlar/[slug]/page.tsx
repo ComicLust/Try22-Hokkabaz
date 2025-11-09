@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { db } from '@/lib/db'
+import { getSeoRecord } from '@/lib/seo'
 import YorumDetayClient from '@/components/YorumDetayClient'
 const prisma: any = db
 
@@ -12,11 +13,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params
     const brand = await prisma.reviewBrand.findUnique({ where: { slug } })
     if (!brand) return { title: 'Site Yorumları' }
+    // SEO kayıtları: Admin > SEO ayarlarından /yorumlar/{slug} için override
+    const seo = await getSeoRecord(`/yorumlar/${slug}`, [`yorumlar/${slug}`])
 
-const canonical = `https://hokkabaz.bet/yorumlar/${slug}`
-    const title = `${brand.name} Yorumları`
-    const description = `${brand.name} için kullanıcı yorumları ve değerlendirmeler`
-    const images = brand.logoUrl ? [brand.logoUrl] : ['/uploads/1760732951329-fzch33159aq.jpg']
+    function buildDefaultBrandTitle(name: string): string {
+      return `${name} Yorumları ve Şikayetleri Hokkabaz'da!`
+    }
+
+    function buildDefaultBrandDescription(name: string): string {
+      return `${name} hakkında gerçek kullanıcı yorumları ve şikayetleri Hokkabaz'da. Güvenilirlik, ödeme, bonuslar ve destek deneyimleri tek sayfada!`
+    }
+
+    const canonical = seo?.canonicalUrl || `https://hokkabaz.bet/yorumlar/${slug}`
+    const title = seo?.title ?? brand.seoTitle ?? buildDefaultBrandTitle(brand.name)
+    const description = seo?.description ?? brand.seoDescription ?? brand.editorialSummary ?? buildDefaultBrandDescription(brand.name)
+    const images = (seo?.ogImageUrl ? [seo.ogImageUrl] : (brand.logoUrl ? [brand.logoUrl] : ['/uploads/1760732951329-fzch33159aq.jpg']))
 
     // Aggregate rating ve örnek review’lar
     let averageRating: number | undefined = undefined
@@ -84,8 +95,8 @@ const canonical = `https://hokkabaz.bet/yorumlar/${slug}`
       description,
       alternates: { canonical },
       openGraph: {
-        title,
-        description,
+        title: seo?.ogTitle ?? title,
+        description: seo?.ogDescription ?? description,
         url: canonical,
         siteName: 'Hokkabaz',
         type: 'website',
@@ -94,9 +105,9 @@ const canonical = `https://hokkabaz.bet/yorumlar/${slug}`
       },
       twitter: {
         card: 'summary_large_image',
-        title,
-        description,
-        images,
+        title: seo?.twitterTitle ?? title,
+        description: seo?.twitterDescription ?? description,
+        images: seo?.twitterImageUrl ? [seo.twitterImageUrl] : images,
       },
       other: { structuredData: JSON.stringify(structuredData) },
     }

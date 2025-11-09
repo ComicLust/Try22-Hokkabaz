@@ -1007,3 +1007,517 @@ Port 3000 in use. Retrying on 3001...
 [32m[nodemon] starting `npx tsx server.ts`[39m
 > Ready on http://0.0.0.0:3000
 > Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+ ✓ Compiled /middleware in 128ms (108 modules)
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 4.4s (2238 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /admin 200 in 5471ms
+ ✓ Compiled in 1130ms (1059 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ○ Compiling /api/admin/bonuses ...
+ ✓ Compiled /api/admin/bonuses in 522ms (2228 modules)
+ ✓ Compiled in 751ms (1049 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`SiteReview`.`id` FROM `main`.`SiteReview` WHERE `main`.`SiteReview`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`isAnonymous`, `main`.`SiteReview`.`rating`, `main`.`SiteReview`.`isPositive`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`imageUrl`, `main`.`SiteReview`.`imageUrls`, `main`.`SiteReview`.`isApproved`, `main`.`SiteReview`.`isRejected`, `main`.`SiteReview`.`helpfulCount`, `main`.`SiteReview`.`notHelpfulCount`, `main`.`SiteReview`.`repliedBy`, `main`.`SiteReview`.`replyText`, `main`.`SiteReview`.`repliedAt`, `main`.`SiteReview`.`avatarUrl`, `main`.`SiteReview`.`createdAt`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) ORDER BY `main`.`SiteReview`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`isAnonymous`, `main`.`SiteReview`.`rating`, `main`.`SiteReview`.`isPositive`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`imageUrl`, `main`.`SiteReview`.`imageUrls`, `main`.`SiteReview`.`isApproved`, `main`.`SiteReview`.`isRejected`, `main`.`SiteReview`.`helpfulCount`, `main`.`SiteReview`.`notHelpfulCount`, `main`.`SiteReview`.`repliedBy`, `main`.`SiteReview`.`replyText`, `main`.`SiteReview`.`repliedAt`, `main`.`SiteReview`.`avatarUrl`, `main`.`SiteReview`.`createdAt`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE `main`.`SiteReview`.`isApproved` = ? ORDER BY `main`.`SiteReview`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`SiteReview`.`id` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl` FROM `main`.`ReviewBrand` WHERE `main`.`ReviewBrand`.`id` IN (?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/admin/site-reviews?status=approved&limit=1 200 in 1738ms
+ GET /api/admin/site-reviews?status=pending&limit=1 200 in 1742ms
+ GET /api/admin/bonuses?status=pending&page=1&limit=1 200 in 1745ms
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`brandId`, `main`.`Bonus`.`isApproved`, `main`.`Bonus`.`createdByLoginId`, `main`.`Bonus`.`createdByName`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? ORDER BY `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`Bonus`.`id` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /@vite/client 404 in 1892ms
+ GET /api/seo?page=%2Fadmin 200 in 1753ms
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 1763ms
+ ✓ Compiled /api/carousel in 486ms (2265 modules)
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`brandId`, `main`.`Bonus`.`isApproved`, `main`.`Bonus`.`createdByLoginId`, `main`.`Bonus`.`createdByName`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? ORDER BY `main`.`Bonus`.`isFeatured` DESC, `main`.`Bonus`.`priority` DESC, `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/bonuses 200 in 586ms
+ GET /api/campaigns 200 in 588ms
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`slug`, `main`.`Campaign`.`description`, `main`.`Campaign`.`imageUrl`, `main`.`Campaign`.`ctaUrl`, `main`.`Campaign`.`badgeLabel`, `main`.`Campaign`.`bonusText`, `main`.`Campaign`.`bonusAmount`, `main`.`Campaign`.`tags`, `main`.`Campaign`.`startDate`, `main`.`Campaign`.`endDate`, `main`.`Campaign`.`isActive`, `main`.`Campaign`.`isFeatured`, `main`.`Campaign`.`priority`, `main`.`Campaign`.`createdAt`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`priority` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`CarouselSlide`.`id`, `main`.`CarouselSlide`.`title`, `main`.`CarouselSlide`.`subtitle`, `main`.`CarouselSlide`.`imageUrl`, `main`.`CarouselSlide`.`desktopImageUrl`, `main`.`CarouselSlide`.`mobileImageUrl`, `main`.`CarouselSlide`.`ctaLabel`, `main`.`CarouselSlide`.`ctaUrl`, `main`.`CarouselSlide`.`order`, `main`.`CarouselSlide`.`isActive`, `main`.`CarouselSlide`.`createdAt`, `main`.`CarouselSlide`.`updatedAt` FROM `main`.`CarouselSlide` WHERE 1=1 ORDER BY `main`.`CarouselSlide`.`order` ASC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`members`, `main`.`TelegramGroup`.`membersText`, `main`.`TelegramGroup`.`imageUrl`, `main`.`TelegramGroup`.`ctaUrl`, `main`.`TelegramGroup`.`type`, `main`.`TelegramGroup`.`isFeatured`, `main`.`TelegramGroup`.`priority`, `main`.`TelegramGroup`.`badges`, `main`.`TelegramGroup`.`createdAt`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`isFeatured` DESC, `main`.`TelegramGroup`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`SiteReview`.`id` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`brandId`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`isAnonymous`, `main`.`SiteReview`.`rating`, `main`.`SiteReview`.`isPositive`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`imageUrl`, `main`.`SiteReview`.`imageUrls`, `main`.`SiteReview`.`isApproved`, `main`.`SiteReview`.`isRejected`, `main`.`SiteReview`.`helpfulCount`, `main`.`SiteReview`.`notHelpfulCount`, `main`.`SiteReview`.`repliedBy`, `main`.`SiteReview`.`replyText`, `main`.`SiteReview`.`repliedAt`, `main`.`SiteReview`.`avatarUrl`, `main`.`SiteReview`.`createdAt`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`isApproved` = ? AND `main`.`SiteReview`.`isRejected` = ?) ORDER BY `main`.`SiteReview`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`order`, `main`.`MarqueeLogo`.`isActive`, `main`.`MarqueeLogo`.`createdAt`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`order` ASC LIMIT ? OFFSET ?
+ GET /api/carousel 200 in 586ms
+ GET /api/telegram-groups 200 in 593ms
+ GET /api/admin/site-reviews?status=pending&limit=25&page=1 200 in 581ms
+ GET /api/marquee-logos 200 in 595ms
+ ○ Compiling /api/admin/sitemap/status ...
+ ✓ Compiled /api/admin/sitemap/status in 551ms (2274 modules)
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`createdAt` FROM `main`.`SiteReview` WHERE (`main`.`SiteReview`.`createdAt` >= ? AND `main`.`SiteReview`.`createdAt` <= ?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`AffiliateClick`.`id`, `main`.`AffiliateClick`.`createdAt` FROM `main`.`AffiliateClick` WHERE (`main`.`AffiliateClick`.`createdAt` >= ? AND `main`.`AffiliateClick`.`createdAt` <= ?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`updatedAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SiteReview`.`id`, `main`.`SiteReview`.`author`, `main`.`SiteReview`.`content`, `main`.`SiteReview`.`updatedAt` FROM `main`.`SiteReview` WHERE 1=1 ORDER BY `main`.`SiteReview`.`updatedAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE 1=1 ORDER BY `main`.`Bonus`.`updatedAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Campaign`.`id`, `main`.`Campaign`.`title`, `main`.`Campaign`.`updatedAt` FROM `main`.`Campaign` WHERE 1=1 ORDER BY `main`.`Campaign`.`updatedAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`MarqueeLogo`.`id`, `main`.`MarqueeLogo`.`imageUrl`, `main`.`MarqueeLogo`.`href`, `main`.`MarqueeLogo`.`updatedAt` FROM `main`.`MarqueeLogo` WHERE 1=1 ORDER BY `main`.`MarqueeLogo`.`updatedAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`TelegramGroup`.`id`, `main`.`TelegramGroup`.`name`, `main`.`TelegramGroup`.`updatedAt` FROM `main`.`TelegramGroup` WHERE 1=1 ORDER BY `main`.`TelegramGroup`.`updatedAt` DESC LIMIT ? OFFSET ?
+ GET /api/admin/stats/daily?days=30 200 in 659ms
+ GET /api/admin/activity/recent 200 in 659ms
+ GET /api/admin/sitemap/status 200 in 660ms
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`ReviewBrand`.`id` FROM `main`.`ReviewBrand` WHERE `main`.`ReviewBrand`.`isActive` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`Bonus`.`id` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`brandId`, `main`.`Bonus`.`isApproved`, `main`.`Bonus`.`createdByLoginId`, `main`.`Bonus`.`createdByName`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? ORDER BY `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/admin/bonuses?status=pending&limit=25&page=1 200 in 662ms
+ GET /api/admin/robots 200 in 664ms
+ ○ Compiling /admin/seo ...
+ ✓ Compiled /admin/seo in 781ms (2329 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin/seo. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin/seo. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /admin/seo 200 in 884ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fadmin%2Fseo 200 in 96ms
+ GET /api/seo 200 in 14ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE 1=1 ORDER BY `main`.`SeoSetting`.`page` ASC LIMIT ? OFFSET ?
+ ✓ Compiled /api/pages in 312ms (2331 modules)
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=__organization__ 200 in 350ms
+ GET /api/pages 200 in 358ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fgizlilik-politikasi 200 in 13ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar 200 in 15ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar 200 in 14ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ ○ Compiling /admin/yorumlar/markalar ...
+ ✓ Compiled /admin/yorumlar/markalar in 542ms (2338 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ GET /admin/yorumlar/markalar 200 in 637ms
+prisma:query SELECT 1
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fadmin%2Fyorumlar%2Fmarkalar 200 in 26ms
+ GET /api/review-brands 200 in 65ms
+ ✓ Compiled /uploads/[...file] in 227ms (2341 modules)
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 801ms
+ ✓ Compiled in 783ms (1088 modules)
+prisma:query SELECT 1
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ ✓ Compiled in 228ms (1088 modules)
+ GET /admin/yorumlar/markalar 200 in 216ms
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /admin/yorumlar/markalar 200 in 21ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+ ✓ Compiled /middleware in 171ms (108 modules)
+ ○ Compiling /admin/yorumlar/markalar ...
+ ✓ Compiled /admin/yorumlar/markalar in 1656ms (1074 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /admin/yorumlar/markalar 200 in 2098ms
+ ✓ Compiled in 465ms (477 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /api/review-brands in 485ms (1089 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /@vite/client 404 in 612ms
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`Bonus`.`id` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`brandId`, `main`.`Bonus`.`isApproved`, `main`.`Bonus`.`createdByLoginId`, `main`.`Bonus`.`createdByName`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? ORDER BY `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/admin/bonuses?status=pending&page=1&limit=1 200 in 588ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fadmin%2Fyorumlar%2Fmarkalar 200 in 590ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 567ms
+ ✓ Compiled /uploads/[...file] in 97ms (1092 modules)
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 616ms
+ ✓ Compiled /api/review-brands/[id] in 446ms (1094 modules)
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:15:71)
+  13 |   try {
+  14 |     // Eski öğeyi alın (slug değişimi ve cache revalidate için gerekli)
+> 15 |     const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
+     |                                                                       ^
+  16 |     const patch = await req.json()
+  17 |     const data: any = { ...patch }
+  18 |
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:15:71)
+  13 |   try {
+  14 |     // Eski öğeyi alın (slug değişimi ve cache revalidate için gerekli)
+> 15 |     const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
+     |                                                                       ^
+  16 |     const patch = await req.json()
+  17 |     const data: any = { ...patch }
+  18 |
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:15:71)
+  13 |   try {
+  14 |     // Eski öğeyi alın (slug değişimi ve cache revalidate için gerekli)
+> 15 |     const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
+     |                                                                       ^
+  16 |     const patch = await req.json()
+  17 |     const data: any = { ...patch }
+  18 |
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE `main`.`ReviewBrand`.`id` IN (?,?,?) LIMIT ? OFFSET ?
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:39:70)
+  37 |     }
+  38 |
+> 39 |     const updated = await db.reviewBrand.update({ where: { id: params.id }, data })
+     |                                                                      ^
+  40 |     // Liste ve slug bazlı cache’i revalidate et
+  41 |     revalidateReviewBrandTags(updated.slug)
+  42 |     if (prev && prev.slug !== updated.slug) {
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:39:70)
+  37 |     }
+  38 |
+> 39 |     const updated = await db.reviewBrand.update({ where: { id: params.id }, data })
+     |                                                                      ^
+  40 |     // Liste ve slug bazlı cache’i revalidate et
+  41 |     revalidateReviewBrandTags(updated.slug)
+  42 |     if (prev && prev.slug !== updated.slug) {
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:39:70)
+  37 |     }
+  38 |
+> 39 |     const updated = await db.reviewBrand.update({ where: { id: params.id }, data })
+     |                                                                      ^
+  40 |     // Liste ve slug bazlı cache’i revalidate et
+  41 |     revalidateReviewBrandTags(updated.slug)
+  42 |     if (prev && prev.slug !== updated.slug) {
+prisma:query UPDATE `main`.`ReviewBrand` SET `seoDescription` = ?, `updatedAt` = ? WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `name` AS `name`, `slug` AS `slug`, `logoUrl` AS `logoUrl`, `editorialSummary` AS `editorialSummary`, `seoTitle` AS `seoTitle`, `seoDescription` AS `seoDescription`, `siteUrl` AS `siteUrl`, `priority` AS `priority`, `isActive` AS `isActive`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`
+ PATCH /api/review-brands/cmh72heyy0014m4jbhe58houg 200 in 613ms
+ PATCH /api/review-brands/cmh72heyy0014m4jbhe58houg 200 in 445ms
+prisma:query UPDATE `main`.`ReviewBrand` SET `seoTitle` = ?, `updatedAt` = ? WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `name` AS `name`, `slug` AS `slug`, `logoUrl` AS `logoUrl`, `editorialSummary` AS `editorialSummary`, `seoTitle` AS `seoTitle`, `seoDescription` AS `seoDescription`, `siteUrl` AS `siteUrl`, `priority` AS `priority`, `isActive` AS `isActive`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`
+prisma:query UPDATE `main`.`ReviewBrand` SET `seoTitle` = ?, `updatedAt` = ? WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `name` AS `name`, `slug` AS `slug`, `logoUrl` AS `logoUrl`, `editorialSummary` AS `editorialSummary`, `seoTitle` AS `seoTitle`, `seoDescription` AS `seoDescription`, `siteUrl` AS `siteUrl`, `priority` AS `priority`, `isActive` AS `isActive`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`
+ PATCH /api/review-brands/cmh72heyy0014m4jbhe58houg 200 in 1073ms
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 11ms
+ GET /api/review-brands 200 in 7ms
+ GET /api/review-brands 200 in 6ms
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 14ms
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:15:71)
+  13 |   try {
+  14 |     // Eski öğeyi alın (slug değişimi ve cache revalidate için gerekli)
+> 15 |     const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
+     |                                                                       ^
+  16 |     const patch = await req.json()
+  17 |     const data: any = { ...patch }
+  18 |
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:39:70)
+  37 |     }
+  38 |
+> 39 |     const updated = await db.reviewBrand.update({ where: { id: params.id }, data })
+     |                                                                      ^
+  40 |     // Liste ve slug bazlı cache’i revalidate et
+  41 |     revalidateReviewBrandTags(updated.slug)
+  42 |     if (prev && prev.slug !== updated.slug) {
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query UPDATE `main`.`ReviewBrand` SET `seoTitle` = ?, `updatedAt` = ? WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `name` AS `name`, `slug` AS `slug`, `logoUrl` AS `logoUrl`, `editorialSummary` AS `editorialSummary`, `seoTitle` AS `seoTitle`, `seoDescription` AS `seoDescription`, `siteUrl` AS `siteUrl`, `priority` AS `priority`, `isActive` AS `isActive`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`
+ PATCH /api/review-brands/cmh72heyy0014m4jbhe58houg 200 in 64ms
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 10ms
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 17ms
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:15:71)
+  13 |   try {
+  14 |     // Eski öğeyi alın (slug değişimi ve cache revalidate için gerekli)
+> 15 |     const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
+     |                                                                       ^
+  16 |     const patch = await req.json()
+  17 |     const data: any = { ...patch }
+  18 |
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) LIMIT ? OFFSET ?
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:39:70)
+  37 |     }
+  38 |
+> 39 |     const updated = await db.reviewBrand.update({ where: { id: params.id }, data })
+     |                                                                      ^
+  40 |     // Liste ve slug bazlı cache’i revalidate et
+  41 |     revalidateReviewBrandTags(updated.slug)
+  42 |     if (prev && prev.slug !== updated.slug) {
+prisma:query UPDATE `main`.`ReviewBrand` SET `seoTitle` = ?, `updatedAt` = ? WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `name` AS `name`, `slug` AS `slug`, `logoUrl` AS `logoUrl`, `editorialSummary` AS `editorialSummary`, `seoTitle` AS `seoTitle`, `seoDescription` AS `seoDescription`, `siteUrl` AS `siteUrl`, `priority` AS `priority`, `isActive` AS `isActive`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`
+ PATCH /api/review-brands/cmh72heyy0014m4jbhe58houg 200 in 54ms
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 9ms
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 8ms
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:15:71)
+  13 |   try {
+  14 |     // Eski öğeyi alın (slug değişimi ve cache revalidate için gerekli)
+> 15 |     const prev = await db.reviewBrand.findUnique({ where: { id: params.id } })
+     |                                                                       ^
+  16 |     const patch = await req.json()
+  17 |     const data: any = { ...patch }
+  18 |
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) LIMIT ? OFFSET ?
+Error: Route "/api/review-brands/[id]" used `params.id`. `params` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at PATCH (src/app/api/review-brands/[id]/route.ts:39:70)
+  37 |     }
+  38 |
+> 39 |     const updated = await db.reviewBrand.update({ where: { id: params.id }, data })
+     |                                                                      ^
+  40 |     // Liste ve slug bazlı cache’i revalidate et
+  41 |     revalidateReviewBrandTags(updated.slug)
+  42 |     if (prev && prev.slug !== updated.slug) {
+prisma:query UPDATE `main`.`ReviewBrand` SET `seoDescription` = ?, `updatedAt` = ? WHERE (`main`.`ReviewBrand`.`id` = ? AND 1=1) RETURNING `id` AS `id`, `name` AS `name`, `slug` AS `slug`, `logoUrl` AS `logoUrl`, `editorialSummary` AS `editorialSummary`, `seoTitle` AS `seoTitle`, `seoDescription` AS `seoDescription`, `siteUrl` AS `siteUrl`, `priority` AS `priority`, `isActive` AS `isActive`, `createdAt` AS `createdAt`, `updatedAt` AS `updatedAt`
+ PATCH /api/review-brands/cmh72heyy0014m4jbhe58houg 200 in 60ms
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 9ms
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 14ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+Port 3000 in use. Retrying on 3001...
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+> Ready on http://0.0.0.0:3001
+> Socket.IO server running at ws://0.0.0.0:3001/api/socketio
+ ✓ Compiled /middleware in 101ms (108 modules)
+ ○ Compiling /admin/yorumlar/markalar ...
+ ✓ Compiled /admin/yorumlar/markalar in 2.5s (1074 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /admin/yorumlar/markalar 200 in 3054ms
+ ✓ Compiled in 571ms (477 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ○ Compiling /api/review-brands ...
+ ✓ Compiled /api/review-brands in 711ms (1089 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /@vite/client 404 in 874ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`Bonus`.`id` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`brandId`, `main`.`Bonus`.`isApproved`, `main`.`Bonus`.`createdByLoginId`, `main`.`Bonus`.`createdByName`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? ORDER BY `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/admin/bonuses?status=pending&page=1&limit=1 200 in 860ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fadmin%2Fyorumlar%2Fmarkalar 200 in 862ms
+prisma:query SELECT `main`.`ReviewBrand`.`id`, `main`.`ReviewBrand`.`name`, `main`.`ReviewBrand`.`slug`, `main`.`ReviewBrand`.`logoUrl`, `main`.`ReviewBrand`.`editorialSummary`, `main`.`ReviewBrand`.`seoTitle`, `main`.`ReviewBrand`.`seoDescription`, `main`.`ReviewBrand`.`siteUrl`, `main`.`ReviewBrand`.`priority`, `main`.`ReviewBrand`.`isActive`, `main`.`ReviewBrand`.`createdAt`, `main`.`ReviewBrand`.`updatedAt` FROM `main`.`ReviewBrand` WHERE 1=1 ORDER BY `main`.`ReviewBrand`.`createdAt` DESC LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 860ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Ftest 200 in 14ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-4-1761444344775 200 in 22ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-6-1761444344775 200 in 22ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-5-1761444344775 200 in 22ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-7-1761444344775 200 in 22ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-3-1761444344775 200 in 23ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-8-1761444344775 200 in 15ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-9-1761444344775 200 in 16ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-11-1761444344775 200 in 25ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-13-1761444344775 200 in 25ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-12-1761444344775 200 in 25ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-10-1761444344775 200 in 25ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-14-1761444344775 200 in 23ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-15-1761444344775 200 in 21ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-17-1761444344775 200 in 17ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-18-1761444344775 200 in 17ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-16-1761444344775 200 in 22ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-19-1761444344775 200 in 22ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-20-1761444344775 200 in 23ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-brand 200 in 19ms
+ GET /api/seo?page=%2Fyorumlar%2Fanadoluslot 200 in 19ms
+ GET /api/seo?page=%2Fyorumlar%2Fikasbet 200 in 19ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdopingbet 200 in 20ms
+ GET /api/seo?page=%2Fyorumlar%2Fsuperbahis 200 in 20ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fbetewin 200 in 15ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Ftrwin 200 in 20ms
+ ✓ Compiled /uploads/[...file] in 112ms (1092 modules)
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 548ms
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `npx tsx server.ts`[39m
+> Ready on http://0.0.0.0:3000
+> Socket.IO server running at ws://0.0.0.0:3000/api/socketio
+ ✓ Compiled /middleware in 127ms (108 modules)
+ ○ Compiling /admin/yorumlar/markalar ...
+ ✓ Compiled /admin/yorumlar/markalar in 2.4s (1074 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /admin/yorumlar/markalar. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /admin/yorumlar/markalar 200 in 3077ms
+ ✓ Compiled in 659ms (477 modules)
+ ⚠ Cross origin request detected from 0.0.0.0 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ ✓ Compiled /api/review-brands in 390ms (1064 modules)
+ ✓ Compiled in 150ms (467 modules)
+ ⚠ Unsupported metadata themeColor is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ ⚠ Unsupported metadata viewport is configured in metadata export in /@vite/client. Please move it to viewport export instead.
+Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /@vite/client 404 in 792ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/review-brands 200 in 701ms
+ GET /api/seo?page=%2Fadmin%2Fyorumlar%2Fmarkalar 200 in 719ms
+ GET /api/admin/bonuses?status=pending&page=1&limit=1 200 in 721ms
+prisma:query SELECT COUNT(*) AS `_count._all` FROM (SELECT `main`.`Bonus`.`id` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? LIMIT ? OFFSET ?) AS `sub`
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`Bonus`.`id`, `main`.`Bonus`.`title`, `main`.`Bonus`.`slug`, `main`.`Bonus`.`description`, `main`.`Bonus`.`shortDescription`, `main`.`Bonus`.`bonusType`, `main`.`Bonus`.`gameCategory`, `main`.`Bonus`.`amount`, `main`.`Bonus`.`wager`, `main`.`Bonus`.`minDeposit`, `main`.`Bonus`.`imageUrl`, `main`.`Bonus`.`postImageUrl`, `main`.`Bonus`.`ctaUrl`, `main`.`Bonus`.`badges`, `main`.`Bonus`.`validityText`, `main`.`Bonus`.`startDate`, `main`.`Bonus`.`endDate`, `main`.`Bonus`.`features`, `main`.`Bonus`.`isActive`, `main`.`Bonus`.`isFeatured`, `main`.`Bonus`.`priority`, `main`.`Bonus`.`brandId`, `main`.`Bonus`.`isApproved`, `main`.`Bonus`.`createdByLoginId`, `main`.`Bonus`.`createdByName`, `main`.`Bonus`.`createdAt`, `main`.`Bonus`.`updatedAt` FROM `main`.`Bonus` WHERE `main`.`Bonus`.`isApproved` = ? ORDER BY `main`.`Bonus`.`createdAt` DESC LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Ftest 200 in 19ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-3-1761444344775 200 in 28ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-4-1761444344775 200 in 28ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-5-1761444344775 200 in 24ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-6-1761444344775 200 in 24ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-7-1761444344775 200 in 31ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-8-1761444344775 200 in 21ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-9-1761444344775 200 in 23ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-11-1761444344775 200 in 23ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-12-1761444344775 200 in 22ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-10-1761444344775 200 in 22ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-13-1761444344775 200 in 23ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-14-1761444344775 200 in 22ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-16-1761444344775 200 in 18ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-15-1761444344775 200 in 24ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-17-1761444344775 200 in 24ms
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-18-1761444344775 200 in 24ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-19-1761444344775 200 in 20ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-marka-20-1761444344775 200 in 25ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdemo-brand 200 in 17ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fanadoluslot 200 in 21ms
+ GET /api/seo?page=%2Fyorumlar%2Fikasbet 200 in 21ms
+ GET /api/seo?page=%2Fyorumlar%2Fsuperbahis 200 in 21ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE `main`.`SeoSetting`.`page` IN (?,?,?) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fdopingbet 200 in 23ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Fbetewin 200 in 23ms
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+prisma:query SELECT `main`.`SeoSetting`.`id`, `main`.`SeoSetting`.`page`, `main`.`SeoSetting`.`title`, `main`.`SeoSetting`.`description`, `main`.`SeoSetting`.`keywords`, `main`.`SeoSetting`.`canonicalUrl`, `main`.`SeoSetting`.`ogTitle`, `main`.`SeoSetting`.`ogDescription`, `main`.`SeoSetting`.`ogImageUrl`, `main`.`SeoSetting`.`ogLogoUrl`, `main`.`SeoSetting`.`twitterTitle`, `main`.`SeoSetting`.`twitterDescription`, `main`.`SeoSetting`.`twitterImageUrl`, `main`.`SeoSetting`.`robotsIndex`, `main`.`SeoSetting`.`robotsFollow`, `main`.`SeoSetting`.`structuredData` FROM `main`.`SeoSetting` WHERE (`main`.`SeoSetting`.`page` = ? AND 1=1) LIMIT ? OFFSET ?
+ GET /api/seo?page=%2Fyorumlar%2Ftrwin 200 in 21ms
+ ✓ Compiled /uploads/[...file] in 125ms (1092 modules)
+ GET /uploads/1761157562787-iwwu2vdvuu.png 404 in 629ms

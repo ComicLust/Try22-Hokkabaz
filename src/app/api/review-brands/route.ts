@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, logoUrl, editorialSummary, siteUrl, slug: rawSlug } = body || {}
+    const { name, logoUrl, editorialSummary, siteUrl, seoTitle, seoDescription, slug: rawSlug } = body || {}
     if (!name || typeof name !== 'string') {
       return NextResponse.json({ error: 'Marka adı gerekli' }, { status: 400 })
     }
@@ -25,8 +25,19 @@ export async function POST(req: NextRequest) {
     const slug = slugifyTr(slugBase)
     const exists = await db.reviewBrand.findUnique({ where: { slug } })
     if (exists) return NextResponse.json({ error: 'Slug zaten mevcut' }, { status: 400 })
-    const created = await db.reviewBrand.create({
-      data: { name, slug, logoUrl: logoUrl ?? null, editorialSummary: editorialSummary ?? null, siteUrl: siteUrl ?? null, isActive: true },
+    // Prisma Client tipleri derleme sırasında eski şemayı yansıtabilir.
+    // Bu nedenle create çağrısını geçici olarak any ile güvenli şekilde genişletiyoruz.
+    const created = await (db as any).reviewBrand.create({
+      data: {
+        name,
+        slug,
+        logoUrl: logoUrl ?? null,
+        editorialSummary: editorialSummary ?? null,
+        seoTitle: typeof seoTitle === 'string' ? seoTitle : null,
+        seoDescription: typeof seoDescription === 'string' ? seoDescription : null,
+        siteUrl: siteUrl ?? null,
+        isActive: true,
+      },
     })
     revalidateReviewBrandTags(slug)
     return NextResponse.json(created)
