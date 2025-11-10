@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
-import { Calendar, ExternalLink, MessageSquare, ThumbsUp, ThumbsDown, AlertCircle, CheckCircle2, Plus, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Calendar, ExternalLink, MessageSquare, ThumbsUp, ThumbsDown, AlertCircle, CheckCircle2, Plus, X, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -63,7 +64,7 @@ export default function YorumDetayClient({ slug, initialSite, initialReviews }: 
   const regenCaptcha = () => { setCaptchaA(Math.floor(Math.random()*5)+2); setCaptchaB(Math.floor(Math.random()*5)+2); setCaptchaInput('') }
 
   useEffect(() => {
-    (async () => {
+    void (async () => {
       try {
         setLoading(true)
         // Site bilgisi yoksa getir
@@ -626,29 +627,43 @@ function RenderedReview({ content }: RenderedReviewProps) {
 // Note: Component-scoped rendering within same file
 
 export function LightboxPortal({ open, images, index, caption, onClose, onPrev, onNext, onSelect }: { open: boolean; images: string[]; index: number; caption?: string; onClose: ()=>void; onPrev: ()=>void; onNext: ()=>void; onSelect: (i:number)=>void }) {
-  if (!open || !images.length) return null
-  const current = images[index]
   const startYRef = useRef<number | null>(null)
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => { startYRef.current = e.touches?.[0]?.clientY ?? null }
   const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
     if (startYRef.current == null) return
     const dy = e.touches?.[0]?.clientY - startYRef.current
-    if (dy && dy > 90) { onClose() }
+    // Mobilde sayfanın da kaymasını engelle
+    e.preventDefault()
+    if (dy && dy > 110) { onClose() }
   }
-  return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center p-4" role="dialog" aria-modal="true" onClick={onClose} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
+  // Lightbox açıkken body scroll'u kapat
+  useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [open])
+  if (!open || !images.length) return null
+  const current = images[index]
+  const overlay = (
+    <div className="fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center p-4 overscroll-contain touch-none" role="dialog" aria-modal="true" onClick={onClose} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
       {/* Global close button */}
       <button type="button" onClick={(e)=>{ e.stopPropagation(); onClose() }} className="fixed top-4 right-4 z-[60] inline-flex items-center justify-center rounded-md border bg-card/90 text-foreground hover:bg-card px-2 py-1">
         <X className="w-6 h-6" />
       </button>
+      {/* Mobil bilgilendirme metni (story benzeri) */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 sm:hidden z-[55] flex items-center gap-1 rounded-md bg-black/60 text-white px-2 py-1 text-xs">
+        <ChevronDown className="w-3 h-3" />
+        <span>Aşağı kaydırınca kapanır</span>
+      </div>
       <div className="relative max-w-[92vw] mx-auto" onClick={(e)=>e.stopPropagation()}>
-        <div className="relative mx-auto max-w-[90vw] max-h-[70vh] w-full flex items-center justify-center">
+        <div className="relative mx-auto max-w-[92vw] max-h-[85vh] sm:max-h-[80vh] w-full flex items-center justify-center overflow-hidden">
           {images.length > 1 && (
             <button type="button" onClick={onPrev} className="absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-md bg-card/70 hover:bg-card">
               <ChevronLeft className="w-6 h-6" />
             </button>
           )}
-          <img src={current} alt="büyük görsel" className="max-h-[70vh] w-auto object-contain rounded-md" />
+          <img src={current} alt="büyük görsel" className="max-h-[85vh] sm:max-h-[80vh] max-w-[92vw] w-auto h-auto object-contain rounded-md" />
           {images.length > 1 && (
             <button type="button" onClick={onNext} className="absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-md bg-card/70 hover:bg-card">
               <ChevronRight className="w-6 h-6" />
@@ -672,4 +687,5 @@ export function LightboxPortal({ open, images, index, caption, onClose, onPrev, 
       </div>
     </div>
   )
+  return createPortal(overlay, document.body)
 }

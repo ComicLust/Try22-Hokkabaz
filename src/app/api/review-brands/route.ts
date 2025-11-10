@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const slugBase = (rawSlug && typeof rawSlug === 'string' ? rawSlug : name)
     const slug = slugifyTr(slugBase)
     const exists = await db.reviewBrand.findUnique({ where: { slug } })
-    if (exists) return NextResponse.json({ error: 'Slug zaten mevcut' }, { status: 400 })
+    if (exists) return NextResponse.json({ error: 'Slug zaten mevcut' }, { status: 409 })
     // Prisma Client tipleri derleme sırasında eski şemayı yansıtabilir.
     // Bu nedenle create çağrısını geçici olarak any ile güvenli şekilde genişletiyoruz.
     const created = await (db as any).reviewBrand.create({

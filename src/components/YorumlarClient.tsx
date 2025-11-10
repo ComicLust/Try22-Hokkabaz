@@ -1,17 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Search, ArrowRight, MessageSquare, BarChart3, Clock, CalendarDays, CircleDashed, Lightbulb, MessageSquarePlus, ThumbsUp, ThumbsDown } from 'lucide-react'
+import { Search, ArrowRight, MessageSquare, BarChart3, Clock, CalendarDays, CircleDashed, MessageSquarePlus, ThumbsUp, ThumbsDown, Plus, AlertCircle, User, FileText, Image as ImageIcon } from 'lucide-react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
+import { Textarea } from '@/components/ui/textarea'
+import { Switch } from '@/components/ui/switch'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+// Kategori UI kaldırıldı
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/table'
+import { slugifyTr } from '@/lib/slugify'
 import SeoArticle from "@/components/SeoArticle";
 import { TopBrandTicker } from '@/components/top-brand-ticker/TopBrandTicker'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -35,19 +41,54 @@ export default function YorumlarClient() {
 
   const { toast } = useToast()
 
-  // Marka öneri formu
-  const [suggestOpen, setSuggestOpen] = useState(false)
-  const [brandName, setBrandName] = useState('')
-  const [email, setEmail] = useState('')
-  const [siteUrl, setSiteUrl] = useState('')
-  const [submittingSuggestion, setSubmittingSuggestion] = useState(false)
+  // Şikayet/yorum oluşturma akışı
+  const [createOpen, setCreateOpen] = useState(false)
+  const [dialogQuery, setDialogQuery] = useState('')
+  const [selectedBrand, setSelectedBrand] = useState<ReviewBrand | null>(null)
+  const [newBrandName, setNewBrandName] = useState('')
+  const [newBrandUrl, setNewBrandUrl] = useState('')
+  const [creatingBrand, setCreatingBrand] = useState(false)
+  // Şikayet akışında varsayılan olumsuz
+  const [isPositive, setIsPositive] = useState<boolean>(false)
+  const [isAnonymous, setIsAnonymous] = useState(true)
+  const [author, setAuthor] = useState('')
+  const [content, setContent] = useState('')
+  const [submittingReview, setSubmittingReview] = useState(false)
+  // Kategori kaldırıldı
 
-  // Basit captcha (toplama)
-  const [captchaA, setCaptchaA] = useState<number>(() => Math.floor(Math.random()*5)+2)
-  const [captchaB, setCaptchaB] = useState<number>(() => Math.floor(Math.random()*5)+2)
-  const [captchaInput, setCaptchaInput] = useState<string>('')
-  const captchaOk = useMemo(() => Number(captchaInput) === (captchaA + captchaB), [captchaInput, captchaA, captchaB])
-  const regenCaptcha = () => { setCaptchaA(Math.floor(Math.random()*5)+2); setCaptchaB(Math.floor(Math.random()*5)+2); setCaptchaInput('') }
+  // Görsel yükleme durumu (YorumDetayClient ile aynı kurallar)
+  const [imageUrls, setImageUrls] = useState<(string | null)[]>([])
+  const [uploading, setUploading] = useState<boolean>(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null)
+  const [dragActive, setDragActive] = useState<boolean>(false)
+  // Yükleme ilerlemesi ve ekran okuyucu mesajları
+  const [uploadProgress, setUploadProgress] = useState<number[]>([0, 0, 0])
+  const [srMessage, setSrMessage] = useState<string>('')
+
+  // Mobil marka listesi sanallaştırma
+  const mobileListRef = useRef<HTMLDivElement | null>(null)
+  const [mobileStartIndex, setMobileStartIndex] = useState<number>(0)
+  const [mobileEndIndex, setMobileEndIndex] = useState<number>(20)
+  function handleMobileScroll() {
+    const el = mobileListRef.current
+    if (!el) return
+    const rowH = 72
+    const top = el.scrollTop
+    const view = el.clientHeight
+    const start = Math.max(0, Math.floor(top / rowH) - 2)
+    const end = Math.ceil((top + view) / rowH) + 2
+    setMobileStartIndex(start)
+    setMobileEndIndex(end)
+  }
+  useEffect(() => {
+    // Dialog açıldığında başlangıç aralığını ayarla
+    if (createOpen) {
+      setMobileStartIndex(0)
+      setMobileEndIndex(20)
+    }
+  }, [createOpen])
 
   // Marquee (kayan logolar)
   type MarqueeLogo = { id: string; imageUrl: string; href?: string | null; order: number; isActive: boolean };
@@ -105,6 +146,35 @@ export default function YorumlarClient() {
     }))
   }, [brands, stats])
 
+  // Debounce edilmiş arama
+  const [debouncedDialogQuery, setDebouncedDialogQuery] = useState('')
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedDialogQuery(dialogQuery.trim().toLowerCase()), 200)
+    return () => clearTimeout(t)
+  }, [dialogQuery])
+
+  const dialogFiltered = useMemo(() => {
+    const q = debouncedDialogQuery
+    return enriched.filter((s) => (q ? (s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q)) : true))
+  }, [enriched, debouncedDialogQuery])
+
+  function highlight(text: string, query: string) {
+    const q = query.trim().toLowerCase()
+    if (!q) return text
+    const i = text.toLowerCase().indexOf(q)
+    if (i < 0) return text
+    const before = text.slice(0, i)
+    const match = text.slice(i, i + q.length)
+    const after = text.slice(i + q.length)
+    return (
+      <>
+        {before}
+        <mark className="bg-yellow-200/60 text-foreground rounded px-0.5">{match}</mark>
+        {after}
+      </>
+    )
+  }
+
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase()
     let list = enriched.filter((s) => (q ? (s.name.toLowerCase().includes(q) || s.slug.toLowerCase().includes(q)) : true))
@@ -126,6 +196,90 @@ export default function YorumlarClient() {
     }
     return list
   }, [enriched, searchQuery, sortKey, showOnlyUncommented])
+
+  // Görsel yükleme yardımcıları
+  function canAddMoreImages(): boolean {
+    const filledCount = imageUrls.filter(Boolean).length
+    return filledCount < 3
+  }
+  function removeImageAt(idx: number) {
+    setImageUrls((prev) => {
+      const next = [...prev]
+      next[idx] = null
+      return next
+    })
+  }
+  async function processFiles(files: FileList | File[]) {
+    const allowed = new Set(['image/png', 'image/jpeg'])
+    const list = Array.from(files)
+    setUploading(true)
+    for (const file of list) {
+      if (!canAddMoreImages()) break
+      if (!allowed.has(file.type)) { setUploadError('Sadece PNG/JPEG'); continue }
+      if (file.size > 500 * 1024) { setUploadError('Maksimum 500KB'); continue }
+      // Hedef indexi belirle
+      const targetIndex = (() => {
+        const current = [...imageUrls]
+        const idx = typeof pendingIndex === 'number' ? pendingIndex : current.findIndex((v) => v == null)
+        if (idx >= 0) return idx
+        if (current.length < 3) return current.length
+        return -1
+      })()
+      if (targetIndex < 0) break
+      setUploadProgress((prev) => { const next = [...prev]; next[targetIndex] = 0; return next })
+      setSrMessage('Yükleme başladı')
+      try {
+        const url = await new Promise<string>((resolve, reject) => {
+          const xhr = new XMLHttpRequest()
+          xhr.open('POST', '/api/upload')
+          xhr.responseType = 'json'
+          xhr.upload.onprogress = (e: ProgressEvent) => {
+            if (e.lengthComputable) {
+              const pct = Math.max(0, Math.min(100, Math.round((e.loaded / e.total) * 100)))
+              setUploadProgress((prev) => { const next = [...prev]; next[targetIndex] = pct; return next })
+              setSrMessage(`Yükleme ilerlemesi yüzde ${pct}`)
+            }
+          }
+          xhr.onload = () => {
+            const data: any = xhr.response
+            if (xhr.status >= 200 && xhr.status < 300 && data?.url) {
+              setSrMessage('Görsel yüklendi')
+              resolve(String(data.url))
+            } else {
+              const msg = String(data?.error || 'Yükleme hatası')
+              setSrMessage('Yükleme hatası')
+              reject(new Error(msg))
+            }
+          }
+          xhr.onerror = () => {
+            setSrMessage('Ağ hatası')
+            reject(new Error('Ağ hatası'))
+          }
+          const fd = new FormData()
+          fd.append('file', file)
+          xhr.send(fd)
+        })
+        setImageUrls((prev) => {
+          const next = [...prev]
+          next[targetIndex] = url
+          return next.slice(0, 3)
+        })
+      } catch (err: any) {
+        setUploadError(String(err?.message || 'Yükleme hatası'))
+        setUploadProgress((prev) => { const next = [...prev]; next[targetIndex] = 0; return next })
+      }
+    }
+    setUploading(false)
+  }
+  async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+    setUploadError(null)
+    if (!canAddMoreImages() && pendingIndex === null) { setUploadError('En fazla 3 görsel yükleyebilirsiniz.'); e.target.value = ''; return }
+    await processFiles(files)
+    e.target.value = ''
+    setPendingIndex(null)
+  }
 
   const uncommented = useMemo(() => enriched.filter((b) => (b.reviewCount ?? 0) === 0), [enriched])
 
@@ -158,13 +312,15 @@ export default function YorumlarClient() {
               <p className="mt-1 text-sm md:text-base text-muted-foreground">
                 Gerçek kullanıcı yorumlarıyla bahis sitelerini karşılaştırın. Arama, filtre ve sıralama seçenekleriyle en iyi kararınızı verin.
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap gap-2 items-center">
                 <Button asChild className="gap-1.5">
                   <a href="#yorumlu-siteler">Yorumları Keşfet <ArrowRight className="w-4 h-4" /></a>
                 </Button>
-                <Button variant="outline" className="gap-1.5" onClick={()=> setSuggestOpen(true)}>
-                  <Lightbulb className="w-4 h-4" aria-hidden /> Marka Öner
+                <Button onClick={()=> setCreateOpen(true)}
+                  className="gap-1.5 font-semibold shadow-md ring-2 ring-gold/40">
+                  <MessageSquarePlus className="w-4 h-4" aria-hidden /> Şikayet Oluştur
                 </Button>
+                <span className="text-xs md:text-sm text-muted-foreground">Şikayetin mi var? Tıklayıp hemen paylaş.</span>
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
@@ -218,62 +374,315 @@ export default function YorumlarClient() {
               <Button size="sm" className="flex-1 md:flex-none gap-1.5" variant={showOnlyUncommented ? 'default' : 'outline'} onClick={() => setShowOnlyUncommented((v)=>!v)}>
                 <CircleDashed className="w-4 h-4" aria-hidden /> Henüz Yorumlanmayanlar
               </Button>
-              <Dialog open={suggestOpen} onOpenChange={setSuggestOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm" variant="outline" className="flex-1 md:flex-none gap-1.5"><Lightbulb className="w-4 h-4" aria-hidden /> Marka Öner</Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+              <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+                <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Marka Öner</DialogTitle>
+                    <DialogTitle>Şikayet Oluştur</DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-3">
-                    <div className="space-y-1">
-                      <Label>Marka Adı</Label>
-                      <Input value={brandName} onChange={(e)=>setBrandName(e.target.value)} placeholder="Örn: Örnek Bahis" />
+                  <div className="space-y-6">
+                    {/* Erişilebilirlik için canlı durum bölgesi */}
+                    <p className="sr-only" role="status" aria-live="polite">{srMessage}</p>
+                    {/* Stepper: 2 aşamalı küçük gösterge */}
+                    <div className="mb-3 flex items-center gap-2 text-xs">
+                      <Badge variant={selectedBrand ? 'outline' : 'default'} className="inline-flex items-center gap-1">
+                        <Search className="w-3 h-3" />
+                        <span>Marka Seç</span>
+                      </Badge>
+                      <span className="text-muted-foreground">→</span>
+                      <Badge variant={selectedBrand ? 'default' : 'outline'} className="inline-flex items-center gap-1">
+                        {isPositive ? <ThumbsUp className="w-3 h-3" /> : <ThumbsDown className="w-3 h-3" />}
+                        <span>Yorum Yaz</span>
+                      </Badge>
                     </div>
-                    <div className="space-y-1">
-                      <Label>E-posta</Label>
-                      <Input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="ornek@mail.com" />
+
+                    {/* Adım 1: Marka Seçimi veya Ekleme */}
+                    <div className="space-y-3">
+                      <h3 className="text-sm font-medium">1) Marka Seç</h3>
+                      {selectedBrand ? (
+                        <div className="flex items-center justify-between rounded-md border p-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-10 h-10 flex items-center justify-center border rounded bg-card">
+                              {selectedBrand.logoUrl ? (
+                                <img src={selectedBrand.logoUrl} alt={selectedBrand.name} className="w-full h-full object-contain" />
+                              ) : (
+                                <img src="/logo.svg" alt="logo" className="h-6 w-12" />
+                              )}
+                            </div>
+                            <div>
+                              <div className="text-sm font-medium">{selectedBrand.name}</div>
+                              <div className="text-xs text-muted-foreground">/yorumlar/{selectedBrand.slug}</div>
+                            </div>
+                          </div>
+                          <Button variant="outline" size="sm" onClick={()=> setSelectedBrand(null)}>Değiştir</Button>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-2">
+                            <Input value={dialogQuery} onChange={(e)=>setDialogQuery(e.target.value)} placeholder="Marka ara…" className="h-9" />
+                          </div>
+                          <div className="overflow-x-auto hidden sm:block">
+                            <div className="max-h-[50vh] overflow-y-auto rounded-md border">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow className="sticky top-0 bg-background z-10">
+                                    <TableHead>Logo</TableHead>
+                                    <TableHead>Marka</TableHead>
+                                    <TableHead>Yorum</TableHead>
+                                    <TableHead></TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {dialogFiltered.slice(0, 50).map((b)=> (
+                                    <TableRow key={b.id}>
+                                      <TableCell>
+                                        <div className="w-10 h-10 flex items-center justify-center border rounded bg-card">
+                                          {b.logoUrl ? (
+                                            <img src={b.logoUrl} alt={b.name} className="w-full h-full object-contain" />
+                                          ) : (
+                                            <img src="/logo.svg" alt="logo" className="h-6 w-12" />
+                                          )}
+                                        </div>
+                                      </TableCell>
+                                      <TableCell className="text-sm">{highlight(b.name, debouncedDialogQuery)}</TableCell>
+                                      <TableCell className="text-sm">{b.reviewCount ?? 0}</TableCell>
+                                      <TableCell className="text-right"><Button size="sm" onClick={()=> setSelectedBrand(b)}>Seç</Button></TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
+                          {/* Akıllı öneri: inline yeni marka ekle */}
+                          {dialogQuery.trim().length >= 2 && (
+                            (()=>{
+                              const name = dialogQuery.trim()
+                              const slugCandidate = slugifyTr(name)
+                              const duplicate = enriched.find((b)=> b.slug === slugCandidate || b.name.trim().toLowerCase() === name.toLowerCase())
+                              return (
+                                <div className="rounded-md border p-2 flex items-center justify-between">
+                                  <div className="text-xs">Yeni marka olarak ekle: <span className="font-medium">{name}</span></div>
+                                  <Button size="sm" variant={duplicate? 'outline':'default'} disabled={!!duplicate} onClick={()=>{ setNewBrandName(name); setNewBrandUrl('') }}>
+                                    {duplicate ? 'Zaten mevcut' : 'Formu doldur'}
+                                  </Button>
+                                </div>
+                              )
+                            })()
+                          )}
+
+                          {/* Mobil kart listesi: basit sanallaştırma */}
+                          <div className="sm:hidden max-h-[60vh] overflow-y-auto" ref={mobileListRef} onScroll={handleMobileScroll}>
+                            {(() => {
+                              const items = dialogFiltered
+                              const total = items.length
+                              const rowH = 72
+                              const start = mobileStartIndex
+                              const end = Math.min(mobileEndIndex, total)
+                              const topPad = start * rowH
+                              const bottomPad = Math.max(0, (total - end) * rowH)
+                              const windowed = items.slice(start, end)
+                              return (
+                                <div className="space-y-2" style={{ paddingTop: `${topPad}px`, paddingBottom: `${bottomPad}px` }}>
+                                  {windowed.map((b)=> (
+                                    <div key={b.id} className="flex items-center justify-between rounded-md border p-2" style={{ height: `${rowH}px` }}>
+                                      <div className="flex items-center gap-2">
+                                        <div className="w-10 h-10 flex items-center justify-center border rounded bg-card">
+                                          {b.logoUrl ? (
+                                            <img src={b.logoUrl} alt={b.name} className="w-full h-full object-contain" />
+                                          ) : (
+                                            <img src="/logo.svg" alt="logo" className="h-6 w-12" />
+                                          )}
+                                        </div>
+                                        <div>
+                                          <div className="text-sm font-medium">{highlight(b.name, debouncedDialogQuery)}</div>
+                                          <div className="text-xs text-muted-foreground">Yorum: {b.reviewCount ?? 0}</div>
+                                        </div>
+                                      </div>
+                                      <Button size="sm" onClick={()=> setSelectedBrand(b)}>Seç</Button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )
+                            })()}
+                          </div>
+                          <div className="space-y-2 pt-2">
+                            <div className="text-xs text-muted-foreground">Markan listede yok mu?</div>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                              <Input value={newBrandName} onChange={(e)=> setNewBrandName(e.target.value)} placeholder="Marka adı" />
+                              <Input value={newBrandUrl} onChange={(e)=> setNewBrandUrl(e.target.value)} placeholder="Site URL (opsiyonel)" />
+                              <Button disabled={creatingBrand || !newBrandName.trim()} onClick={async ()=>{
+                                if (!newBrandName.trim()) { toast({ variant:'destructive', title:'Eksik bilgi', description:'Lütfen marka adını girin.' }); return }
+                                // İsim/slug çakışma kontrolü
+                                const slugCandidate = slugifyTr(newBrandName.trim())
+                                const existing = brands.find((b)=> b.slug === slugCandidate || b.name.trim().toLowerCase() === newBrandName.trim().toLowerCase())
+                                if (existing) {
+                                  setSelectedBrand(existing)
+                                  toast({ variant:'destructive', title:'Marka zaten mevcut', description:`${existing.name} listede mevcut, onu seçtim.` })
+                                  return
+                                }
+                                try {
+                                  setCreatingBrand(true)
+                                  const res = await fetch('/api/review-brands', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: newBrandName.trim(), siteUrl: newBrandUrl.trim() || undefined }) })
+                                  const data = await res.json().catch(()=>({}))
+                                  if (!res.ok) {
+                                    if (res.status === 409) {
+                                      const bySlug = brands.find((b)=> b.slug === slugCandidate)
+                                      if (bySlug) {
+                                        setSelectedBrand(bySlug)
+                                        setNewBrandName(''); setNewBrandUrl('')
+                                        toast({ variant:'destructive', title:'Marka zaten mevcut', description:`${bySlug.name} listede mevcut, onu seçtim.` })
+                                        return
+                                      }
+                                    }
+                                    toast({ variant:'destructive', title:'Marka eklenemedi', description: String(data?.error || 'Hata') })
+                                  } else {
+                                    const created: ReviewBrand = data
+                                    setBrands(prev => [created, ...prev])
+                                    setSelectedBrand(created)
+                                    setNewBrandName(''); setNewBrandUrl('')
+                                    toast({ title: 'Marka eklendi', description: `${created.name} seçildi, şimdi şikayetini yaz.` })
+                                  }
+                                } finally { setCreatingBrand(false) }
+                              }}>Marka Ekle ve Seç</Button>
+                            </div>
+                            <p className="text-xs text-muted-foreground">Marka eklendikten sonra moderasyon kurallarına uygun yorumlar onaylandıktan sonra yayınlanır.</p>
+                          </div>
+                        </>
+                      )}
                     </div>
-                    <div className="space-y-1">
-                      <Label>Marka URL</Label>
-                      <Input value={siteUrl} onChange={(e)=>setSiteUrl(e.target.value)} placeholder="https://ornekbahis.com" />
+
+                    {/* Adım 2: Şikayet / Olumlu değerlendirme yazımı */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-sm font-medium">
+                        {isPositive ? <ThumbsUp className="w-4 h-4 text-emerald-600" /> : <ThumbsDown className="w-4 h-4 text-red-600" />}
+                        <span>2) Şikayetinizi veya olumlu değerlendirmenizi yazın</span>
+                      </div>
+                      {!selectedBrand && (
+                        <p className="text-xs text-muted-foreground">Devam etmek için önce bir marka seçin veya ekleyin.</p>
+                      )}
+                      {selectedBrand && (
+                        <div className="space-y-3">
+                          {/* Ton seçimi */}
+                          <div className="flex gap-2">
+                            <Button variant={isPositive===false? 'default':'outline'} size="sm" onClick={()=> setIsPositive(false)} className="flex items-center gap-1">
+                              <ThumbsDown className="w-3.5 h-3.5" /> Şikayet
+                            </Button>
+                            <Button variant={isPositive===true? 'default':'outline'} size="sm" onClick={()=> setIsPositive(true)} className="flex items-center gap-1">
+                              <ThumbsUp className="w-3.5 h-3.5" /> Olumlu Değerlendirme
+                            </Button>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={isPositive? 'default':'destructive'} className="text-xs flex items-center gap-1">
+                              {isPositive ? <ThumbsUp className="w-3.5 h-3.5" /> : <ThumbsDown className="w-3.5 h-3.5" />}
+                              {isPositive ? 'Olumlu değerlendirme' : 'Şikayet'}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                              Şikayetleriniz markalara otomatik gönderilir
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button type="button" className="inline-flex items-center justify-center p-0.5 rounded hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring" aria-label="Bilgi">
+                                    <AlertCircle className="w-3.5 h-3.5" />
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  Oluşturulan şikayetler markaların resmi mail adreslerine otomatik iletilir.
+                                </TooltipContent>
+                              </Tooltip>
+                            </span>
+                          </div>
+                          {/* Kategori UI kaldırıldı */}
+                          <div className="flex items-center gap-2">
+                            <Switch checked={isAnonymous} onCheckedChange={setIsAnonymous} id="anon" />
+                            <Label htmlFor="anon" className="text-sm flex items-center gap-1"><User className="w-4 h-4" /> İsimsiz yaz</Label>
+                          </div>
+                          {!isAnonymous && (
+                            <div className="relative">
+                              <Input value={author} onChange={(e)=> setAuthor(e.target.value)} placeholder="Kullanıcı adı / takma ad" />
+                              <User className="absolute right-2 top-2.5 w-4 h-4 text-muted-foreground" />
+                            </div>
+                          )}
+                          <div className="space-y-1">
+                            <Label className="text-sm flex items-center gap-1"><FileText className="w-4 h-4" /> Metin</Label>
+                            <Textarea value={content} onChange={(e)=> setContent(e.target.value)} placeholder="Şikayetinizin veya değerlendirmenizin detaylarını yazın…Kullanıcı adınızı yazmayıda unutmayınız!" rows={5} />
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-muted-foreground flex items-center gap-1"><AlertCircle className="w-3.5 h-3.5" /> Lütfen kanıt ve tarih gibi somut bilgileri ekleyin.</span>
+                              <span className="text-xs text-muted-foreground">{content.length} karakter</span>
+                            </div>
+                          </div>
+
+                          {/* Görsel yükleme (3 slot, drag & drop) */}
+                          <div>
+                            <Label className="text-sm flex items-center gap-1"><ImageIcon className="w-4 h-4" /> Görsel (opsiyonel)</Label>
+                            <input
+                              ref={fileInputRef}
+                              type="file"
+                              accept="image/png,image/jpeg"
+                              multiple
+                              onChange={handleFileSelect}
+                              disabled={uploading}
+                              className="hidden"
+                            />
+                            <div
+                              className={`mt-1 flex gap-2 p-2 rounded-md border-2 ${dragActive ? 'border-gold bg-muted/40' : 'border-dashed'}`}
+                              onDragOver={(e)=>{ e.preventDefault(); setDragActive(true) }}
+                              onDragLeave={(e)=>{ e.preventDefault(); setDragActive(false) }}
+                              onDrop={(e)=>{ e.preventDefault(); setDragActive(false); const dt = e.dataTransfer; const files = dt?.files; if (files && files.length) { setPendingIndex(null); processFiles(files) } }}
+                              aria-label="Görsel sürükle-bırak alanı"
+                            >
+                              {[0,1,2].map((idx) => {
+                                const url = imageUrls[idx] || null
+                                const canClick = !uploading
+                                return (
+                                  <div
+                                    key={idx}
+                                    className={`relative aspect-square w-20 sm:w-24 border-2 rounded-md ${url ? 'border-muted' : 'border-dashed'} flex items-center justify-center ${canClick ? 'cursor-pointer hover:bg-muted/40' : 'opacity-50 cursor-not-allowed'} bg-card`}
+                                    onClick={() => { if (!canClick) return ; setPendingIndex(idx); fileInputRef.current?.click() }}
+                                    aria-label={`Görsel yükle ${idx+1}`}
+                                    role="button"
+                                  >
+                                      {url ? (
+                                      <>
+                                        <img src={url} alt="yüklenen görsel" className="absolute inset-0 w-full h-full object-cover rounded-md" loading="lazy" />
+                                        {typeof pendingIndex === 'number' && pendingIndex === idx && uploadProgress[idx] != null && (
+                                          <div className="absolute bottom-0 left-0 right-0 h-2 bg-muted/60">
+                                            <div className="h-2 bg-primary" style={{ width: `${uploadProgress[idx] ?? 0}%` }} />
+                                          </div>
+                                        )}
+                                        <Button type="button" variant="destructive" size="sm" className="absolute top-1 right-1 h-6 px-2" onClick={(e)=>{ e.stopPropagation(); removeImageAt(idx) }}>Kaldır</Button>
+                                      </>
+                                    ) : (
+                                      <div className="text-muted-foreground flex items-center justify-center"><Plus className="w-6 h-6" /></div>
+                                    )}
+                                  </div>
+                              )
+                            })}
+                          </div>
+                          <p className="mt-1 text-xs text-muted-foreground">Maksimum 500KB. PNG/JPEG izin verilir. En fazla 3 görsel.</p>
+                          {uploadError && <div className="mt-1 text-xs text-red-600">{uploadError}</div>}
+                          </div>
+
+                          <div className="flex gap-2">
+                            <Button disabled={submittingReview} onClick={async ()=>{
+                              if (!selectedBrand) { toast({ variant:'destructive', title:'Marka seçilmedi', description:'Lütfen bir marka seçin.' }); return }
+                              if (!content.trim()) { toast({ variant:'destructive', title:'Eksik bilgi', description:'Lütfen metin girin.' }); return }
+                              if (!isAnonymous && !author.trim()) { toast({ variant:'destructive', title:'Eksik bilgi', description:'İsimsiz değilse kullanıcı adı girin.' }); return }
+                              try {
+                                setSubmittingReview(true)
+                                const res = await fetch('/api/site-reviews', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ brandSlug: selectedBrand.slug, author, isAnonymous, isPositive, content, imageUrls: imageUrls.filter((u): u is string => typeof u === 'string') }) })
+                                const data = await res.json().catch(()=>({}))
+                                if (!res.ok) {
+                                  toast({ variant:'destructive', title:'Gönderim hatası', description: String(data?.error || 'Hata') })
+                                } else {
+                                  toast({ title: 'Gönderildi', description: 'Moderatör onayından sonra yorumunuz görüntülenecek.' })
+                                  setAuthor(''); setContent(''); setIsAnonymous(true); setIsPositive(false); setImageUrls([]); setUploadError(null)
+                                  setCreateOpen(false)
+                                }
+                              } finally { setSubmittingReview(false) }
+                            }} className="flex items-center gap-1.5">Gönder <ArrowRight className="w-4 h-4" /></Button>
+                            <Button variant="outline" onClick={()=> setCreateOpen(false)}>İptal</Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm">Doğrulama:</span>
-                      <span className="font-mono text-sm">{captchaA} + {captchaB} =</span>
-                      <Input
-                        className="w-16 h-8"
-                        value={captchaInput}
-                        onChange={(e)=>setCaptchaInput(e.target.value.replace(/[^0-9]/g, ''))}
-                        placeholder="?"
-                        type="tel"
-                      />
-                      <Button type="button" variant="ghost" size="sm" onClick={regenCaptcha}>Yenile</Button>
-                    </div>
-                    <div className="flex gap-2 pt-1">
-                      <Button disabled={submittingSuggestion} onClick={async ()=>{
-                        if (!brandName.trim()) { toast({ variant:'destructive', title:'Eksik bilgi', description:'Lütfen marka adını girin.' }); return }
-                        if (!captchaOk) { toast({ variant:'destructive', title:'Doğrulama başarısız', description:'Lütfen basit toplama doğrulamasını doğru yanıtlayın.' }); return }
-                        try {
-                          setSubmittingSuggestion(true)
-                          const res = await fetch('/api/brand-suggestions', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ brandName: brandName.trim(), email: email.trim(), siteUrl: siteUrl.trim() })
-                          })
-                          if (res.ok) {
-                            toast({ title: 'Gönderildi', description: 'Öneriniz bizlere ulaştı!.' })
-                            setBrandName(''); setEmail(''); setSiteUrl(''); regenCaptcha(); setSuggestOpen(false)
-                          } else {
-                            const data = await res.json().catch(()=>({}))
-                            toast({ variant:'destructive', title:'Gönderim hatası', description: data?.error ?? 'Gönderim başarısız' })
-                          }
-                        } finally { setSubmittingSuggestion(false) }
-                      }}>Gönder</Button>
-                      <Button variant="outline" onClick={()=>setSuggestOpen(false)}>İptal</Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">Bilgiler yalnızca moderasyon ve iletişim amaçlıdır; sitede otomatik yayınlanmaz.</p>
                   </div>
                 </DialogContent>
               </Dialog>

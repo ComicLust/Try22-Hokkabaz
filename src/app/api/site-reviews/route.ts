@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { randomUUID } from 'crypto'
 import { sanitizeText, createIpRateLimiter, getClientIp, isSafeLocalUploadPath } from '@/lib/security'
 import { withCache, revalidateSiteReviewsTag } from '@/lib/cache'
+import { Prisma } from '@prisma/client'
 
 function dicebearAvatar(seed: string) {
   const s = encodeURIComponent(seed)
@@ -36,7 +37,7 @@ export async function GET(req: NextRequest) {
             ...(hasImage ? {
               OR: [
                 { imageUrl: { not: null } },
-                { imageUrls: { not: null } },
+                { imageUrls: { not: Prisma.DbNull } },
               ],
             } : {}),
           },
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest) {
             ...(hasImage ? {
               OR: [
                 { imageUrl: { not: null } },
-                { imageUrls: { not: null } },
+                { imageUrls: { not: Prisma.DbNull } },
               ],
             } : {}),
           },

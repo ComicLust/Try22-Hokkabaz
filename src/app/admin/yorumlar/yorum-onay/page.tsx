@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
 import { ThumbsUp, ThumbsDown, X, ZoomIn } from 'lucide-react'
 
@@ -335,15 +335,18 @@ export default function AdminCommentApprovalPage() {
                     </div>
                     {/* Görsel önizlemeleri */}
                     {(() => {
-                      const imgs = [
+                      const imgsRaw = [
                         ...(it.imageUrl ? [it.imageUrl] : []),
                         ...(Array.isArray(it.imageUrls) ? it.imageUrls : [])
                       ]
+                      const imgs = Array.from(new Set(
+                        imgsRaw.filter((u) => typeof u === 'string' && u.trim().length > 0)
+                      ))
                       return imgs.length > 0 ? (
                         <div className="mt-2">
                           <div className="flex flex-wrap items-center gap-2">
-                            {imgs.map((url) => (
-                              <div key={url} className="relative group">
+                            {imgs.map((url, i) => (
+                              <div key={`${url}-${i}`} className="relative group">
                                 <img
                                   src={url}
                                   alt={it.author || it.brand?.name || 'yorum görseli'}
@@ -394,6 +397,9 @@ export default function AdminCommentApprovalPage() {
       {/* Görsel büyük önizleme */}
       <Dialog open={imagePreview.open} onOpenChange={(open) => setImagePreview((p) => ({ ...p, open }))}>
         <DialogContent className="max-w-3xl">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Görsel Önizleme</DialogTitle>
+          </DialogHeader>
           {imagePreview.url ? (
             <img src={imagePreview.url} alt="Önizleme" className="w-full h-auto rounded" />
           ) : null}
